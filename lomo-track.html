@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LOMO Track — Case Study | Pradeep UX Portfolio</title>
+  <meta name="description" content="Making tanker operations easier to monitor on the move. Case study on connected IoT tracking, route deviations, and operational exceptions by Pradeep." />
+  <link rel="icon" href="assets/images/avatar.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="index.html" class="brand-profile">
+        <div class="avatar-wrapper">
+          <img src="assets/images/avatar.jpg" alt="Pradeep avatar" class="avatar-img" />
+          <span class="status-dot"></span>
+        </div>
+        <div class="brand-info">
+          <span class="brand-name">Pradeep</span>
+          <span class="brand-title">UX Designer</span>
+        </div>
+      </a>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="projects.html" class="nav-link active">Work</a></li>
+          <li><a href="about.html" class="nav-link">About</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle dark/light mode">
+          <span id="themeIcon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </button>
+        <a href="resume.html" class="btn-resume">Resume</a>
+        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Toggle mobile menu" aria-expanded="false">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Case Study Hero -->
+    <section class="case-study-hero" style="border-bottom: none; padding-bottom: 20px;">
+      <div class="container">
+        <h1 class="projects-page-title" style="margin-bottom: 12px;">LOMO Track</h1>
+        <p class="projects-page-subtitle" style="margin-bottom: 30px;">
+          Making tanker operations easier to monitor on the move.
+        </p>
+
+        <!-- Project Meta Information 3-Column Grid -->
+        <div class="case-study-meta-grid-3">
+          <div class="meta-card">
+            <div class="meta-card-label">Role</div>
+            <div class="meta-card-value">UX / Product Designer</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-card-label">Industry</div>
+            <div class="meta-card-value">Enterprise IoT · Logistics</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-card-label">Duration</div>
+            <div class="meta-card-value">3 months</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Visual Banner -->
+    <div class="container" style="margin-top: 40px;">
+      <div style="border-radius: var(--radius-lg); overflow: hidden; max-height: 520px; box-shadow: var(--shadow-lg);">
+        <img src="assets/images/mockup-1.jpg" alt="LOMO Track App Overview" style="width: 100%; height: 100%; object-fit: cover;" />
+      </div>
+    </div>
+
+    <!-- Case Study Body Content -->
+    <article class="case-study-body container">
+      
+      <!-- Section 1: Overview -->
+      <section class="cs-section">
+        <div class="cs-section-tag">01 / Overview</div>
+        <h2 class="cs-h2">Making complex trip information easier to understand</h2>
+        <p class="cs-text">
+          LOMO Track is a mobile application for operations teams monitoring tanker trips, vehicle movement, and connected IoT lock systems. The product brings trip status, source and destination, travelled distance, live GPS vehicle location, route deviations, and operational exceptions into a unified mobile experience.
+        </p>
+        <p class="cs-text">
+          My role was to organize this dense operational information into a clear, scannable flow that operators could immediately interpret while monitoring high-stakes transport journeys in real time.
+        </p>
+      </section>
+
+      <!-- Section 2: The Challenge -->
+      <section class="cs-section">
+        <div class="cs-section-tag">02 / The Challenge</div>
+        <h2 class="cs-h2">The challenge wasn't showing more data. It was helping users understand what matters.</h2>
+        <p class="cs-text">
+          A fleet-tracking ecosystem contains dozens of critical data points at the exact same moment: vehicle status, trip info, designated routes, GPS telemetry, actual distance, hardware tamper sensors, and driving safety events.
+        </p>
+        <p class="cs-text">
+          Displaying all of this equally on a mobile screen overwhelmed users and made scanning almost impossible during rapid field checks. To cut through the noise, I anchored the experience around three core operational questions:
+        </p>
+
+        <div class="cs-card-highlight">
+          <ul class="cs-list" style="margin: 0;">
+            <li><strong>Where is the vehicle right now?</strong></li>
+            <li><strong>Is the trip progressing normally along its approved route?</strong></li>
+            <li><strong>Has an exception occurred that requires urgent attention?</strong></li>
+          </ul>
+        </div>
+
+        <p class="cs-text">
+          These three questions established what should appear first on the primary screens, and what detail could remain secondary when drilling down.
+        </p>
+      </section>
+
+      <!-- Section 3: Architecture & Flow -->
+      <section class="cs-section">
+        <div class="cs-section-tag">03 / Architecture &amp; System Flow</div>
+        <h2 class="cs-h2">Designing around the journey, not individual screens</h2>
+        <p class="cs-text">
+          Instead of treating Home, Trips, Tracking, and Exceptions as disconnected screens, I mapped the entire experience to the natural mental model an operations user follows when checking a vehicle:
+        </p>
+
+        <!-- Visual System Architecture Diagram -->
+        <div class="workflow-flowchart">
+          <div class="flow-node">Tanker Hardware</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">IoT Smart Lock</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">GPS &amp; Trip Telemetry</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">LOMO Platform</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node" style="border-color: var(--accent-blue); color: var(--accent-blue);">Operations Mobile App</div>
+        </div>
+
+        <p class="cs-text">
+          The operational task flow for operators was structured sequentially:
+        </p>
+        <div class="workflow-flowchart" style="background-color: var(--bg-card);">
+          <div class="flow-node">Sign In</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">Find Trip</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">Understand Status</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">Locate Vehicle</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node">Inspect Route</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-node" style="border-color: var(--accent-coral); color: var(--accent-coral);">Review Exceptions</div>
+        </div>
+
+        <h3 style="font-size: 1.3rem; margin: 30px 0 16px 0;">Core UX Principles Established:</h3>
+        <ul class="cs-list">
+          <li><strong>Give trip context before detailed map information:</strong> A map without trip context is just coordinates; context tells the operator what those coordinates mean.</li>
+          <li><strong>Show essentials first:</strong> Allow operators to drill deeper on demand rather than front-loading every telemetry metric.</li>
+          <li><strong>Keep expected movement visually distinct from abnormal movement:</strong> Forward and reverse routes are quiet; deviations stand out prominently.</li>
+          <li><strong>Keep exceptions connected to the trip &amp; location:</strong> Harsh braking or tamper alerts are useless in an isolated notification tray—they belong on the map where they occurred.</li>
+        </ul>
+      </section>
+
+      <!-- Section 4: Key Design Decisions -->
+      <section class="cs-section">
+        <div class="cs-section-tag">04 / Design Solutions</div>
+        <h2 class="cs-h2">Key Design Decisions That Transformed Scannability</h2>
+
+        <!-- Decision 1 -->
+        <div style="margin-bottom: 40px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;">
+            1. Trip context before map inspection
+          </h3>
+          <p class="cs-text">
+            Tracking products frequently default to an edge-to-edge map. But operators primarily need to know: <em>Which truck? What load? How far along?</em>
+          </p>
+          <p class="cs-text">
+            I structured the Home / Current Trip screen as a compact executive trip summary with a clear information hierarchy:
+          </p>
+          <div class="cs-card-highlight">
+            <ol style="padding-left: 20px; line-height: 1.8; color: var(--text-secondary);">
+              <li><strong>01 Vehicle ID &amp; Operational Status</strong></li>
+              <li><strong>02 Source Location</strong></li>
+              <li><strong>03 Destination Target</strong></li>
+              <li><strong>04 Distance Progress (e.g., 96 KM Actual)</strong></li>
+              <li><strong>05 Consignment / Invoice Reference</strong></li>
+              <li><strong>06 Action: Open Live Tracking Map</strong></li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Decision 2 -->
+        <div style="margin-bottom: 40px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;">
+            2. Turning the map into an operational decision tool
+          </h3>
+          <p class="cs-text">
+            A pin on a map answers only one question. The more important question is: <em>Is this vehicle where it was authorized to be?</em>
+          </p>
+          <p class="cs-text">
+            The tracking view connects live coordinates with the scheduled journey through three distinct visual states:
+          </p>
+          <ul class="cs-list">
+            <li><strong>Forward Route:</strong> Expected, authorized path toward destination.</li>
+            <li><strong>Reverse Route:</strong> Return journey following verified waypoints.</li>
+            <li><strong>Route Deviation:</strong> Standout warning showing movement outside geo-fenced corridors.</li>
+          </ul>
+        </div>
+
+        <!-- Decision 3 -->
+        <div style="margin-bottom: 40px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;">
+            3. Connecting exceptions directly to the active route
+          </h3>
+          <p class="cs-text">
+            When harsh driving occurs (HARSH_BRAKING, HARSH_MANOEUVRING, HARSH_ACCELERATION), operators need to see the incident in the context of the journey.
+          </p>
+          <div class="cs-card-highlight">
+            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">Event + Location + Trip = Context</p>
+            <p style="color: var(--text-secondary); margin: 0;">
+              By embedding an interactive bottom sheet directly on the tracking view, operators can inspect event counts, timestamps, and road conditions without losing the active vehicle in view.
+            </p>
+          </div>
+        </div>
+
+        <!-- Decision 4 -->
+        <div style="margin-bottom: 40px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;">
+            4. Trip Playback for incident investigations
+          </h3>
+          <p class="cs-text">
+            When an audit occurs, current position does not explain what happened 2 hours prior. Trip Playback provides an intuitive player control bar (Play, Pause, Scrub, Reset, and Speed multipliers: 1x, 2x, 5x) to review historical vehicle telemetry effortlessly.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 5: Key Takeaway -->
+      <section class="cs-section" style="border-top: 1px solid var(--border-subtle); padding-top: 50px;">
+        <div class="cs-section-tag">05 / Takeaways</div>
+        <h2 class="cs-h2">What this project changed in the way I design</h2>
+        <p class="cs-text">
+          Working on LOMO Track pushed me beyond aesthetic mobile design. The real difficulty wasn't creating another sleek dark-mode UI—it was understanding how hardware locks, GPS sensors, telemetry packets, trip schedules, and field operations interact.
+        </p>
+        <div class="cs-card-highlight" style="border-left-color: var(--accent-coral);">
+          <blockquote style="font-family: var(--font-display); font-size: 1.6rem; line-height: 1.4; color: var(--text-primary); font-style: italic;">
+            "Tracking tells users where the vehicle is. Good UX helps them understand what is happening."
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- Case Study Navigation Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border-subtle); margin-top: 60px;">
+        <a href="projects.html" class="btn-pill-primary">← All Projects</a>
+        <a href="fitness-tracker.html" class="btn-pill-primary">Next Project: Fitness Tracker →</a>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- Big Impact Dark Theme Footer -->
+  <footer id="contact" class="site-footer">
+    <div class="container">
+      <h2 class="footer-cta-title">
+        <span class="coral-accent">Lets</span> <span class="rotating-word">create</span><br />
+        incredible work together.
+      </h2>
+
+      <div class="footer-details-grid">
+        <div>
+          <div class="footer-col-title">Email</div>
+          <a href="mailto:pradeep.tasp.0802@gmail.com" class="footer-email-link">pradeep.tasp.0802@gmail.com</a>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Connect</div>
+          <ul class="footer-link-list">
+            <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="mailto:pradeep.tasp.0802@gmail.com">Email</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Social</div>
+          <div class="footer-social-pill">
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-circle-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-divider-line"></div>
+
+      <div class="footer-sub-grid">
+        <div class="footer-sub-col">
+          <div class="footer-col-title">Explore</div>
+          <ul class="footer-link-list-inline">
+            <li><a href="projects.html">Work</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="resume.html">Résumé</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-sub-col">
+          <div class="footer-col-title">Location</div>
+          <div class="footer-location-text">Chennai, India</div>
+        </div>
+
+        <div class="footer-sub-col copyright-col">
+          <div>© 2026 Pradeep</div>
+        </div>
+      </div>
+
+      <div class="footer-watermark">Pradeep</div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
