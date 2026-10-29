@@ -1762,3 +1762,23 @@ button {
     grid-template-columns: 1fr;
   }
 }
+
+/* --- Suppress Framer Badges & Edit Controls --- */
+#__framer-badge-container,
+.__framer-badge,
+#__framer-editorbar,
+[data-framer-name="Edit Content"],
+button[class*="EditButton"],
+div[class*="EditButton"],
+iframe[id*="framer"],
+.framer-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+}

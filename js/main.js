@@ -211,3 +211,24 @@ function initRotatingWord() {
   }, 2400);
 }
 
+/* --- Remove Any Stray Framer Badges or Edit Content Floating Overlays --- */
+(function removeFramerBadges() {
+  function cleanup() {
+    const badge = document.getElementById('__framer-badge-container');
+    if (badge) badge.style.setProperty('display', 'none', 'important');
+    const editor = document.getElementById('__framer-editorbar');
+    if (editor) editor.remove();
+    document.querySelectorAll('#__framer-badge-container, .__framer-badge, #__framer-editorbar, [data-framer-name="Edit Content"]').forEach(el => {
+      el.remove();
+    });
+  }
+  cleanup();
+  if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', cleanup);
+    window.addEventListener('load', cleanup);
+    if (typeof MutationObserver !== 'undefined') {
+      new MutationObserver(cleanup).observe(document.documentElement, { childList: true, subtree: true });
+    }
+  }
+})();
+
