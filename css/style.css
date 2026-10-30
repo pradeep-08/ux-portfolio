@@ -1727,6 +1727,10 @@ button {
     grid-template-columns: 1fr;
     gap: 30px;
   }
+  .case-study-body {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1760,6 +1764,87 @@ button {
   }
   .gallery-grid {
     grid-template-columns: 1fr;
+  }
+  .nav-actions {
+    gap: 10px;
+  }
+  .mobile-nav-active .nav-links {
+    gap: 4px;
+  }
+  .mobile-nav-active .nav-link {
+    display: block;
+    padding: 10px 0;
+  }
+  .mobile-nav-active .nav-link.active::after {
+    display: none;
+  }
+
+  /* Case study pages */
+  .case-study-hero {
+    padding-top: 48px;
+  }
+  .case-study-body {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+  .cs-section {
+    margin-bottom: 52px;
+  }
+  .cs-h2 {
+    font-size: 1.65rem;
+  }
+  .cs-lead {
+    font-size: 1.1rem;
+  }
+  .cs-text {
+    font-size: 1rem;
+  }
+  .cs-card-highlight {
+    padding: 20px;
+  }
+  .cs-card-highlight blockquote {
+    font-size: 1.3rem !important;
+  }
+  .case-study-meta-grid-3 {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .meta-card {
+    padding: 14px 16px;
+  }
+  .workflow-flowchart {
+    flex-direction: column;
+    padding: 24px 16px;
+    gap: 8px;
+  }
+  .flow-node {
+    text-align: center;
+  }
+  .flow-arrow {
+    transform: rotate(90deg);
+  }
+  .cs-pager {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+  .cs-pager .btn-pill-primary {
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Footer */
+  .site-footer {
+    padding: 64px 0 40px 0;
+  }
+  .footer-cta-title {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 360px) {
+  .brand-info {
+    display: none;
   }
 }
 

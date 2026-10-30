@@ -1,0 +1,68 @@
+/* ==========================================================================
+   FRAMER PAGES - MOBILE LAYOUT FIXES
+   Loaded by index, about, projects and resume. Every rule is scoped to
+   Framer's phone breakpoint so tablet and desktop layouts are untouched.
+   ========================================================================== */
+
+@media (max-width: 809.98px) {
+
+  /* --- Header (phone, menu closed): logo left, Resume + menu right in one row --- */
+  .framer-ANoyk.framer-v-1yd4ihl .framer-jmt26r {
+    justify-content: flex-end !important;
+  }
+  .framer-ANoyk.framer-v-1yd4ihl .framer-1tdmaxe-container {
+    left: 16px !important;
+  }
+  .framer-ANoyk.framer-v-1yd4ihl .framer-n63fdo-container {
+    position: absolute !important;
+    top: 50% !important;
+    right: 64px !important;
+    transform: translateY(-50%) !important;
+  }
+
+  /* --- Hero: eyebrow and heading share one left edge, no fixed 338px width --- */
+  .framer-KlBLr .framer-ufjqu5 .framer-1ughbhb,
+  .framer-KlBLr .framer-ufjqu5 .framer-1oe0527 {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 26px !important;
+    padding-right: 26px !important;
+    box-sizing: border-box !important;
+  }
+  .framer-KlBLr .framer-ufjqu5 .framer-1ughbhb {
+    margin-bottom: 14px !important;
+  }
+  .framer-KlBLr .framer-ufjqu5 .framer-1oe0527 > * + * {
+    margin-top: 16px !important;
+  }
+
+  /* --- "What I bring": drop the full-viewport min-height that left a blank gap --- */
+  .framer-KlBLr .framer-ts46om {
+    min-height: 0 !important;
+    padding-top: 48px !important;
+  }
+
+  /* --- Skill badges: wrap inside the screen instead of overflowing both edges --- */
+  .framer-KlBLr .framer-xmfsu6 {
+    flex-flow: row wrap !important;
+    justify-content: center !important;
+    align-content: center !important;
+    gap: 20px 12px !important;
+    min-height: 0 !important;
+    padding: 32px 16px 56px !important;
+  }
+  .framer-KlBLr .framer-xmfsu6 > [class$="-container"] {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    zoom: 0.9;
+  }
+  .framer-KlBLr .framer-1u06d7i-container { order: 1; transform: rotate(3deg) !important; }
+  .framer-KlBLr .framer-4xb6gp-container { order: 2; transform: rotate(-5deg) !important; }
+  .framer-KlBLr .framer-1otd3t2-container { order: 3; transform: rotate(-4deg) !important; }
+  .framer-KlBLr .framer-n1j6u6-container { order: 4; transform: rotate(-5deg) !important; }
+  .framer-KlBLr .framer-8izplj-container { order: 5; transform: rotate(-4deg) !important; }
+  .framer-KlBLr .framer-n5xeho-container { order: 6; transform: rotate(4deg) !important; }
+}
