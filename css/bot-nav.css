@@ -1,0 +1,392 @@
+/* ==========================================================================
+   BOT NAV - floating bottom navigation with a scroll-storytelling bot
+   Markup is injected by js/bot-nav.js. Colours follow the site theme via
+   [data-bn-theme] on .botnav (set from Framer's toggle-theme or data-theme).
+   ========================================================================== */
+
+.botnav {
+  --bn-bar: #0d0d0d;
+  --bn-text: #ffffff;
+  --bn-muted: #9b9b9b;
+  --bn-divider: rgba(255, 255, 255, 0.2);
+  --bn-face: #ffffff;
+  --bn-eye: #0d0d0d;
+  /* Brand accent (coral), same in both themes. Small marks use the bright coral;
+     filled buttons use a deeper coral so white text passes contrast (4.6:1). */
+  --bn-accent: #ff5e4d;
+  --bn-accent-fill: #d93a26;
+  --bn-accent-fill-hover: #c4321f;
+  --bn-accent-ink: #ffffff;
+  --bn-bubble-bg: #ffffff;
+  --bn-bubble-text: #1a1a1a;
+  --bn-bubble-border: #e6e6e6;
+  --bn-shadow: 0 18px 40px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  --bn-head-w: 60px;
+  --bn-head-h: 36px;
+  --bn-fillet: 12px;
+  --bn-x: 0px;
+
+  position: fixed;
+  left: 50%;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 9990;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  max-width: calc(100vw - 16px);
+}
+
+.botnav[data-bn-theme="dark"] {
+  --bn-bar: #f2f2f0;
+  --bn-text: #111111;
+  --bn-muted: #6b6b6b;
+  --bn-divider: rgba(0, 0, 0, 0.15);
+  --bn-face: #111111;
+  --bn-eye: #f2f2f0;
+  --bn-bubble-bg: #262628;
+  --bn-bubble-text: #ececea;
+  --bn-bubble-border: #3a3a3d;
+  --bn-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* --- Bar --- */
+.botnav__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 5px;
+  background: var(--bn-bar);
+  border-radius: 9999px;
+  box-shadow: var(--bn-shadow);
+  transition: background-color 0.3s ease;
+}
+
+.botnav__link {
+  position: relative;
+  padding: 8px 13px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--bn-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 9999px;
+  transition: color 0.2s ease;
+}
+
+.botnav__link:hover,
+.botnav__link:focus-visible,
+.botnav__link.is-active {
+  color: var(--bn-text);
+}
+
+.botnav__link.is-active {
+  font-weight: 600;
+}
+
+.botnav__link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: var(--bn-accent);
+}
+
+.botnav__divider {
+  width: 1px;
+  height: 22px;
+  margin: 0 6px;
+  background: var(--bn-divider);
+}
+
+.botnav__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--bn-text);
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.botnav__icon:hover,
+.botnav__icon:focus-visible {
+  transform: translateY(-2px);
+}
+
+.botnav__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.botnav__resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 6px;
+  padding: 0 18px 0 20px;
+  height: 40px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--bn-accent-ink);
+  background: var(--bn-accent-fill);
+  border-radius: 9999px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.botnav__resume:hover,
+.botnav__resume:focus-visible {
+  transform: translateY(-1px);
+  background: var(--bn-accent-fill-hover);
+}
+
+.botnav__resume svg {
+  width: 17px;
+  height: 17px;
+}
+
+.botnav a:focus-visible,
+.botnav button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* --- Bot head --- */
+.botnav__bot {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% - 1px);
+  width: var(--bn-head-w);
+  height: var(--bn-head-h);
+  transform: translateX(var(--bn-x));
+  transition: transform 0.55s cubic-bezier(0.34, 1.4, 0.64, 1);
+  pointer-events: none;
+}
+
+.botnav__head {
+  position: absolute;
+  inset: 0;
+  background: var(--bn-bar);
+  border-radius: 21px 21px 0 0;
+  transition: background-color 0.3s ease, top 0.25s ease;
+}
+
+/* Concave fillets that blend the head into the bar */
+.botnav__head::before,
+.botnav__head::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  width: var(--bn-fillet);
+  height: calc(var(--bn-fillet) + 1px);
+}
+.botnav__head::before {
+  left: calc(var(--bn-fillet) * -1);
+  background: radial-gradient(circle at 0 0, transparent calc(var(--bn-fillet) - 0.5px), var(--bn-bar) var(--bn-fillet));
+}
+.botnav__head::after {
+  right: calc(var(--bn-fillet) * -1);
+  background: radial-gradient(circle at 100% 0, transparent calc(var(--bn-fillet) - 0.5px), var(--bn-bar) var(--bn-fillet));
+}
+
+.botnav__face {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--bn-face);
+  border-radius: 16px 16px 11px 11px;
+  transition: background-color 0.3s ease;
+}
+
+.botnav__eye {
+  --ex: 0px;
+  --ey: 0px;
+  width: 10px;
+  height: 17px;
+  border-radius: 5px;
+  background: var(--bn-eye);
+  transform: translate(var(--ex), var(--ey));
+  transition: transform 0.18s ease, height 0.18s ease, border-radius 0.18s ease, background-color 0.3s ease;
+}
+
+.botnav__bot.is-blinking .botnav__eye {
+  height: 3px;
+}
+
+.botnav__bot.is-happy .botnav__eye {
+  height: 7px;
+  border-radius: 7px 7px 2px 2px;
+  transform: translate(var(--ex), calc(var(--ey) - 3px));
+}
+
+/* Bob by stretching the head upward; its base and fillets stay fused to the bar */
+.botnav__bot.is-bobbing .botnav__head {
+  top: -3px;
+}
+
+/* --- Speech bubble --- */
+.botnav__bubble {
+  --bubble-shift: 0px;
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  max-width: min(250px, calc(100vw - 24px));
+  width: max-content;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--bn-bubble-text);
+  background: var(--bn-bubble-bg);
+  border: 1px solid var(--bn-bubble-border);
+  border-radius: 9999px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transform: translate(calc(-50% + var(--bubble-shift)), 6px) scale(0.96);
+  transform-origin: bottom center;
+  transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.botnav__bubble.is-multiline {
+  border-radius: 16px;
+}
+
+.botnav__bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: calc(50% - var(--bubble-shift));
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--bn-bubble-bg);
+  border-right: 1px solid var(--bn-bubble-border);
+  border-bottom: 1px solid var(--bn-bubble-border);
+  transform: rotate(45deg);
+}
+
+/* Success moments (e.g. email copied) use the accent */
+.botnav__bubble.is-success {
+  --bn-bubble-bg: var(--bn-accent-fill);
+  --bn-bubble-border: var(--bn-accent-fill);
+  --bn-bubble-text: var(--bn-accent-ink);
+  font-weight: 600;
+}
+
+.botnav__bubble.is-visible {
+  opacity: 1;
+  transform: translate(calc(-50% + var(--bubble-shift)), 0) scale(1);
+}
+
+.botnav__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- Small screens --- */
+@media (max-width: 640px) {
+  .botnav {
+    --bn-head-w: 52px;
+    --bn-head-h: 31px;
+    --bn-fillet: 10px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .botnav__bar {
+    gap: 0;
+    padding: 5px;
+  }
+  .botnav__link {
+    padding: 8px 9px;
+    font-size: 13px;
+  }
+  .botnav__divider {
+    height: 20px;
+    margin: 0 4px;
+  }
+  .botnav__icon {
+    width: 32px;
+    height: 32px;
+  }
+  .botnav__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  .botnav__resume {
+    width: 34px;
+    height: 34px;
+    margin-left: 4px;
+    padding: 0;
+    justify-content: center;
+  }
+  .botnav__resume-label {
+    display: none;
+  }
+  .botnav__head {
+    border-radius: 18px 18px 0 0;
+  }
+  .botnav__face {
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    gap: 11px;
+    border-radius: 14px 14px 9px 9px;
+  }
+  .botnav__eye {
+    width: 8px;
+    height: 14px;
+    border-radius: 4px;
+  }
+  .botnav__bubble {
+    font-size: 12.5px;
+    padding: 7px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .botnav__link {
+    padding: 8px 6px;
+    font-size: 12.5px;
+  }
+  .botnav__icon {
+    width: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botnav__bot,
+  .botnav__head,
+  .botnav__eye,
+  .botnav__bubble {
+    transition: opacity 0.2s ease;
+  }
+}
+
+@media print {
+  .botnav {
+    display: none !important;
+  }
+}

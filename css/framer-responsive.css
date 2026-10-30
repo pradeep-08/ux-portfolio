@@ -1,23 +1,136 @@
 /* ==========================================================================
-   FRAMER PAGES - MOBILE LAYOUT FIXES
-   Loaded by index, about, projects and resume. Every rule is scoped to
+   FRAMER PAGES - THEME & MOBILE LAYOUT FIXES
+   Loaded by index, about, projects and resume. The skill chips, brand accent and
+   trimmed top header apply at every breakpoint; everything else is scoped to
    Framer's phone breakpoint so tablet and desktop layouts are untouched.
    ========================================================================== */
 
+/* --- Skill chips ("What I bring"): theme-aware surface, border and shadow.
+       Framer hard-codes a grey fill, white border and white halo inline, so they
+       never followed the theme. Icon colours are left as designed. --- */
+.framer-lzGIe.framer-g8ikc9 {
+  --chip-bg: #ffffff;
+  --chip-border: #e4e4e2;
+  --chip-text: #1d1d1f;
+  --chip-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 10px 14px 24px rgba(0, 0, 0, 0.08);
+  background-color: var(--chip-bg) !important;
+  --border-color: var(--chip-border) !important;
+  box-shadow: var(--chip-shadow) !important;
+}
+body[toggle-theme="dark"] .framer-lzGIe.framer-g8ikc9 {
+  --chip-bg: #262628;
+  --chip-border: #3a3a3d;
+  --chip-text: #ececea;
+  --chip-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 10px 14px 24px rgba(0, 0, 0, 0.45);
+}
+.framer-lzGIe.framer-g8ikc9 .framer-gtr6u5 p {
+  --framer-text-color: var(--chip-text) !important;
+}
+
+/* --- Brand accent (coral #ff5e4d, same as --accent-coral in style.css).
+       Hero "Work" CTA: deeper coral fill with white text (4.6:1), both themes. --- */
+.framer-ufjqu5 .framer-BQ7HP.framer-v-1o94x7b {
+  background-color: #d93a26 !important;
+  transition: background-color 0.2s ease;
+}
+.framer-ufjqu5 .framer-BQ7HP.framer-v-1o94x7b .framer-text {
+  --framer-text-color: #ffffff !important;
+}
+.framer-ufjqu5 .framer-BQ7HP.framer-v-1o94x7b:hover {
+  background-color: #c4321f !important;
+}
+.framer-ufjqu5 .framer-BQ7HP.framer-v-1o94x7b [data-framer-name="Arrow"] {
+  filter: brightness(0) invert(1);
+}
+/* Footer "Lets": unify Framer's muted red with the accent */
+.framer-1xpzoxj {
+  --extracted-r6o4lv: #ff5e4d !important;
+}
+
+/* --- Top header: links and Resume now live in the bottom bot nav, so only the
+       logo and the theme toggle stay. Phone hides the hamburger menu too and uses
+       the toggle injected by js/theme-toggle.js instead. --- */
+.framer-ANoyk .framer-5jmsln-container,
+.framer-ANoyk .framer-p3wn6o-container,
+.framer-ANoyk .framer-lmiz9b-container,
+.framer-ANoyk .framer-n63fdo-container,
+.framer-ANoyk.framer-v-1yd4ihl .framer-mq8aiq-container {
+  display: none !important;
+}
+
+.phone-theme-toggle {
+  display: none;
+}
+
 @media (max-width: 809.98px) {
 
-  /* --- Header (phone, menu closed): logo left, Resume + menu right in one row --- */
-  .framer-ANoyk.framer-v-1yd4ihl .framer-jmt26r {
-    justify-content: flex-end !important;
+  /* --- Dark theme: Framer's dark token set only redefines some colour tokens, so
+         parts of the phone layout kept their light-theme colours (white header and
+         hero, dark-grey text on the dark page). Give those tokens dark values here.
+         The always-dark footer and the "Selected work" / "Process" pills are left as is. --- */
+  body[toggle-theme="dark"] {
+    --token-e16847f2-b192-48e1-a890-7bbcce11cc6e: #1d1d1d;  /* header surface */
+    --token-6404906a-a8f6-4a20-b609-163acb7b17d6: #1d1d1d;  /* page surface */
+    --token-266c8d71-9990-411c-9a11-ecf80446ea66: #ececea;  /* headings, menu icon */
+    --token-b1106767-fbaa-4a24-bd97-dfbf18764b12: #b4b4b4;  /* body text */
+    --token-1655f33c-54b8-43d4-8f16-a9e920ed6c1b: #a9aab1;  /* section intro text */
+    --token-28e7f1eb-c89e-4bb0-ab33-0c0caa957f39: #3a3a3a;  /* outline button border */
   }
+  /* The hero's surface token doubles as the footer's white text colour, so
+     override the hero background itself instead of the token. */
+  body[toggle-theme="dark"] .framer-KlBLr .framer-ufjqu5,
+  body[toggle-theme="dark"] .framer-ewt1ny {
+    background-color: #1d1d1d !important;
+  }
+  /* Text presets with hard-coded dark colours (section headings, project titles, intro copy) */
+  body[toggle-theme="dark"] .framer-styles-preset-4u6n5c,
+  body[toggle-theme="dark"] .framer-styles-preset-13c3248,
+  body[toggle-theme="dark"] .framer-styles-preset-1sksvyh {
+    --framer-text-color: #ececea !important;
+  }
+  body[toggle-theme="dark"] .framer-styles-preset-1y1gyft {
+    --framer-text-color: #b4b4b4 !important;
+  }
+  /* "What I bring" label: match the colour the desktop layout uses in dark */
+  body[toggle-theme="dark"] .framer-styles-preset-10ljhlf {
+    --framer-text-color: #c9c9c9 !important;
+  }
+  /* "Download Resume as PDF" outline button uses a white fill */
+  body[toggle-theme="dark"] .framer-C1xb4.framer-v-u3nqzu {
+    background-color: #262626 !important;
+  }
+
+  /* --- Header (phone): logo left, theme toggle right --- */
   .framer-ANoyk.framer-v-1yd4ihl .framer-1tdmaxe-container {
     left: 16px !important;
   }
-  .framer-ANoyk.framer-v-1yd4ihl .framer-n63fdo-container {
-    position: absolute !important;
-    top: 50% !important;
-    right: 64px !important;
-    transform: translateY(-50%) !important;
+  .phone-theme-toggle {
+    position: absolute;
+    top: 15px;
+    right: 16px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #111111;
+    cursor: pointer;
+  }
+  body[toggle-theme="dark"] .phone-theme-toggle {
+    color: #ececea;
+  }
+  .phone-theme-toggle svg {
+    width: 22px;
+    height: 22px;
+  }
+  .phone-theme-toggle:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
   }
 
   /* --- Hero: eyebrow and heading share one left edge, no fixed 338px width --- */
