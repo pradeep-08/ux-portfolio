@@ -1,0 +1,227 @@
+/* ==========================================================================
+   EXPERIENCE & SKILLS - last section of the home page (js/experience.js)
+   Sized and aligned to Framer's content column (1200px max, 24px gutters).
+   Theme follows Framer's body[toggle-theme].
+   ========================================================================== */
+
+.xp {
+  --xp-text: #1d1d1f;
+  --xp-body: #555555;
+  --xp-muted: #8a8a8a;
+  --xp-border: #e8e8e6;
+  --xp-chip: #f4f4f3;
+  --xp-accent: #d93a26;
+
+  /* Framer's parent is a flex column; the footer is order 1002 */
+  order: 1001;
+  align-self: stretch;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px 0 140px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--xp-text);
+}
+
+body[toggle-theme="dark"] .xp {
+  --xp-text: #ececea;
+  --xp-body: #b4b4b6;
+  --xp-muted: #85858a;
+  --xp-border: #2c2c2e;
+  --xp-chip: #232325;
+  --xp-accent: #ff7666;
+}
+
+.xp *,
+.xp *::before,
+.xp *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.xp__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 96px;
+}
+
+.xp__pill {
+  display: inline-block;
+  padding: 5px 12px;
+  font-family: "Instrument Sans", "Inter", sans-serif;
+  font-size: 14px;
+  color: var(--xp-text);
+  border: 1px solid var(--xp-border);
+  border-radius: 999px;
+}
+
+.xp__title {
+  margin-top: 16px;
+  font-family: "Lora", Georgia, serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--xp-text);
+}
+
+/* --- Experience timeline --- */
+.xp__list {
+  margin-top: 40px;
+  list-style: none;
+  border-top: 1px solid var(--xp-border);
+}
+
+.xp__job {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--xp-border);
+}
+
+.xp__dates {
+  font-family: "DM Mono", ui-monospace, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--xp-muted);
+}
+
+.xp__company {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--xp-text);
+}
+
+.xp__company span {
+  font-weight: 400;
+  color: var(--xp-muted);
+}
+
+.xp__company span::before {
+  content: "·";
+  margin: 0 8px;
+}
+
+.xp__summary {
+  margin-top: 10px;
+  max-width: 68ch;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--xp-body);
+}
+
+.xp__meta {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  font-size: 14px;
+}
+
+.xp__meta div {
+  display: flex;
+  gap: 8px;
+}
+
+.xp__meta dt {
+  color: var(--xp-muted);
+}
+
+.xp__meta dd {
+  color: var(--xp-text);
+}
+
+/* --- Skills grid --- */
+.xp__skills {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.xp__group {
+  padding: 22px;
+  border: 1px solid var(--xp-border);
+  border-radius: 20px;
+}
+
+.xp__group-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--xp-text);
+}
+
+.xp__chips {
+  margin-top: 14px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.xp__chips li {
+  padding: 5px 10px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--xp-body);
+  background: var(--xp-chip);
+  border-radius: 999px;
+}
+
+/* --- Tablet --- */
+@media (max-width: 1199.98px) {
+  .xp__job {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+  .xp__skills {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- Phone --- */
+@media (max-width: 809.98px) {
+  .xp {
+    padding: 24px 0 120px;
+  }
+  .xp__inner {
+    padding: 0 16px;
+    gap: 64px;
+  }
+  .xp__title {
+    font-size: 28px;
+  }
+  .xp__list {
+    margin-top: 28px;
+  }
+  .xp__job {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    padding: 24px 0;
+  }
+  .xp__company {
+    font-size: 18px;
+  }
+  .xp__company span {
+    display: block;
+  }
+  .xp__company span::before {
+    content: none;
+  }
+  .xp__summary {
+    font-size: 15px;
+  }
+  .xp__skills {
+    margin-top: 28px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .xp__group {
+    padding: 18px;
+    border-radius: 16px;
+  }
+}

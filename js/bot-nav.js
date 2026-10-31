@@ -22,8 +22,9 @@
       [0.12, 'Pradeep makes complex enterprise products easy to use.'],
       [0.25, 'These are the skills he brings to every project.'],
       [0.42, 'Some of his selected work. Tap one to dive in.'],
-      [0.62, 'This is how he solves product problems, step by step.'],
-      [0.85, "Like what you see? Let's build something together ✉️"],
+      [0.5, 'This is how he solves product problems, step by step.'],
+      [0.66, "Here's where he's worked, and the skills he brings."],
+      [0.92, "Like what you see? Let's build something together ✉️"],
     ],
     about: [
       [0, 'Meet Pradeep: UX designer, 3+ years in enterprise SaaS & IoT.'],
