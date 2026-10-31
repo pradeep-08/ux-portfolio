@@ -8,23 +8,33 @@
  */
 
 (function () {
+  // Single source for project cards. `img` stays null until a verified Figma export
+  // exists (see docs/missing-case-study-assets.md); cards then show a text cover.
+  // `featured` projects also appear under "Selected work" on the phone home page.
   const PROJECTS = [
-    { href: 'lomo-track.html', kicker: 'Enterprise IoT · Logistics', name: 'LOMO Track', img: 'assets/images/mockup-1.jpg', wide: true },
-    { href: 'fitness-tracker.html', kicker: 'Redesign project', name: 'Fitness Tracker App', img: 'assets/images/fitness-cover.webp' },
-    { href: 'social-dining.html', kicker: 'Internship project', name: 'Social Dining App', img: 'assets/images/social-dining-cover.webp' },
-    { href: 'collaborative-learning.html', kicker: 'Graduation project', name: 'Collaborative Learning', img: 'assets/images/collaborative-cover.webp', wide: true },
+    { href: 'lomo-track.html', kicker: 'B2B · Logistics and IoT', name: 'LOMO Track', platform: 'Mobile · Office project', pitch: 'Making tanker trips easier to understand on the move', img: null, wide: true, featured: true },
+    { href: 'curio-snap.html', kicker: 'EdTech · Robotics and AI', name: 'Curio Snap', platform: 'Web · Freelance', pitch: 'Helping learners connect visual code with real-world robotics', img: null, featured: true },
+    { href: 'facility-management.html', kicker: 'B2B · Facility operations', name: 'Facility Management', platform: 'Mobile · Office project', pitch: 'Connecting facility tasks from assignment to completion', img: null, featured: true },
+    { href: 'gcc-safe-subway.html', kicker: 'Public-sector operations', name: 'GCC Safe Subway', platform: 'Mobile · Office project', pitch: 'Making subway barrier operations clear and deliberate', img: null },
+    { href: 'e-seal.html', kicker: 'B2B · Asset and seal operations', name: 'E-Seal', platform: 'Web · Office project', pitch: 'Bringing seal activity into one operational view', img: null },
   ];
 
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>';
 
-  function build() {
+  function media(p) {
+    if (p.img) return `<div class="pcard__media"><img src="${p.img}" alt="" loading="lazy" /></div>`;
+    return `<div class="pcard__media pcard__media--text"><span class="pcard__platform">${p.platform}</span><span class="pcard__pitch">${p.pitch}</span></div>`;
+  }
+
+  function build(home) {
+    const list = home ? PROJECTS.filter(p => p.featured) : PROJECTS;
     const section = document.createElement('section');
     section.className = 'pgrid';
-    section.setAttribute('aria-label', 'Selected projects');
-    section.innerHTML = '<ul class="pgrid__list">' + PROJECTS.map(p => `
+    section.setAttribute('aria-label', home ? 'Featured projects' : 'All projects');
+    section.innerHTML = '<ul class="pgrid__list">' + list.map(p => `
       <li class="pgrid__item${p.wide ? ' pgrid__item--wide' : ''}">
         <a class="pcard" href="${p.href}">
-          <div class="pcard__media"><img src="${p.img}" alt="" loading="lazy" /></div>
+          ${media(p)}
           <div class="pcard__foot">
             <h3 class="pcard__title"><span>${p.kicker}</span><strong>${p.name}</strong></h3>
             <span class="pcard__btn" aria-hidden="true">${ARROW}<span class="pcard__label">View case</span></span>
@@ -44,7 +54,7 @@
     const anchor = framerList || homeIntro;
     if (!anchor) return false;
     if (!grid) {
-      grid = build();
+      grid = build(!!homeIntro);
       if (homeIntro) grid.classList.add('pgrid--home');
     }
     if (grid.previousElementSibling !== anchor) anchor.after(grid);

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Curio Snap — Case Study | Pradeep UX Portfolio</title>
+  <meta name="description" content="Helping learners connect visual code with real-world robotics. Case study on a robotics and AI learning workspace by Pradeep." />
+  <link rel="icon" href="assets/images/avatar.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/bot-nav.css" />
+</head>
+<body class="cs-page">
+
+  <div class="cs-topbar">
+    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
+      <span class="cs-avatar"><img src="assets/images/avatar.jpg" alt="" /><i aria-hidden="true"></i></span>
+      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
+    </a>
+    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  </div>
+
+  <div class="cs-layout">
+    <aside class="cs-toc" aria-label="On this page">
+      <nav><ol></ol></nav>
+    </aside>
+
+    <main class="cs-article">
+      <header>
+        <a href="projects.html" class="cs-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          back
+        </a>
+        <p class="cs-eyebrow">Curio Snap · case study · <span data-read-time>4 min read</span></p>
+        <h1 class="cs-title">Helping learners connect visual code with real-world robotics</h1>
+        <p class="cs-summary">A robotics and AI learning workspace that brings blocks, code feedback, device connection and guided training into one experience.</p>
+
+        <dl class="cs-meta">
+          <div><dt>Sector</dt><dd>EdTech</dd></div>
+          <div><dt>Audience</dt><dd>Schools and direct learners</dd></div>
+          <div><dt>Platform</dt><dd>Web</dd></div>
+          <div><dt>Project</dt><dd>Freelance</dd></div>
+        </dl>
+      </header>
+
+      <section class="cs-block" id="product" data-toc="The product">
+        <p class="cs-eyebrow">The product</p>
+        <h2>What Curio Snap brings together</h2>
+        <p>Curio Snap is designed for students aged 8–15 learning robotics through visual programming, simulation and connected devices. The brief describes both school and direct-learner use. The design file explores a Blockly workspace, generated Python, device connection, hardware configuration and AI training workflows. My freelance work focused on making this technical environment easier to navigate and understand.</p>
+      </section>
+
+      <section class="cs-block" id="problem" data-toc="Problem framing">
+        <p class="cs-eyebrow">Problem framing</p>
+        <h2>The challenge</h2>
+        <p>A learner is asked to understand several things at once: which block to use, what the code means, how a device connects and whether the program or model worked. Exposing all technical detail at the same level can make the starting point unclear. The design challenge is to support a simple first action while keeping deeper tools available as the learner progresses.</p>
+      </section>
+
+      <section class="cs-block" id="users" data-toc="Users &amp; scope">
+        <p class="cs-eyebrow">Users and scope</p>
+        <h2>Who it serves</h2>
+        <p>Students are the primary learner audience described in the brief. Schools are an intended institutional audience, and direct learners are also in scope. Teacher dashboards and parent tracking are described as future possibilities, so they are not presented here as completed features. The case study focuses on the workspace, device connection and guided AI-learning sequence.</p>
+      </section>
+
+      <section class="cs-block" id="flow" data-toc="Task flow">
+        <p class="cs-eyebrow">Task flow</p>
+        <h2>How the work moves</h2>
+        <div class="cs-flowgroup">
+          <p class="cs-flowgroup-label">Robotics path</p>
+          <ol class="cs-steps">
+            <li>Open the workspace</li>
+            <li>Find blocks or an example</li>
+            <li>Build a program</li>
+            <li>Inspect generated code and feedback</li>
+            <li>Connect a device when needed</li>
+            <li>Upload or run</li>
+            <li>Observe the response</li>
+          </ol>
+        </div>
+        <div class="cs-flowgroup">
+          <p class="cs-flowgroup-label">AI path</p>
+          <ol class="cs-steps">
+            <li>Choose a supported board</li>
+            <li>Choose what to teach</li>
+            <li>Add examples</li>
+            <li>Train</li>
+            <li>Test with new input</li>
+            <li>Use the model in blocks or export to a device where supported</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="cs-block" id="decisions" data-toc="Design decisions">
+        <p class="cs-eyebrow">Design decisions</p>
+        <h2>Key decisions</h2>
+        <h3>1. The workspace separates making from inspecting.</h3>
+        <p>The toolbox, block canvas and code/output areas give learners recognizable places to find actions, assemble logic and inspect the result. Wireframes explore collapsed panels and alternative hardware-control placement, demonstrating attention to available working space.</p>
+        <h3>2. Device connection becomes an explicit choice.</h3>
+        <p>Bluetooth and USB connection options, connected states and upload screens expose the link between the digital workspace and physical hardware. Hardware dialogs also explore port selection and configuration rather than assuming the learner knows where each component is attached.</p>
+        <h3>3. AI training is organized as a sequence.</h3>
+        <p>The file includes board selection and training screens that move through input data, training and checking results. Learner-oriented language such as adding examples and testing the result helps make the sequence understandable without beginning with model architecture or deployment formats.</p>
+        <h3>4. Advanced tools remain available as the workflow expands.</h3>
+        <p>Code preview, terminal output, monitoring and model export provide depth for more involved tasks. Light and dark variants explore the same workspace in both themes.</p>
+      </section>
+
+      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
+        <p class="cs-eyebrow">Design outcome and next validation</p>
+        <h2>What the design achieves, and how to test it</h2>
+        <p>The designs establish a connection between visual programming, hardware and AI experimentation. The next evaluation should test whether a learner can build a first program, recover from a connection failure and explain why an AI prediction may be uncertain. Useful measures include first-task completion, help requests, connection recovery and testing on examples not used during training. No learning improvement or accuracy gain is claimed here.</p>
+      </section>
+
+      <section class="cs-block" id="reflection" data-toc="Reflection">
+        <p class="cs-eyebrow">Pausing to reflect</p>
+        <h2>Reflection</h2>
+        <blockquote class="cs-quote">An educational interface must help learners understand what they are doing as well as complete the action. The strongest direction in this work is a sequence that makes the relationship between examples, code, devices and feedback visible.</blockquote>
+      </section>
+
+      <footer class="cs-end">
+        <p class="cs-thanks">Thanks for reading</p>
+        <ul class="cs-links">
+          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+          <li><a href="projects.html"><span>all projects</span></a></li>
+        </ul>
+        <a href="facility-management.html" class="cs-next">
+          <div><small>next project</small><strong>Facility Management</strong></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/case-study.js"></script>
+  <script src="js/bot-nav.js"></script>
+</body>
+</html>

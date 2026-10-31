@@ -13,7 +13,7 @@
   const EMAIL = 'pradeep.tasp.0802@gmail.com';
   const LINKEDIN = 'https://www.linkedin.com/in/pradeep-t-1b97491aa/';
   const RESUME_PDF = 'https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf';
-  const CASE_STUDIES = ['lomo-track', 'social-dining', 'fitness-tracker', 'collaborative-learning'];
+  const CASE_STUDIES = ['lomo-track', 'curio-snap', 'facility-management', 'gcc-safe-subway', 'e-seal', 'social-dining', 'fitness-tracker', 'collaborative-learning'];
 
   /* --- Story lines per page: [scroll progress 0-1 where the line starts, text] --- */
   const STORIES = {

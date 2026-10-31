@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LOMO Track — Case Study | Pradeep UX Portfolio</title>
-  <meta name="description" content="Making tanker operations easier to monitor on the move. Case study on connected IoT tracking, route deviations, and operational exceptions by Pradeep." />
+  <meta name="description" content="Making tanker trips easier to understand on the move. Case study on trip monitoring, route exceptions and support workflows by Pradeep." />
   <link rel="icon" href="assets/images/avatar.jpg" type="image/jpeg" />
   <link rel="stylesheet" href="css/case-study.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
@@ -30,116 +30,86 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
           back
         </a>
-        <p class="cs-eyebrow">case study · <span data-read-time>5 min read</span></p>
-        <h1 class="cs-title">LOMO Track</h1>
-        <p class="cs-summary">Making tanker operations easier to monitor on the move.</p>
+        <p class="cs-eyebrow">LOMO Track · case study · <span data-read-time>4 min read</span></p>
+        <h1 class="cs-title">Making tanker trips easier to understand on the move</h1>
+        <p class="cs-summary">A mobile experience that connects trip status, vehicle location, route exceptions and support requests for logistics teams.</p>
 
         <dl class="cs-meta">
-          <div><dt>Role</dt><dd>UX / Product Designer</dd></div>
-          <div><dt>Industry</dt><dd>Enterprise IoT · Logistics</dd></div>
-          <div><dt>Timeline</dt><dd>3 months</dd></div>
+          <div><dt>Sector</dt><dd>B2B</dd></div>
+          <div><dt>Domain</dt><dd>Logistics and IoT</dd></div>
+          <div><dt>Platform</dt><dd>Mobile</dd></div>
+          <div><dt>Project</dt><dd>Office project</dd></div>
         </dl>
-
-        <figure class="cs-cover">
-          <img src="assets/images/mockup-1.jpg" alt="LOMO Track app overview" />
-        </figure>
       </header>
 
-      <section class="cs-block" id="overview" data-toc="Overview">
+      <section class="cs-block" id="product" data-toc="The product">
         <p class="cs-eyebrow">The product</p>
-        <h2>Making complex trip information easier to understand</h2>
-        <p>LOMO Track is a mobile application for operations teams monitoring tanker trips, vehicle movement, and connected IoT lock systems. The product brings trip status, source and destination, travelled distance, live GPS vehicle location, route deviations, and operational exceptions into a unified mobile experience.</p>
-        <p>My role was to organize this dense operational information into a clear, scannable flow that operators could immediately interpret while monitoring high-stakes transport journeys in real time.</p>
+        <h2>What LOMO Track brings together</h2>
+        <p>LOMO Track brings trip monitoring into a mobile workflow. The designs include an administrator’s trip list, an assigned-trip experience, trip details, location views, route exceptions and support tickets. The central design challenge was deciding what users need to understand immediately and what they can open when investigating a particular journey.</p>
       </section>
 
-      <section class="cs-block" id="challenge" data-toc="The Challenge">
-        <p class="cs-eyebrow">Problem statement</p>
-        <h2>The challenge wasn't showing more data. It was helping users understand what matters.</h2>
-        <p>A fleet-tracking ecosystem contains dozens of critical data points at the exact same moment: vehicle status, trip info, designated routes, GPS telemetry, actual distance, hardware tamper sensors, and driving safety events.</p>
-        <p>Displaying all of this equally on a mobile screen overwhelmed users and made scanning almost impossible during rapid field checks. To cut through the noise, I anchored the experience around three core operational questions:</p>
-        <div class="cs-callout">
-          <ul class="cs-list">
-            <li>Where is the vehicle right now?</li>
-            <li>Is the trip progressing normally along its approved route?</li>
-            <li>Has an exception occurred that requires urgent attention?</li>
-          </ul>
-        </div>
-        <p style="margin-top: 20px;">These three questions established what should appear first on the primary screens, and what detail could remain secondary when drilling down.</p>
+      <section class="cs-block" id="problem" data-toc="Problem framing">
+        <p class="cs-eyebrow">Problem framing</p>
+        <h2>The challenge</h2>
+        <p>A vehicle’s location is only one part of an operational decision. Users also need the trip’s source and destination, its current status and the events associated with it. On a small screen, these details compete for attention. The design addresses that complexity by separating the trip overview from deeper map and exception views while maintaining the vehicle and journey context.</p>
       </section>
 
-      <section class="cs-block" id="flow" data-toc="System &amp; Flow">
-        <p class="cs-eyebrow">Architecture &amp; system flow</p>
-        <h2>Designing around the journey, not individual screens</h2>
-        <p>Instead of treating Home, Trips, Tracking, and Exceptions as disconnected screens, I mapped the entire experience to the natural mental model an operations user follows when checking a vehicle:</p>
-        <div class="cs-flow" aria-label="System flow">
-          <span>Tanker Hardware</span><i>→</i>
-          <span>IoT Smart Lock</span><i>→</i>
-          <span>GPS &amp; Trip Telemetry</span><i>→</i>
-          <span>LOMO Platform</span><i>→</i>
-          <span class="is-key">Operations Mobile App</span>
-        </div>
-        <p style="margin-top: 20px;">The operational task flow for operators was structured sequentially:</p>
-        <div class="cs-flow" aria-label="Operator task flow">
-          <span>Sign In</span><i>→</i>
-          <span>Find Trip</span><i>→</i>
-          <span>Understand Status</span><i>→</i>
-          <span>Locate Vehicle</span><i>→</i>
-          <span>Inspect Route</span><i>→</i>
-          <span class="is-key">Review Exceptions</span>
-        </div>
-
-        <h3>Core UX principles</h3>
-        <ul class="cs-list">
-          <li><strong>Give trip context before detailed map information:</strong> A map without trip context is just coordinates; context tells the operator what those coordinates mean.</li>
-          <li><strong>Show essentials first:</strong> Allow operators to drill deeper on demand rather than front-loading every telemetry metric.</li>
-          <li><strong>Keep expected movement visually distinct from abnormal movement:</strong> Forward and reverse routes are quiet; deviations stand out prominently.</li>
-          <li><strong>Keep exceptions connected to the trip &amp; location:</strong> Harsh braking or tamper alerts are useless in an isolated notification tray—they belong on the map where they occurred.</li>
-        </ul>
+      <section class="cs-block" id="users" data-toc="Users &amp; scope">
+        <p class="cs-eyebrow">Users and scope</p>
+        <h2>Who it serves</h2>
+        <p>The file distinguishes administrator and user authentication and shows both a multi-trip list and an assigned-trip home screen. The experience therefore supports two different starting points: finding a trip across a fleet and checking the trip relevant to an individual user. The case study focuses on these visible workflows rather than claiming a complete production permission model.</p>
       </section>
 
-      <section class="cs-block" id="decisions" data-toc="Design Decisions">
-        <p class="cs-eyebrow">Design solutions</p>
-        <h2>Key design decisions that transformed scannability</h2>
-
-        <h3>1. Trip context before map inspection</h3>
-        <p>Tracking products frequently default to an edge-to-edge map. But operators primarily need to know: <em>Which truck? What load? How far along?</em></p>
-        <p>I structured the Home / Current Trip screen as a compact executive trip summary with a clear information hierarchy:</p>
-        <div class="cs-callout">
-          <ol class="cs-list">
-            <li>Vehicle ID &amp; Operational Status</li>
-            <li>Source Location</li>
-            <li>Destination Target</li>
-            <li>Distance Progress (e.g., 96 KM Actual)</li>
-            <li>Consignment / Invoice Reference</li>
-            <li>Action: Open Live Tracking Map</li>
+      <section class="cs-block" id="flow" data-toc="Task flow">
+        <p class="cs-eyebrow">Task flow</p>
+        <h2>How the work moves</h2>
+        <div class="cs-flowgroup">
+          <p class="cs-flowgroup-label">Administrator</p>
+          <ol class="cs-steps">
+            <li>Sign in</li>
+            <li>Search or filter trips</li>
+            <li>Select a trip</li>
+            <li>Review trip information</li>
+            <li>Inspect the route</li>
+            <li>Open an exception</li>
+            <li>Return to the list</li>
           </ol>
         </div>
-
-        <h3>2. Turning the map into an operational decision tool</h3>
-        <p>A pin on a map answers only one question. The more important question is: <em>Is this vehicle where it was authorized to be?</em></p>
-        <p>The tracking view connects live coordinates with the scheduled journey through three distinct visual states:</p>
-        <ul class="cs-list">
-          <li><strong>Forward Route:</strong> Expected, authorized path toward destination.</li>
-          <li><strong>Reverse Route:</strong> Return journey following verified waypoints.</li>
-          <li><strong>Route Deviation:</strong> Standout warning showing movement outside geo-fenced corridors.</li>
-        </ul>
-
-        <h3>3. Connecting exceptions directly to the active route</h3>
-        <p>When harsh driving occurs (HARSH_BRAKING, HARSH_MANOEUVRING, HARSH_ACCELERATION), operators need to see the incident in the context of the journey.</p>
-        <div class="cs-callout">
-          <p class="cs-callout-title">Event + Location + Trip = Context</p>
-          <p>By embedding an interactive bottom sheet directly on the tracking view, operators can inspect event counts, timestamps, and road conditions without losing the active vehicle in view.</p>
+        <div class="cs-flowgroup">
+          <p class="cs-flowgroup-label">Assigned-trip user</p>
+          <ol class="cs-steps">
+            <li>Sign in</li>
+            <li>Review assigned trip</li>
+            <li>Open location or navigation</li>
+            <li>Raise a ticket when help is needed</li>
+            <li>Review ticket status</li>
+          </ol>
         </div>
-
-        <h3>4. Trip Playback for incident investigations</h3>
-        <p>When an audit occurs, current position does not explain what happened 2 hours prior. Trip Playback provides an intuitive player control bar (Play, Pause, Scrub, Reset, and Speed multipliers: 1x, 2x, 5x) to review historical vehicle telemetry effortlessly.</p>
       </section>
 
-      <section class="cs-block" id="takeaways" data-toc="Takeaways">
+      <section class="cs-block" id="decisions" data-toc="Design decisions">
+        <p class="cs-eyebrow">Design decisions</p>
+        <h2>Key decisions</h2>
+        <h3>1. Trip context comes first.</h3>
+        <p>The trip summary groups vehicle identity, journey endpoints, status and distance before the user moves into detailed tracking. This gives the map a purpose: inspecting a journey the user already understands.</p>
+        <h3>2. Route views distinguish different parts of the journey.</h3>
+        <p>Forward, reverse and deviation labels give users a way to inspect route information in smaller groups. Event lists connect categories such as harsh braking, overspeed and halt with timestamps and a Map action, helping users move from a summary into a specific incident.</p>
+        <h3>3. Support stays connected to the trip.</h3>
+        <p>The ticket creation and created-ticket screens retain vehicle and route information alongside the issue type and status. The intended benefit is to reduce the amount of context a user must reconstruct when reporting a tracking issue.</p>
+        <h3>4. The design includes situations beyond an active trip.</h3>
+        <p>No-trip, loading, restricted-access and application-update screens make system state explicit. A playback screen adds Pause and Reset controls for reviewing recorded movement.</p>
+      </section>
+
+      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
+        <p class="cs-eyebrow">Design outcome and next validation</p>
+        <h2>What the design achieves, and how to test it</h2>
+        <p>The design provides distinct paths from trip overview to investigation and support. The next validation should test whether users can find a vehicle, explain an exception and raise a ticket without losing the original trip context. Useful measures are task completion, time to locate the relevant event and incorrect trip selections. These are proposed measures, not reported results.</p>
+      </section>
+
+      <section class="cs-block" id="reflection" data-toc="Reflection">
         <p class="cs-eyebrow">Pausing to reflect</p>
-        <h2>What this project changed in the way I design</h2>
-        <p>Working on LOMO Track pushed me beyond aesthetic mobile design. The real difficulty wasn't creating another sleek dark-mode UI—it was understanding how hardware locks, GPS sensors, telemetry packets, trip schedules, and field operations interact.</p>
-        <blockquote class="cs-quote">"Tracking tells users where the vehicle is. Good UX helps them understand what is happening."</blockquote>
+        <h2>Reflection</h2>
+        <blockquote class="cs-quote">This project shows how information hierarchy can turn a dense tracking interface into a sequence of operational questions. A useful trip overview helps users decide what to inspect next, while the detailed views preserve the context needed to understand it.</blockquote>
       </section>
 
       <footer class="cs-end">
@@ -149,8 +119,8 @@
           <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
           <li><a href="projects.html"><span>all projects</span></a></li>
         </ul>
-        <a href="fitness-tracker.html" class="cs-next">
-          <div><small>next project</small><strong>Fitness Tracker App Revamp</strong></div>
+        <a href="curio-snap.html" class="cs-next">
+          <div><small>next project</small><strong>Curio Snap</strong></div>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </a>
       </footer>

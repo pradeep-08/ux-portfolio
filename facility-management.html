@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Facility Management — Case Study | Pradeep UX Portfolio</title>
+  <meta name="description" content="Connecting facility tasks from assignment to completion. Case study on a facility operations mobile workflow by Pradeep." />
+  <link rel="icon" href="assets/images/avatar.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/bot-nav.css" />
+</head>
+<body class="cs-page">
+
+  <div class="cs-topbar">
+    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
+      <span class="cs-avatar"><img src="assets/images/avatar.jpg" alt="" /><i aria-hidden="true"></i></span>
+      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
+    </a>
+    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  </div>
+
+  <div class="cs-layout">
+    <aside class="cs-toc" aria-label="On this page">
+      <nav><ol></ol></nav>
+    </aside>
+
+    <main class="cs-article">
+      <header>
+        <a href="projects.html" class="cs-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          back
+        </a>
+        <p class="cs-eyebrow">Facility Management · case study · <span data-read-time>4 min read</span></p>
+        <h1 class="cs-title">Connecting facility tasks from assignment to completion</h1>
+        <p class="cs-summary">A mobile workflow for organizing facilities, assigning work and recording activity through connected devices and guided checklists.</p>
+
+        <dl class="cs-meta">
+          <div><dt>Sector</dt><dd>B2B</dd></div>
+          <div><dt>Domain</dt><dd>Facility operations</dd></div>
+          <div><dt>Platform</dt><dd>Mobile</dd></div>
+          <div><dt>Project</dt><dd>Office project</dd></div>
+        </dl>
+      </header>
+
+      <section class="cs-block" id="product" data-toc="The product">
+        <p class="cs-eyebrow">The product</p>
+        <h2>What Facility Management brings together</h2>
+        <p>The Facility Management designs connect administrative setup with day-to-day field work. Administrators organize locations, buildings, floors and facilities, create schedules and map users to work. Field users review assigned tasks, connect an eBaton, record activity and complete checklists. The interface also includes maintenance history, complaints and reassignment workflows.</p>
+      </section>
+
+      <section class="cs-block" id="problem" data-toc="Problem framing">
+        <p class="cs-eyebrow">Problem framing</p>
+        <h2>The challenge</h2>
+        <p>Completing a task involves more than marking it done. A worker must identify the correct facility, understand the required work and record the result. Supervisors need to see who is responsible and which work remains outstanding. Device connection adds another dependency. The design challenge is to make those dependencies understandable without turning routine maintenance into a complicated form-filling exercise.</p>
+      </section>
+
+      <section class="cs-block" id="users" data-toc="Users &amp; scope">
+        <p class="cs-eyebrow">Users and scope</p>
+        <h2>Who it serves</h2>
+        <p>The administrator experience focuses on configuration, assignment and oversight. The field-user experience focuses on today’s tasks and activity recording. This separation allows the same system to support setup and execution without giving both roles the same starting screen.</p>
+      </section>
+
+      <section class="cs-block" id="flow" data-toc="Task flow">
+        <p class="cs-eyebrow">Task flow</p>
+        <h2>How the work moves</h2>
+        <div class="cs-flowgroup">
+          <p class="cs-flowgroup-label">Administrator</p>
+          <ol class="cs-steps">
+            <li>Create company hierarchy</li>
+            <li>Add facility</li>
+            <li>Map its identifier</li>
+            <li>Assign users and schedule</li>
+            <li>Monitor work</li>
+            <li>Reassign selected tasks when necessary</li>
+          </ol>
+        </div>
+        <div class="cs-flowgroup">
+          <p class="cs-flowgroup-label">Field user</p>
+          <ol class="cs-steps">
+            <li>Review assigned task</li>
+            <li>Connect device or choose the available manual path</li>
+            <li>Identify facility</li>
+            <li>Check in</li>
+            <li>Complete checklist and reasons</li>
+            <li>Check out</li>
+            <li>Review recorded activity</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="cs-block" id="decisions" data-toc="Design decisions">
+        <p class="cs-eyebrow">Design decisions</p>
+        <h2>Key decisions</h2>
+        <h3>1. The location hierarchy gives tasks a physical context.</h3>
+        <p>Location, building and floor labels help distinguish facilities that may otherwise have similar names. Facility detail screens bring together mapping, users, schedules and maintenance information so the relationships can be reviewed in one place.</p>
+        <h3>2. Connection state is part of the workflow.</h3>
+        <p>The file includes device discovery, connected, disconnected, reconnecting and low-battery screens. It also shows a choice between connecting an eBaton and recording manually when no device is connected. This makes the dependency visible rather than leaving users to guess why an action is unavailable.</p>
+        <h3>3. Checklists turn completion into a more specific record.</h3>
+        <p>Task screens associate the facility, user, time and device with checklist answers and reasons. The check-in and check-out sequence provides a clear distinction between beginning work and recording its completion.</p>
+        <h3>4. Assignment can change without losing the task context.</h3>
+        <p>The user-swapping flow selects a current assignee, a backup assignee and the relevant tasks. Complaint screens extend the activity record with a category, facility or asset, message and up to two photographs.</p>
+      </section>
+
+      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
+        <p class="cs-eyebrow">Design outcome and next validation</p>
+        <h2>What the design achieves, and how to test it</h2>
+        <p>The design connects configuration, task execution and supervisory review in a coherent operational model. Validation should cover a complete maintenance task, a disconnected device, an unknown facility identifier and a reassignment. Measure completion errors, recovery success and whether supervisors can correctly identify outstanding work.</p>
+      </section>
+
+      <section class="cs-block" id="reflection" data-toc="Reflection">
+        <p class="cs-eyebrow">Pausing to reflect</p>
+        <h2>Reflection</h2>
+        <blockquote class="cs-quote">The strongest part of this project is the connection between digital records and physical work. Clear facility identity, visible device state and explicit completion steps all contribute to a record that another person can understand later.</blockquote>
+      </section>
+
+      <footer class="cs-end">
+        <p class="cs-thanks">Thanks for reading</p>
+        <ul class="cs-links">
+          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+          <li><a href="projects.html"><span>all projects</span></a></li>
+        </ul>
+        <a href="gcc-safe-subway.html" class="cs-next">
+          <div><small>next project</small><strong>GCC Safe Subway</strong></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/case-study.js"></script>
+  <script src="js/bot-nav.js"></script>
+</body>
+</html>

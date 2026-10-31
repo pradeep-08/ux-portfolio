@@ -89,6 +89,43 @@ body[toggle-theme="dark"] .pgrid {
   transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+/* Text cover: used until a verified screen export exists for the project */
+.pcard__media--text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px;
+  background-image: radial-gradient(var(--pg-border) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-color: var(--pg-media);
+}
+
+.pcard__platform {
+  align-self: flex-start;
+  padding: 5px 10px;
+  font-family: "DM Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  color: var(--pg-sub);
+  background: var(--pg-card);
+  border: 1px solid var(--pg-border);
+  border-radius: 999px;
+}
+
+.pcard__pitch {
+  max-width: 24ch;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--pg-text);
+}
+
+.pgrid__item--wide .pcard__pitch {
+  max-width: 20ch;
+  font-size: 30px;
+}
+
 .pcard:hover .pcard__media img,
 .pcard:focus-visible .pcard__media img {
   transform: scale(1.03);
@@ -226,6 +263,13 @@ body[toggle-theme="dark"] .pgrid {
   .pgrid__item--wide .pcard__media {
     aspect-ratio: 4 / 3;
     border-radius: 14px;
+  }
+  .pcard__media--text {
+    padding: 16px;
+  }
+  .pcard__pitch,
+  .pgrid__item--wide .pcard__pitch {
+    font-size: 21px;
   }
   .pcard__foot {
     padding: 0 6px;
