@@ -4,7 +4,9 @@
    [data-bn-theme] on .botnav (set from Framer's toggle-theme or data-theme).
    ========================================================================== */
 
-.botnav {
+/* Shared tokens: the bar and the stool corner (.botseat) where the bot can sit */
+.botnav,
+.botseat {
   --bn-bar: #0d0d0d;
   --bn-text: #ffffff;
   --bn-muted: #9b9b9b;
@@ -26,7 +28,9 @@
   --bn-head-h: 36px;
   --bn-fillet: 12px;
   --bn-x: 0px;
+}
 
+.botnav {
   position: fixed;
   left: 50%;
   bottom: calc(18px + env(safe-area-inset-bottom, 0px));
@@ -37,7 +41,8 @@
   max-width: calc(100vw - 16px);
 }
 
-.botnav[data-bn-theme="dark"] {
+.botnav[data-bn-theme="dark"],
+.botseat[data-bn-theme="dark"] {
   --bn-bar: #f2f2f0;
   --bn-text: #111111;
   --bn-muted: #6b6b6b;
@@ -373,6 +378,348 @@
   }
   .botnav__icon {
     width: 30px;
+  }
+}
+
+/* ==========================================================================
+   STOOL CORNER (desktop): drag the bot off the bar onto the stool and it sits
+   there and narrates the page. Markup and behaviour live in js/bot-nav.js.
+   ========================================================================== */
+
+/* The head is the drag handle on pointer devices wide enough for the stool */
+@media (min-width: 810px) and (hover: hover) and (pointer: fine) {
+  .botnav__head {
+    pointer-events: auto;
+    cursor: grab;
+  }
+}
+
+.botseat {
+  position: fixed;
+  right: 40px;
+  bottom: 28px;
+  z-index: 9991;
+  width: 96px;
+  height: 120px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  pointer-events: none;
+}
+
+/* Stool: round seat, two splayed legs and a footrest */
+.botseat__stool {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 76px;
+  height: 64px;
+  margin-left: -38px;
+  opacity: 0;
+  transform: translateY(16px) scale(0.9);
+  transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.botseat.is-open .botseat__stool,
+.botseat.is-seated .botseat__stool {
+  opacity: 1;
+  transform: none;
+}
+
+.botseat__seat {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  border-radius: 8px;
+  background: var(--bn-bar);
+  box-shadow: var(--bn-shadow);
+}
+
+.botseat__leg {
+  position: absolute;
+  top: 8px;
+  width: 6px;
+  height: 56px;
+  border-radius: 3px;
+  background: var(--bn-bar);
+}
+
+.botseat__leg:nth-child(2) {
+  left: 14px;
+  transform: rotate(9deg);
+  transform-origin: top center;
+}
+
+.botseat__leg:nth-child(3) {
+  right: 14px;
+  transform: rotate(-9deg);
+  transform-origin: top center;
+}
+
+.botseat__rest {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 38px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bn-bar);
+}
+
+/* Drop-target hint while dragging */
+.botseat.is-open .botseat__seat {
+  outline: 2px dashed transparent;
+  outline-offset: 6px;
+  transition: outline-color 0.2s ease;
+}
+
+/* While dragging, the stool is marked as where the bot will go */
+.botseat.is-open .botseat__seat {
+  outline-color: var(--bn-accent);
+}
+
+/* Flight between bar, cursor and stool: left/top glide while the bot hops */
+.botnav__bot.is-flying {
+  position: fixed;
+  z-index: 9992;
+  transition: left var(--fly-ms, 500ms) cubic-bezier(0.3, 0.7, 0.4, 1), top var(--fly-ms, 500ms) cubic-bezier(0.3, 0.7, 0.4, 1);
+  animation: botnav-hop var(--fly-ms, 500ms) ease-in-out;
+}
+
+@keyframes botnav-hop {
+  0% { transform: translateY(0); }
+  45% { transform: translateY(-46px); }
+  100% { transform: translateY(0); }
+}
+
+/* --- Stick arms and legs (case-study pages, only while off the bar) --- */
+.botnav__limb {
+  display: none;
+  position: absolute;
+  z-index: -1;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--bn-bar);
+  transition: transform 0.25s ease;
+}
+
+.botnav__bot.has-limbs.is-free .botnav__limb {
+  display: block;
+}
+
+.botnav__limb--arm-l,
+.botnav__limb--arm-r {
+  top: 48%;
+  height: 19px;
+  transform-origin: top center;
+}
+
+/* Arms hang from the outer edges of the head, angled down and out */
+.botnav__limb--arm-l {
+  left: -2px;
+  transform: rotate(38deg);
+}
+
+.botnav__limb--arm-r {
+  right: -2px;
+  transform: rotate(-38deg);
+}
+
+.botnav__limb--leg-l,
+.botnav__limb--leg-r {
+  top: calc(100% - 4px);
+  height: 19px;
+  transform-origin: top center;
+}
+
+.botnav__limb--leg-l {
+  left: 34%;
+  transform: rotate(8deg);
+}
+
+.botnav__limb--leg-r {
+  right: 34%;
+  transform: rotate(-8deg);
+}
+
+/* Feet */
+.botnav__limb--leg-l::after,
+.botnav__limb--leg-r::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  width: 8px;
+  height: 4px;
+  border-radius: 3px;
+  background: inherit;
+}
+
+.botnav__limb--leg-l::after {
+  right: -1px;
+}
+
+.botnav__limb--leg-r::after {
+  left: -1px;
+}
+
+/* Dragging: legs dangle and kick */
+.botnav__bot.is-dragging .botnav__limb--leg-l {
+  animation: botleg-kick 0.5s ease-in-out infinite alternate;
+}
+
+.botnav__bot.is-dragging .botnav__limb--leg-r {
+  animation: botleg-kick 0.5s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes botleg-kick {
+  from { transform: rotate(18deg); }
+  to { transform: rotate(-18deg); }
+}
+
+/* Flying: arms up */
+.botnav__bot.is-flying .botnav__limb--arm-l {
+  transform: rotate(140deg);
+}
+
+.botnav__bot.is-flying .botnav__limb--arm-r {
+  transform: rotate(-140deg);
+}
+
+/* Seated: legs hang over the front of the stool, the right arm gestures while talking */
+.botnav__bot.is-seated .botnav__limb--leg-l {
+  transform: rotate(2deg);
+}
+
+.botnav__bot.is-seated .botnav__limb--leg-r {
+  transform: rotate(-2deg);
+}
+
+.botnav__bot.is-seated.is-talking .botnav__limb--arm-r {
+  animation: botarm-talk 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes botarm-talk {
+  from { transform: rotate(-38deg); }
+  to { transform: rotate(-120deg); }
+}
+
+/* --- Bot while detached (dragging or seated) --- */
+.botnav__bot.is-free {
+  /* Own stacking layer: limbs sit behind the head but in front of the stool */
+  z-index: 1;
+  transition: none;
+  transform: none;
+}
+
+.botnav__bot.is-free .botnav__head {
+  border-radius: 21px 21px 16px 16px;
+  box-shadow: var(--bn-shadow);
+  cursor: grab;
+  pointer-events: auto;
+}
+
+.botnav__bot.is-free .botnav__head::before,
+.botnav__bot.is-free .botnav__head::after {
+  display: none;
+}
+
+.botnav__bot.is-free .botnav__face {
+  bottom: 5px;
+  border-radius: 16px;
+}
+
+.botnav__bot.is-dragging {
+  position: fixed;
+  z-index: 9992;
+}
+
+.botnav__bot.is-dragging .botnav__head {
+  cursor: grabbing;
+  transform: rotate(-6deg) scale(1.06);
+}
+
+.botnav__bot.is-seated {
+  position: absolute;
+  left: 50%;
+  top: auto;
+  bottom: 62px;
+  margin-left: calc(var(--bn-head-w) / -2);
+}
+
+.botnav__bot.is-seated .botnav__head {
+  animation: botseat-idle 3.2s ease-in-out infinite;
+}
+
+@keyframes botseat-idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Back on the bar: small pop so the return reads as an arrival */
+.botnav__bot.is-returning .botnav__head {
+  animation: botnav-return 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@keyframes botnav-return {
+  0% { transform: translateY(-14px) scale(0.85); }
+  100% { transform: none; }
+}
+
+/* Seated narration: a larger bubble to the bot's upper left */
+.botnav__bot.is-seated .botnav__bubble {
+  left: auto;
+  right: 0;
+  bottom: calc(100% + 14px);
+  width: 300px;
+  max-width: min(300px, calc(100vw - 80px));
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  border-radius: 16px;
+  transform: translateY(6px) scale(0.96);
+  transform-origin: bottom right;
+}
+
+.botnav__bot.is-seated .botnav__bubble.is-visible {
+  transform: none;
+}
+
+.botnav__bot.is-seated .botnav__bubble::after {
+  left: auto;
+  right: 26px;
+}
+
+.botnav__bubble-label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: "DM Mono", ui-monospace, Menlo, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--bn-accent-fill);
+}
+
+.botnav[data-bn-theme="dark"] .botnav__bubble-label,
+.botseat[data-bn-theme="dark"] .botnav__bubble-label {
+  color: var(--bn-accent);
+}
+
+@media (max-width: 809.98px) {
+  .botseat {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botnav__bot.is-seated .botnav__head,
+  .botnav__bot.is-returning .botnav__head,
+  .botnav__bot.is-flying,
+  .botnav__limb {
+    animation: none !important;
+  }
+  .botseat__stool {
+    transition: opacity 0.2s ease;
   }
 }
 

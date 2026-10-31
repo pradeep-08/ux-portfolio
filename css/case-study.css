@@ -579,6 +579,156 @@ body.cs-page {
   color: var(--cs-accent);
 }
 
+/* --- Reading progress ring with section menu (built by js/case-study.js) --- */
+/* Desktop: fixed just below the theme toggle; js/case-study.js sets --ring-right
+   so the ring's centre lines up with the toggle's */
+.cs-progress {
+  position: fixed;
+  top: 100px;
+  right: var(--ring-right, 28px);
+  z-index: 9980;
+}
+
+.cs-progress__btn {
+  position: relative;
+  display: block;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--cs-surface);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+[data-theme="dark"] .cs-progress__btn {
+  background: #050505;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.cs-progress__ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.cs-progress__ring circle {
+  fill: none;
+  stroke-width: 4;
+}
+
+.cs-progress__track {
+  stroke: var(--cs-border);
+}
+
+[data-theme="dark"] .cs-progress__track {
+  stroke: #2e2e30;
+}
+
+.cs-progress__bar {
+  stroke: var(--cs-text);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.15s linear;
+}
+
+.cs-progress__badge {
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 18px;
+  margin-left: -11px;
+  border-radius: 4px;
+  background: var(--cs-text);
+  color: var(--cs-bg);
+  transition: transform 0.2s ease;
+}
+
+.cs-progress__badge svg {
+  width: 14px;
+  height: 14px;
+}
+
+.cs-progress__btn:hover .cs-progress__badge,
+.cs-progress.is-open .cs-progress__badge {
+  transform: translateY(-2px);
+}
+
+.cs-progress__menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px);
+  min-width: 220px;
+  padding: 14px 16px 16px;
+  background: var(--cs-surface);
+  border: 1px solid var(--cs-border);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+}
+
+.cs-progress__title {
+  font-family: var(--cs-mono);
+  font-size: 12px;
+  color: var(--cs-muted);
+}
+
+.cs-progress__menu ol {
+  margin-top: 8px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cs-progress__menu a {
+  display: block;
+  padding: 5px 0;
+  font-size: 14px;
+  color: var(--cs-faint);
+  text-decoration: none;
+}
+
+.cs-progress__menu a:hover,
+.cs-progress__menu a.is-active {
+  color: var(--cs-text);
+}
+
+.cs-progress__menu a.is-active {
+  font-weight: 500;
+}
+
+/* Narrow screens: top-right, shown once the page header has scrolled away */
+@media (max-width: 960px) {
+  .cs-progress {
+    right: 16px;
+    top: 16px;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .cs-progress.is-scrolled,
+  .cs-progress.is-open {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .cs-progress__btn {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media print {
+  .cs-progress {
+    display: none;
+  }
+}
+
 /* --- Tablet / phone: single column, rail hidden --- */
 @media (max-width: 960px) {
   .cs-layout {

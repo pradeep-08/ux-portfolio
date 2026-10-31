@@ -9,6 +9,12 @@ body.has-project-grid .framer-6v64ie {
   display: none !important;
 }
 
+/* Projects page heading: Framer leaves 150px above and 100px below the title */
+body.has-project-grid .framer-6subr0 {
+  padding-top: 72px !important;
+  padding-bottom: 48px !important;
+}
+
 .pgrid {
   --pg-card: #ffffff;
   --pg-border: #e8e8e6;
@@ -38,8 +44,9 @@ body[toggle-theme="dark"] .pgrid {
 }
 
 .pgrid__list {
+  /* Left-aligned so the grid shares the heading's left edge on wide screens */
   max-width: 1240px;
-  margin: 0 auto;
+  margin: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
@@ -245,7 +252,7 @@ body[toggle-theme="dark"] .pgrid {
 /* --- Phone: one column --- */
 @media (max-width: 809.98px) {
   .pgrid {
-    padding: 0 16px 120px;
+    padding: 0 20px 120px;
   }
   .pgrid__list {
     grid-template-columns: minmax(0, 1fr);

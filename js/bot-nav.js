@@ -83,11 +83,16 @@
     const items = [...nav.querySelectorAll('[data-tip]')];
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    const bubbleLabel = nav.querySelector('.botnav__bubble-label');
+
     let hoverItem = null;
     let bubbleTimer = null;
+    let typeTimer = null;
     let lastStoryIndex = -1;
     let lastSaidAt = 0;
     let pendingStory = null;
+    let free = false; // true while the bot is off the bar (dragging or seated)
+    let seated = false;
 
     syncTheme(nav);
     watchTheme(nav);
@@ -112,6 +117,7 @@
     }
 
     function moveTo(x) {
+      if (free) return;
       nav.style.setProperty('--bn-x', clampX(x - headWidth() / 2) + 'px');
       if (bubble.classList.contains('is-visible')) keepBubbleOnScreen();
     }
@@ -131,9 +137,12 @@
     }
 
     /* --- Speech bubble --- */
-    function say(text, duration, success) {
+    function say(text, duration, success, label) {
       clearTimeout(bubbleTimer);
+      clearInterval(typeTimer);
       bubbleText.textContent = text;
+      bubbleLabel.textContent = label || '';
+      bubbleLabel.hidden = !label;
       bubble.classList.remove('is-multiline');
       bubble.classList.toggle('is-success', !!success);
       bubble.style.setProperty('--bubble-shift', '0px');
@@ -142,6 +151,25 @@
 
       bubble.classList.toggle('is-multiline', bubbleText.offsetHeight > 24);
       keepBubbleOnScreen();
+
+      // Seated narration types itself out like the bot is telling the story.
+      // The bubble is sized with the full text first so it doesn't grow while typing.
+      if (seated && !reduceMotion) {
+        bot.classList.add('is-talking');
+        const h = bubbleText.offsetHeight;
+        bubbleText.style.minHeight = h + 'px';
+        let i = 0;
+        bubbleText.textContent = '';
+        typeTimer = setInterval(() => {
+          i += 2;
+          bubbleText.textContent = text.slice(0, i);
+          if (i >= text.length) {
+            clearInterval(typeTimer);
+            bot.classList.remove('is-talking');
+            bubbleText.style.minHeight = '';
+          }
+        }, 18);
+      }
 
       if (duration) {
         bubbleTimer = setTimeout(hideBubble, duration);
@@ -157,6 +185,10 @@
     // (--bn-x) and layout sizes rather than measured, so slide/scale animations
     // in progress can't skew the result.
     function keepBubbleOnScreen() {
+      if (free) {
+        bubble.style.setProperty('--bubble-shift', '0px');
+        return;
+      }
       const margin = 8;
       const botX = parseFloat(nav.style.getPropertyValue('--bn-x')) || 0;
       const center = bar.getBoundingClientRect().left + botX + headWidth() / 2;
@@ -171,6 +203,10 @@
     const story = (STORIES[page.key] || []).map(([at, text]) => [at, text.replace('{name}', page.name)]);
 
     function tellStory() {
+      if (seated) {
+        narrate();
+        return;
+      }
       if (!story.length || hoverItem) return;
       const progress = scrollProgress();
       let index = 0;
@@ -225,7 +261,7 @@
       moveWithScroll();
       tellStory();
 
-      if (!reduceMotion) {
+      if (!reduceMotion && !free) {
         bot.classList.add('is-bobbing');
         lookAt(0, goingDown ? 3 : -3);
       }
@@ -241,6 +277,7 @@
     /* --- Hover & focus on items --- */
     items.forEach(item => {
       const enter = () => {
+        if (free) return; // the bot is on the stool, not on the bar
         hoverItem = item;
         clearTimeout(pendingStory);
         moveTo(centerOf(item));
@@ -273,7 +310,211 @@
 
     nav.querySelector('.botnav__resume').addEventListener('click', () => smile(900));
 
-    /* --- Start --- */
+    /* --- Seated narration ---
+       Case studies: one line per section, taken from the page's own text, spoken
+       when that section is being read. Other pages: the regular story lines. */
+    const narration = buildNarration(page);
+    let lastNarrated = -1;
+
+    function narrate() {
+      if (narration.length) {
+        const line = window.innerHeight * 0.35;
+        let index = 0;
+        narration.forEach((n, i) => { if (n.el.getBoundingClientRect().top <= line) index = i; });
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) index = narration.length - 1;
+        if (index === lastNarrated) return;
+        lastNarrated = index;
+        clearTimeout(pendingStory);
+        const wait = Math.max(0, 700 - (Date.now() - lastSaidAt));
+        pendingStory = setTimeout(() => say(narration[index].text, 0, false, narration[index].label), wait);
+        return;
+      }
+      // Pages without sections: reuse the scroll story, kept on screen
+      const progress = scrollProgress();
+      let index = 0;
+      story.forEach(([at], i) => { if (progress >= at) index = i; });
+      if (index === lastNarrated) return;
+      lastNarrated = index;
+      clearTimeout(pendingStory);
+      pendingStory = setTimeout(() => say(story[index][1], 0), Math.max(0, 700 - (Date.now() - lastSaidAt)));
+    }
+
+    /* --- Drag to the stool (desktop) --- */
+    const canSeat = window.matchMedia('(min-width: 810px) and (hover: hover) and (pointer: fine)');
+    const seat = document.createElement('div');
+    seat.className = 'botseat';
+    seat.setAttribute('aria-hidden', 'true');
+    seat.innerHTML = '<div class="botseat__stool"><span class="botseat__seat"></span><span class="botseat__leg"></span><span class="botseat__leg"></span><span class="botseat__rest"></span></div>';
+    document.body.appendChild(seat);
+    syncTheme(seat);
+    watchTheme(seat);
+
+    const head = bot.querySelector('.botnav__head');
+    let drag = null;
+    // Off the bar the bot grows stick arms and legs, on case-study pages only
+    if (page.key === 'caseStudy') bot.classList.add('has-limbs');
+
+    // Over the bar (with some slack above it): a release here means "go home"
+    function overBar(x, y) {
+      const r = bar.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top - 50 && y <= r.bottom + 10;
+    }
+
+    function placeAt(x, y) {
+      bot.style.left = (x - drag.dx) + 'px';
+      bot.style.top = (y - drag.dy) + 'px';
+    }
+
+    // Viewport position the bot occupies when sitting on the stool
+    function stoolSpot() {
+      const r = seat.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - headWidth() / 2, y: r.bottom - 62 - bot.offsetHeight };
+    }
+
+    // Viewport position of the bot's slot on the bar (follows scroll progress)
+    function barSpot() {
+      const r = bar.getBoundingClientRect();
+      const first = items[0];
+      const last = items[items.length - 1];
+      const center = centerOf(first) + (centerOf(last) - centerOf(first)) * scrollProgress();
+      return { x: r.left + clampX(center - headWidth() / 2), y: r.top - bot.offsetHeight + 1 };
+    }
+
+    // Hop along an arc from wherever the bot is now to a viewport spot
+    let flying = false;
+    function flyTo(spot, then) {
+      flying = true;
+      const from = bot.getBoundingClientRect();
+      if (bot.parentElement !== seat) seat.appendChild(bot);
+      bot.classList.remove('is-seated', 'is-dragging');
+      bot.classList.add('is-free', 'is-flying');
+      bot.style.left = from.left + 'px';
+      bot.style.top = from.top + 'px';
+      const ms = reduceMotion ? 0 : Math.min(900, 380 + Math.hypot(spot.x - from.left, spot.y - from.top) * 0.45);
+      bot.style.setProperty('--fly-ms', ms + 'ms');
+      void bot.offsetWidth; // commit the start position before transitioning
+      bot.style.left = spot.x + 'px';
+      bot.style.top = spot.y + 'px';
+      setTimeout(() => {
+        bot.classList.remove('is-flying');
+        flying = false;
+        then();
+      }, ms + 20);
+    }
+
+    function sitDown() {
+      free = true;
+      seated = true;
+      clearTimeout(pendingStory);
+      bot.classList.remove('is-dragging', 'is-bobbing', 'is-flying');
+      bot.classList.add('is-free', 'is-seated');
+      bot.style.left = bot.style.top = '';
+      seat.appendChild(bot);
+      seat.classList.remove('is-open');
+      seat.classList.add('is-seated');
+      lookAt(0, 0);
+      smile(900);
+      lastNarrated = -1;
+      finished = false;
+      say(narration.length ? 'Thanks for the seat! Let me tell you the story as you read.' : 'Comfy! I’ll walk you through this page from here.', 0);
+      setTimeout(narrate, 2400);
+    }
+
+    function backToBar() {
+      free = false;
+      seated = false;
+      clearTimeout(pendingStory);
+      clearInterval(typeTimer);
+      bubbleText.style.minHeight = '';
+      bot.classList.remove('is-talking');
+      hideBubble();
+      bot.classList.remove('is-free', 'is-seated', 'is-dragging', 'is-flying');
+      bot.style.left = bot.style.top = '';
+      bar.insertBefore(bot, bar.firstChild);
+      seat.classList.remove('is-open', 'is-seated');
+      lastStoryIndex = -1;
+      bot.classList.add('is-returning');
+      setTimeout(() => bot.classList.remove('is-returning'), 450);
+      moveWithScroll();
+      smile(700);
+    }
+
+    function goToStool() {
+      seat.classList.add('is-open');
+      flyTo(stoolSpot(), sitDown);
+    }
+
+    function jumpHome() {
+      clearTimeout(pendingStory);
+      hideBubble();
+      flyTo(barSpot(), backToBar);
+    }
+
+    // Case study read to the end: say goodbye, then hop back onto the bar
+    let finished = false;
+    function checkFinished() {
+      if (!seated || finished || !narration.length || flying) return;
+      const end = document.querySelector('.cs-end');
+      if (!end || end.getBoundingClientRect().top > window.innerHeight * 0.85) return;
+      finished = true;
+      clearTimeout(pendingStory);
+      // Give the last section's line time to be read before signing off
+      pendingStory = setTimeout(() => {
+        say('That’s the story! Back to the bar I go 👋', 0);
+        pendingStory = setTimeout(() => { if (seated) jumpHome(); }, 2600);
+      }, Math.max(1200, 3600 - (Date.now() - lastSaidAt)));
+    }
+
+    head.addEventListener('pointerdown', e => {
+      if (!canSeat.matches || e.button !== 0 || flying) return;
+      const r = bot.getBoundingClientRect();
+      drag = { id: e.pointerId, sx: e.clientX, sy: e.clientY, dx: e.clientX - r.left, dy: e.clientY - r.top, moved: false };
+      e.preventDefault();
+    });
+
+    // Move/up are tracked on the window: re-parenting the bot into the stool layer
+    // mid-drag would drop a pointer capture set on the head itself.
+    window.addEventListener('pointermove', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (!drag.moved) {
+        if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 5) return;
+        // Start dragging: lift the bot out into the stool layer so it can move freely
+        drag.moved = true;
+        free = true;
+        seated = false;
+        clearTimeout(pendingStory);
+        clearInterval(typeTimer);
+        bot.classList.remove('is-talking');
+        hideBubble();
+        bot.classList.remove('is-seated', 'is-bobbing');
+        bot.classList.add('is-free', 'is-dragging');
+        seat.appendChild(bot);
+        seat.classList.remove('is-seated');
+        seat.classList.add('is-open');
+      }
+      placeAt(e.clientX, e.clientY);
+    });
+
+    // Released anywhere: the bot walks to the stool by itself. Released on the bar: home.
+    const endDrag = e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const moved = drag.moved;
+      drag = null;
+      if (!moved) {
+        if (!seated) say('Psst… drag me out and I’ll tell you the story from my stool.', 3200);
+        return;
+      }
+      if (overBar(e.clientX, e.clientY)) flyTo(barSpot(), backToBar);
+      else goToStool();
+    };
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    window.addEventListener('scroll', checkFinished, { passive: true });
+
+    // Leaving the desktop layout sends the bot home
+    canSeat.addEventListener('change', () => { if (!canSeat.matches && free) backToBar(); });
+
+    /* --- Start: the bot always begins on the bar; only a drag sends it to the stool --- */
     moveWithScroll();
     setTimeout(blink, 1800);
     setTimeout(() => {
@@ -296,6 +537,48 @@
     return { key: 'home', active: 'home' };
   }
 
+  // One narration line per case-study section, built from the page's own copy:
+  // the section's first sentence, its decision headings, or its closing quote.
+  function buildNarration(page) {
+    if (page.key !== 'caseStudy') return [];
+    const article = document.querySelector('.cs-article');
+    if (!article) return [];
+    const firstSentence = text => {
+      const t = (text || '').trim().replace(/\s+/g, ' ');
+      const m = t.match(/^.+?[.!?](?=\s|$)/);
+      return m ? m[0] : t;
+    };
+    const lines = [];
+    const header = article.querySelector('header');
+    const summary = article.querySelector('.cs-summary');
+    if (header && summary) {
+      lines.push({ el: header, label: page.name, text: summary.textContent.trim() });
+    }
+    article.querySelectorAll('.cs-block').forEach(block => {
+      const label = block.dataset.toc || (block.querySelector('h2') || {}).textContent || '';
+      const steps = block.querySelectorAll('.cs-flowgroup');
+      const decisions = block.querySelectorAll('h3');
+      const quote = block.querySelector('.cs-quote');
+      const para = block.querySelector('p:not(.cs-eyebrow):not(.cs-flowgroup-label)');
+      let text = '';
+      if (steps.length) {
+        const roles = [...steps].map(g => {
+          const name = g.querySelector('.cs-flowgroup-label').textContent.trim();
+          return name + ' (' + g.querySelectorAll('li').length + ' steps)';
+        });
+        text = (steps.length > 1 ? 'Two paths here: ' : 'One clear path: ') + roles.join(' and ') + '.';
+      } else if (decisions.length) {
+        text = [...decisions].map(h => h.textContent.trim()).join(' ');
+      } else if (quote) {
+        text = quote.textContent.trim();
+      } else if (para) {
+        text = firstSentence(para.textContent);
+      }
+      if (text) lines.push({ el: block, label: label.trim(), text });
+    });
+    return lines;
+  }
+
   function buildNav(page) {
     const nav = document.createElement('nav');
     nav.className = 'botnav';
@@ -307,10 +590,12 @@
     nav.innerHTML = `
       <div class="botnav__bar">
         <div class="botnav__bot" aria-hidden="true">
-          <div class="botnav__bubble"><span class="botnav__bubble-text"></span></div>
+          <div class="botnav__bubble"><span class="botnav__bubble-label" hidden></span><span class="botnav__bubble-text"></span></div>
           <div class="botnav__head">
             <div class="botnav__face"><span class="botnav__eye"></span><span class="botnav__eye"></span></div>
           </div>
+          <span class="botnav__limb botnav__limb--arm-l"></span><span class="botnav__limb botnav__limb--arm-r"></span>
+          <span class="botnav__limb botnav__limb--leg-l"></span><span class="botnav__limb botnav__limb--leg-r"></span>
         </div>
         ${link('home', 'index.html', 'Home', 'Back to home')}
         ${link('work', 'projects.html', 'Work', 'See my work')}
