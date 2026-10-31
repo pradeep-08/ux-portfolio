@@ -178,4 +178,110 @@ body[toggle-theme="dark"] .framer-lzGIe.framer-g8ikc9 {
   .framer-KlBLr .framer-n1j6u6-container { order: 4; transform: rotate(-5deg) !important; }
   .framer-KlBLr .framer-8izplj-container { order: 5; transform: rotate(-4deg) !important; }
   .framer-KlBLr .framer-n5xeho-container { order: 6; transform: rotate(4deg) !important; }
+
+  /* ======================================================================
+     Phone polish: calmer type scale, tighter rhythm, readable body copy.
+     ====================================================================== */
+
+  /* Body copy preset used across pages: 18px -> 16px */
+  .framer-styles-preset-1y1gyft {
+    --framer-font-size: 16px !important;
+    --framer-line-height: 1.6em !important;
+  }
+
+  /* Page intros start closer to the header (was 120px of empty space) */
+  .framer-6subr0,
+  .framer-16ofo3l,
+  .framer-ewt1ny {
+    padding-top: 40px !important;
+  }
+
+  /* --- Home hero: smaller headline, lighter supporting line --- */
+  .framer-KlBLr .framer-ufjqu5 .framer-1oe0527 > h1:first-child {
+    --framer-font-size: 32px !important;
+    --framer-line-height: 1.18em !important;
+    letter-spacing: -0.01em;
+  }
+  .framer-KlBLr .framer-ufjqu5 .framer-1oe0527 > h1 + h1 {
+    --framer-font-size: 18px !important;
+    --framer-line-height: 1.55em !important;
+  }
+  body:not([toggle-theme="dark"]) .framer-KlBLr .framer-ufjqu5 .framer-1oe0527 > h1 + h1 {
+    --framer-text-color: #6b6b6b !important;
+  }
+
+  /* --- Home process cards: step description was 14px light grey --- */
+  body:not([toggle-theme="dark"]) .framer-rgc29d p {
+    --framer-text-color: #6b6b6b !important;
+  }
+
+  /* --- Projects: cards sit in fixed 675px slots, leaving big gaps or overlaps --- */
+  .framer-1pj4582 {
+    gap: 48px !important;
+  }
+  .framer-1pj4582 > .framer-jukfe1-container {
+    height: auto !important;
+  }
+  .framer-1pj4582 .framer-1en6fne,
+  .framer-1pj4582 .framer-xjer4w,
+  .framer-1pj4582 .framer-1t7nnru {
+    height: auto !important;
+    aspect-ratio: 4 / 3;
+  }
+  .framer-1pj4582 .framer-Jj1ZZ {
+    gap: 16px !important;
+  }
+  .framer-1pj4582 .framer-6cxzle .framer-styles-preset-1sksvyh {
+    --framer-font-size: 22px !important;
+    --framer-line-height: 1.3em !important;
+  }
+  /* Project titles render white on the light page */
+  body:not([toggle-theme="dark"]) .framer-1pj4582 .framer-6cxzle .framer-styles-preset-1sksvyh {
+    --framer-text-color: #1d1d1f !important;
+  }
+  .framer-6v64ie {
+    padding-bottom: 64px !important;
+  }
+
+  /* --- About: intro paragraphs were 31px --- */
+  .framer-1dsk3m0 p {
+    --framer-font-size: 21px !important;
+    --framer-line-height: 1.45em !important;
+  }
+  /* Empty spacer paragraph between the two intro paragraphs */
+  .framer-1dsk3m0 p:has(> br):not(:has(> :not(br))) {
+    --framer-font-size: 6px !important;
+  }
+  .framer-16ofo3l {
+    padding-bottom: 56px !important;
+  }
+  .framer-kpnzzs {
+    padding-top: 24px !important;
+  }
+  .framer-13i3uqv {
+    padding-bottom: 72px !important;
+  }
+
+  /* --- Resume: section spacing --- */
+  .framer-ewt1ny {
+    padding-bottom: 32px !important;
+  }
+  .framer-wnhqel {
+    padding-top: 32px !important;
+    padding-bottom: 64px !important;
+  }
+
+  /* --- Footer headline: 72px -> 48px so it fits without dominating --- */
+  .framer-1xpzoxj p,
+  .framer-3eacv7 p {
+    --framer-font-size: 48px !important;
+    --framer-line-height: 1em !important;
+  }
+  .framer-1fs2p9v {
+    height: auto !important;
+    align-items: baseline !important;
+  }
+  .framer-1qbx4gj .framer-styles-preset-1s8fn6c {
+    --framer-font-size: 30px !important;
+  }
 }

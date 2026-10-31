@@ -113,6 +113,7 @@
 
     function moveTo(x) {
       nav.style.setProperty('--bn-x', clampX(x - headWidth() / 2) + 'px');
+      if (bubble.classList.contains('is-visible')) keepBubbleOnScreen();
     }
 
     function scrollProgress() {
@@ -139,10 +140,8 @@
       bubble.classList.add('is-visible');
       lastSaidAt = Date.now();
 
-      requestAnimationFrame(() => {
-        bubble.classList.toggle('is-multiline', bubbleText.offsetHeight > 24);
-        keepBubbleOnScreen();
-      });
+      bubble.classList.toggle('is-multiline', bubbleText.offsetHeight > 24);
+      keepBubbleOnScreen();
 
       if (duration) {
         bubbleTimer = setTimeout(hideBubble, duration);
@@ -154,17 +153,18 @@
       bubble.classList.remove('is-visible');
     }
 
-    // Wait for the bot's slide to settle before measuring, then nudge the bubble inside the viewport
+    // Nudge the bubble inside the viewport. Computed from the bot's target position
+    // (--bn-x) and layout sizes rather than measured, so slide/scale animations
+    // in progress can't skew the result.
     function keepBubbleOnScreen() {
-      setTimeout(() => {
-        bubble.style.setProperty('--bubble-shift', '0px');
-        const rect = bubble.getBoundingClientRect();
-        const margin = 8;
-        let shift = 0;
-        if (rect.left < margin) shift = margin - rect.left;
-        if (rect.right > window.innerWidth - margin) shift = window.innerWidth - margin - rect.right;
-        bubble.style.setProperty('--bubble-shift', shift + 'px');
-      }, reduceMotion ? 0 : 320);
+      const margin = 8;
+      const botX = parseFloat(nav.style.getPropertyValue('--bn-x')) || 0;
+      const center = bar.getBoundingClientRect().left + botX + headWidth() / 2;
+      const half = bubble.offsetWidth / 2;
+      let shift = 0;
+      if (center - half < margin) shift = margin - (center - half);
+      if (center + half > window.innerWidth - margin) shift = window.innerWidth - margin - (center + half);
+      bubble.style.setProperty('--bubble-shift', shift + 'px');
     }
 
     /* --- Story while scrolling --- */

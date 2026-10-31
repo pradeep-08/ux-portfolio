@@ -4,175 +4,85 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fitness Tracker App Revamp — Case Study | Pradeep UX Portfolio</title>
-  <meta name="description" content="Redesign project: Fitness Tracker App Revamp. Transforming daily workout tracking, health metric visualisations, and habit formation." />
+  <meta name="description" content="Redesign of a fitness tracker app: frictionless workout logging, recovery insights and habit loops. Case study by Pradeep." />
   <link rel="icon" href="assets/images/avatar.jpg" type="image/jpeg" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/case-study.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
 </head>
-<body>
+<body class="cs-page">
 
-  <!-- Site Navigation Header -->
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a href="index.html" class="brand-profile">
-        <div class="avatar-wrapper">
-          <img src="assets/images/avatar.jpg" alt="Pradeep avatar" class="avatar-img" />
-          <span class="status-dot"></span>
+  <div class="cs-topbar">
+    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
+      <span class="cs-avatar"><img src="assets/images/avatar.jpg" alt="" /><i aria-hidden="true"></i></span>
+      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
+    </a>
+    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  </div>
+
+  <div class="cs-layout">
+    <aside class="cs-toc" aria-label="On this page">
+      <nav><ol></ol></nav>
+    </aside>
+
+    <main class="cs-article">
+      <header>
+        <a href="projects.html" class="cs-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+          back
+        </a>
+        <p class="cs-eyebrow">case study · <span data-read-time>3 min read</span></p>
+        <h1 class="cs-title">Fitness Tracker App Revamp</h1>
+        <p class="cs-summary">Transforming daily workout logging, biometric health metrics, and long-term habit formation through intuitive visual feedback.</p>
+
+        <dl class="cs-meta">
+          <div><dt>Role</dt><dd>UX/UI Designer</dd></div>
+          <div><dt>Timeline</dt><dd>3 months</dd></div>
+          <div><dt>Focus</dt><dd>Mobile Experience &amp; Habit Loops</dd></div>
+          <div><dt>Deliverables</dt><dd>UI System, Interactive Prototypes</dd></div>
+        </dl>
+
+        <figure class="cs-cover">
+          <img src="assets/images/fitness-cover.webp" alt="Fitness Tracker app interface" />
+        </figure>
+      </header>
+
+      <section class="cs-block" id="challenge" data-toc="The Challenge">
+        <p class="cs-eyebrow">Problem statement</p>
+        <h2>Overcoming tracking fatigue in everyday fitness apps</h2>
+        <p>Most fitness applications fail not because of missing features, but because manual logging creates friction. When users find logging workouts cumbersome, they drop off after 2 to 3 weeks.</p>
+        <div class="cs-callout">
+          <p>The goal: minimize the time between starting a workout and logging sets, while presenting complex health metrics in accessible, celebratory visuals.</p>
         </div>
-        <div class="brand-info">
-          <span class="brand-name">Pradeep</span>
-          <span class="brand-title">UX Designer</span>
-        </div>
-      </a>
-
-      <div class="nav-actions">
-        <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle dark/light mode">
-          <span id="themeIcon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="case-study-hero">
-      <div class="container">
-        <a href="projects.html" class="back-link">← Back to selected projects</a>
-        
-        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-          <span class="pill-badge" style="margin-bottom: 0;">Health &amp; Fitness</span>
-          <span class="pill-badge" style="margin-bottom: 0;">UI/UX Redesign</span>
-        </div>
-
-        <h1 class="hero-title" style="margin-bottom: 16px; font-size: clamp(2.6rem, 5vw, 4.2rem);">
-          Fitness Tracker App Revamp
-        </h1>
-        <p class="cs-lead" style="max-width: 780px;">
-          Transforming daily workout logging, biometric health metrics, and long-term habit formation through intuitive visual feedback.
-        </p>
-
-        <div class="case-study-meta-grid">
-          <div>
-            <div class="meta-item-label">Role</div>
-            <div class="meta-item-value">UX/UI Designer</div>
-          </div>
-          <div>
-            <div class="meta-item-label">Timeline</div>
-            <div class="meta-item-value">3 Months</div>
-          </div>
-          <div>
-            <div class="meta-item-label">Focus</div>
-            <div class="meta-item-value">Mobile Experience &amp; Habit Loops</div>
-          </div>
-          <div>
-            <div class="meta-item-label">Deliverables</div>
-            <div class="meta-item-value">UI System, Interactive Prototypes</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="container" style="margin-top: 40px;">
-      <div style="border-radius: var(--radius-lg); overflow: hidden; max-height: 520px; box-shadow: var(--shadow-lg);">
-        <img src="assets/images/fitness-cover.webp" alt="Fitness Tracker App Interface" style="width: 100%; height: 100%; object-fit: cover;" />
-      </div>
-    </div>
-
-    <article class="case-study-body container">
-      <section class="cs-section">
-        <div class="cs-section-tag">01 / Challenge</div>
-        <h2 class="cs-h2">Overcoming tracking fatigue in everyday fitness apps</h2>
-        <p class="cs-text">
-          Most fitness applications fail not because of missing features, but because manual logging creates friction. When users find logging workouts cumbersome, they drop off after 2 to 3 weeks.
-        </p>
-        <p class="cs-text">
-          The goal of this redesign was to minimize the time between starting a workout and logging sets, while presenting complex health metrics (heart rate variability, calorie burn rate, sleep recovery) in accessible, celebratory visuals.
-        </p>
+        <p style="margin-top: 20px;">The metrics in scope included heart rate variability, calorie burn rate, and sleep recovery.</p>
       </section>
 
-      <section class="cs-section">
-        <div class="cs-section-tag">02 / Solutions &amp; Impact</div>
-        <h2 class="cs-h2">Frictionless logging &amp; personalized recovery insights</h2>
-        <div class="cs-card-highlight">
-          <ul class="cs-list" style="margin: 0;">
-            <li><strong>1-Tap Quick Start:</strong> Predictive workout routines based on day of week and past history.</li>
-            <li><strong>At-a-Glance Recovery Score:</strong> Consolidated sleep, rest, and activity data into a single readiness indicator.</li>
-            <li><strong>Micro-Celebrations:</strong> Visual feedback loops and achievement badges that reward streak consistency.</li>
-          </ul>
-        </div>
+      <section class="cs-block" id="solution" data-toc="The Solution">
+        <p class="cs-eyebrow">Solutions &amp; impact</p>
+        <h2>Frictionless logging &amp; personalized recovery insights</h2>
+        <ul class="cs-list">
+          <li><strong>1-Tap Quick Start:</strong> Predictive workout routines based on day of week and past history.</li>
+          <li><strong>At-a-Glance Recovery Score:</strong> Consolidated sleep, rest, and activity data into a single readiness indicator.</li>
+          <li><strong>Micro-Celebrations:</strong> Visual feedback loops and achievement badges that reward streak consistency.</li>
+        </ul>
       </section>
 
-      <div class="cs-pager" style="display: flex; justify-content: space-between; align-items: center; padding-top: 40px; border-top: 1px solid var(--border-subtle); margin-top: 60px;">
-        <a href="lomo-track.html" class="btn-pill-primary">← Previous: LOMO Track</a>
-        <a href="social-dining.html" class="btn-pill-primary">Next: Social Dining App →</a>
-      </div>
-    </article>
-  </main>
-
-  <!-- Big Impact Dark Theme Footer -->
-  <footer id="contact" class="site-footer">
-    <div class="container">
-      <h2 class="footer-cta-title">
-        <span class="coral-accent">Lets</span> <span class="rotating-word">create</span><br />
-        incredible work together.
-      </h2>
-
-      <div class="footer-details-grid">
-        <div>
-          <div class="footer-col-title">Email</div>
-          <a href="mailto:pradeep.tasp.0802@gmail.com" class="footer-email-link">pradeep.tasp.0802@gmail.com</a>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Connect</div>
-          <ul class="footer-link-list">
-            <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-            <li><a href="mailto:pradeep.tasp.0802@gmail.com">Email</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Social</div>
-          <div class="footer-social-pill">
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-circle-btn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-divider-line"></div>
-
-      <div class="footer-sub-grid">
-        <div class="footer-sub-col">
-          <div class="footer-col-title">Explore</div>
-          <ul class="footer-link-list-inline">
-            <li><a href="projects.html">Work</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="resume.html">Résumé</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-sub-col">
-          <div class="footer-col-title">Location</div>
-          <div class="footer-location-text">Chennai, India</div>
-        </div>
-
-        <div class="footer-sub-col copyright-col">
-          <div>© 2026 Pradeep</div>
-        </div>
-      </div>
-
-      <div class="footer-watermark">Pradeep</div>
-    </div>
-  </footer>
+      <footer class="cs-end">
+        <p class="cs-thanks">Thanks for reading</p>
+        <ul class="cs-links">
+          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+          <li><a href="projects.html"><span>all projects</span></a></li>
+        </ul>
+        <a href="social-dining.html" class="cs-next">
+          <div><small>next project</small><strong>Social Dining App Design</strong></div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </footer>
+    </main>
+  </div>
 
   <script src="js/main.js"></script>
+  <script src="js/case-study.js"></script>
   <script src="js/bot-nav.js"></script>
 </body>
 </html>

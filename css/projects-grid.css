@@ -1,0 +1,251 @@
+/* ==========================================================================
+   PROJECTS GRID - bento cards for the Projects page
+   Markup is injected by js/projects-grid.js after Framer's own list, which is
+   hidden once the grid is in place (body.has-project-grid).
+   Theme follows Framer's body[toggle-theme].
+   ========================================================================== */
+
+body.has-project-grid .framer-6v64ie {
+  display: none !important;
+}
+
+.pgrid {
+  --pg-card: #ffffff;
+  --pg-border: #e8e8e6;
+  --pg-media: #f1f1f0;
+  --pg-text: #111111;
+  --pg-sub: #3d3d3d;
+  --pg-btn: #111111;
+  --pg-btn-ink: #ffffff;
+  --pg-accent: #d93a26;
+
+  /* Framer's parent is a centred flex column; take the full width like its own list */
+  box-sizing: border-box;
+  width: 100%;
+  align-self: stretch;
+  padding: 0 100px 200px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body[toggle-theme="dark"] .pgrid {
+  --pg-card: #1a1a1b;
+  --pg-border: #2c2c2e;
+  --pg-media: #232325;
+  --pg-text: #f2f2f0;
+  --pg-sub: #b4b4b6;
+  --pg-btn: #f2f2f0;
+  --pg-btn-ink: #111111;
+}
+
+.pgrid__list {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.pgrid__item--wide {
+  grid-column: span 2;
+}
+
+/* --- Card --- */
+.pcard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px 14px 18px;
+  background: var(--pg-card);
+  border: 1px solid var(--pg-border);
+  border-radius: 26px;
+  color: var(--pg-text);
+  text-decoration: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.pcard__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--pg-media);
+}
+
+.pgrid__item--wide .pcard__media {
+  aspect-ratio: auto;
+  flex: 1;
+  min-height: 200px;
+}
+
+.pcard__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.pcard:hover .pcard__media img,
+.pcard:focus-visible .pcard__media img {
+  transform: scale(1.03);
+}
+
+/* --- Footer: title + round arrow; on hover the arrow grows into "View case" --- */
+.pcard__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.pcard__title {
+  flex: 1 1 0;
+  min-width: 0;
+  font-size: 18px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.pcard__title span {
+  display: block;
+  font-weight: 400;
+  color: var(--pg-sub);
+}
+
+.pcard__title strong {
+  display: block;
+  font-weight: 700;
+  color: var(--pg-text);
+}
+
+.pcard__btn {
+  flex: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background: var(--pg-btn);
+  color: var(--pg-btn-ink);
+  overflow: hidden;
+  transition: width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, color 0.25s ease;
+}
+
+.pcard__btn svg {
+  width: 20px;
+  height: 20px;
+  transition: opacity 0.2s ease;
+}
+
+.pcard__label {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Hover (pointer devices): title on its own row, button becomes a full-width pill */
+@media (hover: hover) {
+  .pcard:hover .pcard__title,
+  .pcard:focus-visible .pcard__title {
+    flex-basis: 100%;
+  }
+  .pcard:hover .pcard__btn,
+  .pcard:focus-visible .pcard__btn {
+    width: 100%;
+    background: var(--pg-accent);
+    color: #ffffff;
+  }
+  .pcard:hover .pcard__btn svg,
+  .pcard:focus-visible .pcard__btn svg {
+    opacity: 0;
+  }
+  .pcard:hover .pcard__label,
+  .pcard:focus-visible .pcard__label {
+    opacity: 1;
+    transition-delay: 0.12s;
+  }
+}
+
+.pcard:focus-visible {
+  outline: 2px solid var(--pg-accent);
+  outline-offset: 4px;
+}
+
+/* --- Tablet: two columns --- */
+@media (max-width: 1199.98px) {
+  .pgrid {
+    padding: 0 40px 160px;
+  }
+  .pgrid__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .pgrid__item--wide {
+    grid-column: span 2;
+  }
+  .pgrid__item--wide .pcard__media {
+    flex: none;
+    aspect-ratio: 21 / 9;
+  }
+  .pcard__title {
+    font-size: 17px;
+  }
+}
+
+/* --- Phone: one column --- */
+@media (max-width: 809.98px) {
+  .pgrid {
+    padding: 0 16px 120px;
+  }
+  .pgrid__list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .pgrid__item--wide {
+    grid-column: auto;
+  }
+  .pcard {
+    gap: 14px;
+    padding: 10px 10px 14px;
+    border-radius: 22px;
+  }
+  .pcard__media,
+  .pgrid__item--wide .pcard__media {
+    aspect-ratio: 4 / 3;
+    border-radius: 14px;
+  }
+  .pcard__foot {
+    padding: 0 6px;
+  }
+  .pcard__title {
+    font-size: 16px;
+  }
+  .pcard__btn {
+    width: 44px;
+    height: 44px;
+  }
+  .pcard__btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pcard__btn,
+  .pcard__media img {
+    transition: none;
+  }
+}

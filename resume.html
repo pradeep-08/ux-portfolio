@@ -17,7 +17,23 @@ document.addEventListener("click", function(e) {
   if (!a) return;
   var href = a.getAttribute("href");
   if (!href) return;
-  
+
+  // Project cards: open the local case study pages instead of Framer's hosted
+  // CMS pages (which bring their own extra navigation bar)
+  var caseStudies = {
+    "fitness-tracker-app-revamp": "./fitness-tracker.html",
+    "social-dining-app-design": "./social-dining.html",
+    "collaborative-learning-app-design": "./collaborative-learning.html",
+    "lomo-track": "./lomo-track.html"
+  };
+  var slug = (href.match(/projects\/([a-z0-9-]+)\/?$/) || [])[1];
+  if (slug && caseStudies[slug]) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.location.href = caseStudies[slug];
+    return;
+  }
+
   if (href === "/projects" || href === "./projects" || href.endsWith("/projects")) {
     e.preventDefault();
     window.location.href = "./projects.html";

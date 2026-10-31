@@ -1,0 +1,562 @@
+/* ==========================================================================
+   CASE STUDY - long-form reading layout
+   Used by lomo-track, fitness-tracker, social-dining and collaborative-learning.
+   Structure: back link + theme toggle, sticky contents rail, one reading column,
+   mono eyebrows, coral callouts, sign-off with next project.
+   Theme follows html[data-theme] (set by js/main.js).
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&display=swap');
+
+:root {
+  --cs-bg: #fafaf9;
+  --cs-text: #292524;
+  --cs-body: #44403c;
+  --cs-muted: #79716b;
+  --cs-faint: #a8a29e;
+  --cs-border: #e7e5e4;
+  --cs-surface: #ffffff;
+  --cs-accent: #ff5e4d;
+  --cs-accent-text: #c4321f;
+  --cs-accent-tint: rgba(255, 94, 77, 0.08);
+
+  --cs-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --cs-mono: 'DM Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --cs-serif: 'Lora', Georgia, serif;
+
+  --cs-column: 620px;
+  --cs-rail: 210px;
+}
+
+[data-theme="dark"] {
+  --cs-bg: #0f0f10;
+  --cs-text: #f4f4f3;
+  --cs-body: #c9c9cc;
+  --cs-muted: #8e8e93;
+  --cs-faint: #5c5c62;
+  --cs-border: #26262a;
+  --cs-surface: #18181a;
+  --cs-accent-text: #ff7666;
+  --cs-accent-tint: rgba(255, 94, 77, 0.1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.cs-page {
+  background: var(--cs-bg);
+  color: var(--cs-text);
+  font-family: var(--cs-font);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.cs-page img {
+  display: block;
+  max-width: 100%;
+}
+
+/* :where() keeps this at zero specificity so components (e.g. the bot nav) keep their link colours */
+:where(.cs-page) a {
+  color: inherit;
+}
+
+.cs-page :focus-visible {
+  outline: 2px solid var(--cs-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- Top bar: back link + theme toggle --- */
+.cs-topbar {
+  max-width: calc(var(--cs-rail) + var(--cs-column) + 120px);
+  margin: 0 auto;
+  padding: 40px 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Brand: avatar + name, same identity as the other pages' header */
+.cs-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.cs-avatar {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 44px;
+}
+
+.cs-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--cs-border);
+}
+
+/* "Available" status dot */
+.cs-avatar i {
+  position: absolute;
+  right: 1px;
+  bottom: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid var(--cs-bg);
+}
+
+.cs-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+}
+
+.cs-brand-text span:first-child {
+  font-size: 14px;
+  color: var(--cs-muted);
+}
+
+.cs-brand-text span:last-child {
+  font-family: var(--cs-mono);
+  font-size: 14px;
+  color: var(--cs-text);
+}
+
+.cs-back {
+  margin-bottom: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  color: var(--cs-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cs-back:hover {
+  color: var(--cs-text);
+}
+
+.cs-back svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.cs-back:hover svg {
+  transform: translateX(-3px);
+}
+
+.cs-theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--cs-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cs-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.cs-theme:hover {
+  color: var(--cs-text);
+}
+
+.cs-theme svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* --- Layout: contents rail + reading column --- */
+.cs-layout {
+  max-width: calc(var(--cs-rail) + var(--cs-column) + 120px);
+  margin: 0 auto;
+  padding: 40px 24px 160px;
+  display: grid;
+  grid-template-columns: var(--cs-rail) minmax(0, var(--cs-column));
+  column-gap: 120px;
+  align-items: start;
+}
+
+.cs-toc {
+  position: sticky;
+  top: 40px;
+  padding-top: 30px;
+}
+
+.cs-toc ol {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-toc a {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--cs-faint);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cs-toc a:hover,
+.cs-toc a.is-active {
+  color: var(--cs-text);
+}
+
+.cs-toc a.is-active {
+  font-weight: 500;
+}
+
+/* --- Header --- */
+.cs-eyebrow {
+  font-family: var(--cs-mono);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  color: var(--cs-muted);
+}
+
+.cs-title {
+  margin-top: 10px;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--cs-text);
+}
+
+.cs-summary {
+  margin-top: 14px;
+  font-size: 17px;
+  color: var(--cs-body);
+}
+
+.cs-meta {
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 24px 28px;
+}
+
+.cs-meta dt {
+  font-family: var(--cs-mono);
+  font-size: 13px;
+  color: var(--cs-muted);
+  margin-bottom: 4px;
+}
+
+.cs-meta dd {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--cs-text);
+}
+
+.cs-cover {
+  margin-top: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--cs-border);
+  background: var(--cs-surface);
+}
+
+.cs-cover img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+/* --- Sections --- */
+.cs-block {
+  margin-top: 88px;
+  scroll-margin-top: 32px;
+}
+
+.cs-block h2 {
+  margin-top: 6px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--cs-text);
+}
+
+.cs-block h3 {
+  margin-top: 36px;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--cs-muted);
+}
+
+.cs-block p,
+.cs-block li {
+  color: var(--cs-body);
+}
+
+.cs-block h2 + p,
+.cs-block h3 + p {
+  margin-top: 16px;
+}
+
+.cs-block p + p {
+  margin-top: 14px;
+}
+
+.cs-block em {
+  color: var(--cs-text);
+}
+
+.cs-block strong {
+  font-weight: 600;
+  color: var(--cs-text);
+}
+
+.cs-list {
+  margin-top: 16px;
+  padding-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cs-list li::marker {
+  color: var(--cs-faint);
+}
+
+/* Callout: coral rule + tint */
+.cs-callout {
+  margin-top: 20px;
+  padding: 16px 20px;
+  border-left: 3px solid var(--cs-accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--cs-accent-tint);
+  font-weight: 500;
+}
+
+.cs-callout,
+.cs-callout p,
+.cs-callout li {
+  color: var(--cs-accent-text);
+}
+
+.cs-callout strong {
+  color: inherit;
+}
+
+.cs-callout .cs-list {
+  margin-top: 0;
+}
+
+.cs-callout .cs-list li::marker {
+  color: var(--cs-accent);
+}
+
+.cs-callout-title {
+  font-weight: 600;
+}
+
+.cs-callout-title + p {
+  margin-top: 6px;
+  font-weight: 400;
+}
+
+/* Pull quote */
+.cs-quote {
+  margin-top: 28px;
+  padding-left: 20px;
+  border-left: 3px solid var(--cs-accent);
+  font-family: var(--cs-serif);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.45;
+  color: var(--cs-text);
+}
+
+/* Flow: chips joined by arrows */
+.cs-flow {
+  margin-top: 20px;
+  padding: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 6px;
+  border: 1px solid var(--cs-border);
+  border-radius: 12px;
+  background: var(--cs-surface);
+}
+
+.cs-flow span {
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cs-text);
+  border: 1px solid var(--cs-border);
+  border-radius: 999px;
+  background: var(--cs-bg);
+}
+
+.cs-flow span.is-key {
+  border-color: var(--cs-accent);
+  color: var(--cs-accent-text);
+}
+
+.cs-flow i {
+  font-style: normal;
+  color: var(--cs-faint);
+}
+
+/* --- Sign-off --- */
+.cs-end {
+  margin-top: 104px;
+  padding-top: 40px;
+  border-top: 1px solid var(--cs-border);
+}
+
+.cs-thanks {
+  font-family: var(--cs-serif);
+  font-style: italic;
+  font-size: 26px;
+  color: var(--cs-accent-text);
+}
+
+.cs-links {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  list-style: none;
+}
+
+.cs-links a {
+  font-size: 15px;
+  color: var(--cs-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cs-links a span {
+  color: var(--cs-text);
+  text-decoration: underline;
+  text-decoration-color: var(--cs-border);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.cs-links a:hover span {
+  text-decoration-color: var(--cs-accent);
+}
+
+.cs-next {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid var(--cs-border);
+  border-radius: 12px;
+  background: var(--cs-surface);
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.cs-next:hover {
+  border-color: var(--cs-accent);
+  transform: translateY(-2px);
+}
+
+.cs-next small {
+  display: block;
+  font-family: var(--cs-mono);
+  font-size: 12px;
+  color: var(--cs-muted);
+}
+
+.cs-next strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cs-text);
+}
+
+.cs-next svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--cs-accent);
+}
+
+/* --- Tablet / phone: single column, rail hidden --- */
+@media (max-width: 960px) {
+  .cs-layout {
+    display: block;
+    max-width: calc(var(--cs-column) + 48px);
+  }
+  .cs-topbar {
+    max-width: calc(var(--cs-column) + 48px);
+  }
+  .cs-toc {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .cs-topbar {
+    padding: 20px 20px 0;
+  }
+  .cs-layout {
+    padding: 28px 20px 140px;
+  }
+  .cs-title {
+    font-size: 26px;
+  }
+  .cs-summary {
+    font-size: 16px;
+  }
+  .cs-meta {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .cs-cover {
+    margin-top: 36px;
+  }
+  .cs-block {
+    margin-top: 64px;
+  }
+  .cs-quote {
+    font-size: 19px;
+  }
+  .cs-flow span {
+    font-size: 13px;
+  }
+  .cs-end {
+    margin-top: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
