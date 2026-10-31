@@ -1,7 +1,10 @@
 /**
- * Pradeep UX Portfolio - Projects page bento grid
- * Inserts the project cards after Framer's own project list and hides that list
- * (via body.has-project-grid). If this script fails, Framer's list stays visible.
+ * Pradeep UX Portfolio - Project cards
+ * - Projects page: inserts the bento grid after Framer's own project list and
+ *   hides that list (via body.has-project-grid). If this script fails, Framer's
+ *   list stays visible.
+ * - Home page: Framer's phone layout has a "Selected work" intro but no projects,
+ *   so the same cards are added under it (shown on phone only, see CSS).
  */
 
 (function () {
@@ -37,10 +40,15 @@
   // grid if a re-render ever drops it.
   function mount() {
     const framerList = document.querySelector('.framer-6v64ie');
-    if (!framerList) return false;
-    if (!grid) grid = build();
-    if (grid.previousElementSibling !== framerList) framerList.after(grid);
-    document.body.classList.add('has-project-grid');
+    const homeIntro = framerList ? null : document.querySelector('.framer-ufjqu5 > .framer-7kps5');
+    const anchor = framerList || homeIntro;
+    if (!anchor) return false;
+    if (!grid) {
+      grid = build();
+      if (homeIntro) grid.classList.add('pgrid--home');
+    }
+    if (grid.previousElementSibling !== anchor) anchor.after(grid);
+    if (framerList) document.body.classList.add('has-project-grid');
     return true;
   }
 

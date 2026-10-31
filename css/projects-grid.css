@@ -243,6 +243,20 @@ body[toggle-theme="dark"] .pgrid {
   }
 }
 
+/* --- Home page: cards under "Selected work" on phone only --- */
+.pgrid--home {
+  display: none;
+}
+
+@media (max-width: 809.98px) {
+  .pgrid--home {
+    display: block;
+    /* Framer's phone layout reorders the hero section; "Selected work" is order 5 */
+    order: 6;
+    padding: 8px 16px 40px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pcard__btn,
   .pcard__media img {
