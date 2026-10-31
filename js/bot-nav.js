@@ -84,6 +84,7 @@
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const bubbleLabel = nav.querySelector('.botnav__bubble-label');
+    const bubbleActions = nav.querySelector('.botnav__bubble-actions');
 
     let hoverItem = null;
     let bubbleTimer = null;
@@ -92,6 +93,7 @@
     let lastSaidAt = 0;
     let pendingStory = null;
     let free = false; // true while the bot is off the bar (dragging or seated)
+    let asking = false; // the "shall I take a seat?" question is on screen
     let seated = false;
 
     syncTheme(nav);
@@ -138,6 +140,7 @@
 
     /* --- Speech bubble --- */
     function say(text, duration, success, label) {
+      endAsk();
       clearTimeout(bubbleTimer);
       clearInterval(typeTimer);
       bubbleText.textContent = text;
@@ -179,6 +182,40 @@
     function hideBubble() {
       clearTimeout(bubbleTimer);
       bubble.classList.remove('is-visible');
+      endAsk();
+    }
+
+    // A question with buttons in the bubble. The bot is aria-hidden as decoration,
+    // so it's exposed to assistive tech while the question is up.
+    function ask(text, actions) {
+      say(text, 0);
+      asking = true;
+      bubbleActions.innerHTML = '';
+      actions.forEach(({ label, primary, run }) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'botnav__bubble-btn' + (primary ? ' is-primary' : '');
+        b.textContent = label;
+        b.addEventListener('click', () => { endAsk(); run(); });
+        bubbleActions.appendChild(b);
+      });
+      bubbleActions.hidden = false;
+      bubble.classList.add('has-actions');
+      bubble.setAttribute('role', 'dialog');
+      bubble.setAttribute('aria-label', 'Story mode');
+      bot.removeAttribute('aria-hidden');
+      keepBubbleOnScreen();
+    }
+
+    function endAsk() {
+      if (!asking) return;
+      asking = false;
+      bubbleActions.hidden = true;
+      bubbleActions.innerHTML = '';
+      bubble.classList.remove('has-actions');
+      bubble.removeAttribute('role');
+      bubble.removeAttribute('aria-label');
+      bot.setAttribute('aria-hidden', 'true');
     }
 
     // Nudge the bubble inside the viewport. Computed from the bot's target position
@@ -206,6 +243,10 @@
       if (seated) {
         narrate();
         return;
+      }
+      if (asking) {
+        if (scrollProgress() < 0.25) return;
+        hideBubble(); // reader has moved on without answering
       }
       if (!story.length || hoverItem) return;
       const progress = scrollProgress();
@@ -277,7 +318,7 @@
     /* --- Hover & focus on items --- */
     items.forEach(item => {
       const enter = () => {
-        if (free) return; // the bot is on the stool, not on the bar
+        if (free || asking) return; // the bot is on the stool, or waiting for an answer
         hoverItem = item;
         clearTimeout(pendingStory);
         moveTo(centerOf(item));
@@ -421,6 +462,7 @@
     }
 
     function backToBar() {
+      clearTimeout(finishTimer);
       free = false;
       seated = false;
       clearTimeout(pendingStory);
@@ -450,19 +492,23 @@
       flyTo(barSpot(), backToBar);
     }
 
-    // Case study read to the end: say goodbye, then hop back onto the bar
+    // Case study read to the end: say goodbye, then hop back onto the bar.
+    // Uses its own timer: section narration keeps firing during smooth scrolling
+    // and would otherwise cancel the goodbye.
     let finished = false;
+    let finishTimer = null;
     function checkFinished() {
       if (!seated || finished || !narration.length || flying) return;
       const end = document.querySelector('.cs-end');
       if (!end || end.getBoundingClientRect().top > window.innerHeight * 0.85) return;
       finished = true;
-      clearTimeout(pendingStory);
       // Give the last section's line time to be read before signing off
-      pendingStory = setTimeout(() => {
+      finishTimer = setTimeout(() => {
+        if (!seated) return;
+        clearTimeout(pendingStory);
         say('That’s the story! Back to the bar I go 👋', 0);
-        pendingStory = setTimeout(() => { if (seated) jumpHome(); }, 2600);
-      }, Math.max(1200, 3600 - (Date.now() - lastSaidAt)));
+        finishTimer = setTimeout(() => { if (seated) jumpHome(); }, 2600);
+      }, 4200);
     }
 
     head.addEventListener('pointerdown', e => {
@@ -480,6 +526,7 @@
         if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 5) return;
         // Start dragging: lift the bot out into the stool layer so it can move freely
         drag.moved = true;
+        clearTimeout(finishTimer);
         free = true;
         seated = false;
         clearTimeout(pendingStory);
@@ -519,6 +566,14 @@
     setTimeout(blink, 1800);
     setTimeout(() => {
       smile(900);
+      // Case studies on desktop: offer to sit on the stool and tell the story
+      if (narration.length && canSeat.matches && !free) {
+        ask('Hi! Shall I take a seat and walk you through this case study? I\u2019ll hop back when we\u2019re done.', [
+          { label: 'Sure, take a seat', primary: true, run: goToStool },
+          { label: 'No thanks', run: () => say('No problem, I\u2019ll be right here.', 2200) },
+        ]);
+        return;
+      }
       tellStory();
     }, 900);
   }
@@ -590,7 +645,7 @@
     nav.innerHTML = `
       <div class="botnav__bar">
         <div class="botnav__bot" aria-hidden="true">
-          <div class="botnav__bubble"><span class="botnav__bubble-label" hidden></span><span class="botnav__bubble-text"></span></div>
+          <div class="botnav__bubble"><span class="botnav__bubble-label" hidden></span><span class="botnav__bubble-text"></span><span class="botnav__bubble-actions" hidden></span></div>
           <div class="botnav__head">
             <div class="botnav__face"><span class="botnav__eye"></span><span class="botnav__eye"></span></div>
           </div>

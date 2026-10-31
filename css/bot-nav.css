@@ -690,6 +690,61 @@
   right: 26px;
 }
 
+/* "Shall I take a seat?" question: the bubble becomes clickable */
+.botnav__bubble.has-actions {
+  pointer-events: auto;
+  width: 310px;
+  max-width: min(310px, calc(100vw - 24px));
+  padding: 14px 16px;
+  text-align: left;
+  border-radius: 16px;
+}
+
+.botnav__bubble-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.botnav__bubble-actions[hidden] {
+  display: none;
+}
+
+.botnav__bubble-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: 999px;
+  border: 1px solid var(--bn-bubble-border);
+  background: transparent;
+  color: var(--bn-bubble-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.botnav__bubble-btn:hover {
+  border-color: var(--bn-bubble-text);
+}
+
+.botnav__bubble-btn.is-primary {
+  border-color: var(--bn-accent-fill);
+  background: var(--bn-accent-fill);
+  color: var(--bn-accent-ink);
+}
+
+.botnav__bubble-btn.is-primary:hover {
+  background: var(--bn-accent-fill-hover);
+  border-color: var(--bn-accent-fill-hover);
+}
+
+.botnav__bubble-btn:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
 .botnav__bubble-label {
   display: block;
   margin-bottom: 4px;
