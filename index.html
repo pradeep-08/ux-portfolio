@@ -8,8 +8,17 @@
 
 <head>
 <script>
+// Framer's router renders from its own route ("/"), so the URL is swapped
+// while the page boots. Once loaded the real file URL is put back, so Back
+// and reload request a file that exists instead of a missing "/".
 try {
+  var realUrl = location.href;
   history.replaceState(null, "", "/");
+  window.addEventListener("load", function () {
+    setTimeout(function () {
+      try { history.replaceState(history.state, "", realUrl); } catch(e) {}
+    }, 0);
+  });
 } catch(e) {}
 
 document.addEventListener("click", function(e) {
