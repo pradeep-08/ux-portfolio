@@ -575,8 +575,22 @@
         ]);
         return;
       }
+      // Phones: once per visit, suggest desktop for the full experience
+      if (window.matchMedia('(max-width: 809.98px)').matches && !seenDesktopTip()) {
+        say('Psst! I look my best on desktop 💻 Open this on a bigger screen for the full experience.', 5000);
+        lastSaidAt += 3800; // hold the story until the tip has been read
+        return;
+      }
       tellStory();
     }, 900);
+
+    function seenDesktopTip() {
+      try {
+        if (sessionStorage.getItem('pradeep_desktop_tip')) return true;
+        sessionStorage.setItem('pradeep_desktop_tip', '1');
+      } catch (e) { /* storage blocked: show the tip anyway */ }
+      return false;
+    }
   }
 
   /* --- Page detection (Framer pages rewrite the URL to /about, /projects, ...) --- */
