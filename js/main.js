@@ -21,10 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function initThemeToggle() {
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const themeIcon = document.getElementById('themeIcon');
-  const storedTheme = localStorage.getItem('pradeep_theme');
-  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  
-  const currentTheme = storedTheme || (systemPrefersDark ? 'dark' : 'light');
+  // Light by default, whatever the system setting. A choice made here or on the
+  // Framer pages (saved as currentToggleState) carries over between pages.
+  const storedTheme = localStorage.getItem('currentToggleState') || localStorage.getItem('pradeep_theme');
+
+  const currentTheme = storedTheme === 'dark' ? 'dark' : 'light';
   applyTheme(currentTheme);
 
   if (themeToggleBtn) {
@@ -33,6 +34,7 @@ function initThemeToggle() {
       const nextTheme = activeTheme === 'dark' ? 'light' : 'dark';
       applyTheme(nextTheme);
       localStorage.setItem('pradeep_theme', nextTheme);
+      localStorage.setItem('currentToggleState', nextTheme);
     });
   }
 
