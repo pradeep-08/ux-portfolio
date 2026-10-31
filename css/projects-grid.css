@@ -138,14 +138,16 @@ body[toggle-theme="dark"] .pgrid {
   transform: scale(1.03);
 }
 
-/* --- Footer: title + round arrow; on hover the arrow grows into "View case" --- */
+/* --- Footer: title + round arrow; on hover the arrow grows into "View case".
+       The button is absolutely positioned and the footer never wraps, so hover
+       doesn't change the card's height (which would stretch the whole grid row). --- */
 .pcard__foot {
+  --btn-size: 48px;
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 4px;
+  min-height: var(--btn-size);
+  padding: 0 calc(var(--btn-size) + 16px) 0 4px;
 }
 
 .pcard__title {
@@ -154,6 +156,7 @@ body[toggle-theme="dark"] .pgrid {
   font-size: 18px;
   line-height: 1.3;
   letter-spacing: -0.01em;
+  transition: opacity 0.2s ease;
 }
 
 .pcard__title span {
@@ -169,13 +172,15 @@ body[toggle-theme="dark"] .pgrid {
 }
 
 .pcard__btn {
-  flex: none;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  right: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  margin-top: calc(var(--btn-size) / -2);
   border-radius: 9999px;
   background: var(--pg-btn);
   color: var(--pg-btn-ink);
@@ -200,15 +205,16 @@ body[toggle-theme="dark"] .pgrid {
   transition: opacity 0.2s ease;
 }
 
-/* Hover (pointer devices): title on its own row, button becomes a full-width pill */
+/* Hover (pointer devices): the button stretches across the footer into a
+   "View case" pill, covering the title in place */
 @media (hover: hover) {
   .pcard:hover .pcard__title,
   .pcard:focus-visible .pcard__title {
-    flex-basis: 100%;
+    opacity: 0;
   }
   .pcard:hover .pcard__btn,
   .pcard:focus-visible .pcard__btn {
-    width: 100%;
+    width: calc(100% - 8px);
     background: var(--pg-accent);
     color: #ffffff;
   }
@@ -279,14 +285,11 @@ body[toggle-theme="dark"] .pgrid {
     font-size: 21px;
   }
   .pcard__foot {
-    padding: 0 6px;
+    --btn-size: 44px;
+    padding: 0 calc(var(--btn-size) + 14px) 0 6px;
   }
   .pcard__title {
     font-size: 16px;
-  }
-  .pcard__btn {
-    width: 44px;
-    height: 44px;
   }
   .pcard__btn svg {
     width: 18px;
