@@ -1,0 +1,963 @@
+/* ==========================================================================
+   CASE STUDY - "caseform" layout (one page: kriti-attendance.html)
+   Single centred 720px column: title + summary, 4-up meta card, full-width
+   colour panels for visuals, stat strip, before/after pair, numbered process
+   cards, quote, results grid, takeaways, simple footer.
+   Loaded after case-study.css, which still supplies the theme toggle and the
+   reading-progress ring. Theme follows html[data-theme] (js/main.js).
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400&display=swap');
+
+.cf-page {
+  --cf-bg: #ffffff;
+  --cf-text: #0c0c0c;
+  --cf-muted: #666666;
+  --cf-line: #dadada;
+  --cf-card: #f9f9fb;
+  --cf-pill: #4a4a4f;
+  --cf-pill-text: #ffffff;
+  --cf-panel-text: rgba(12, 12, 12, 0.55);
+
+  --cf-lavender: #d4ccfc;
+  --cf-rose: #fdcaca;
+  --cf-peach: #fddccc;
+  --cf-periwinkle: #cbd3ff;
+  --cf-lime: #eeffc8;
+  --cf-mist: #f3f2f8;
+
+  --cf-tag-blue-bg: #e6f1fb;   --cf-tag-blue: #0c447c;
+  --cf-tag-amber-bg: #faeeda;  --cf-tag-amber: #633806;
+  --cf-tag-green-bg: #eaf3de;  --cf-tag-green: #27500a;
+  --cf-tag-purple-bg: #eeedfe; --cf-tag-purple: #3c3489;
+
+  --cf-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --cf-serif: 'Source Serif 4', Georgia, serif;
+  --cf-column: 720px;
+  --cf-text-col: 640px;
+  --cf-radius: 16px;
+
+  background: var(--cf-bg);
+  color: var(--cf-text);
+  font-family: var(--cf-sans);
+  /* Inter's single-storey a and open digits, as in the reference */
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+}
+
+[data-theme="dark"] .cf-page {
+  --cf-bg: #0f0f10;
+  --cf-text: #f4f4f3;
+  --cf-muted: #a1a1a6;
+  --cf-line: #2a2a2e;
+  --cf-card: #18181a;
+  --cf-pill: #e7e7ea;
+  --cf-pill-text: #0f0f10;
+  --cf-panel-text: rgba(12, 12, 12, 0.6);
+
+  --cf-lavender: #6d63b8;
+  --cf-rose: #b06a6a;
+  --cf-peach: #b5826a;
+  --cf-periwinkle: #5f6bb8;
+  --cf-lime: #8ea65a;
+  --cf-mist: #232327;
+
+  --cf-tag-blue-bg: #0f2a45;   --cf-tag-blue: #a8cdf2;
+  --cf-tag-amber-bg: #3d2a0c;  --cf-tag-amber: #f2cf96;
+  --cf-tag-green-bg: #1d3010;  --cf-tag-green: #bfe09a;
+  --cf-tag-purple-bg: #26224f; --cf-tag-purple: #c9c4fb;
+}
+
+/* Neutralise the generic .cs-page / .cs-block rules from case-study.css */
+body.cs-page.cf-page {
+  background: var(--cf-bg);
+  color: var(--cf-text);
+}
+
+.cf-page .cs-block h2,
+.cf-page .cs-block h3 {
+  margin-top: 0;
+  color: var(--cf-text);
+  line-height: 1.4;
+}
+
+.cf-page .cs-block p,
+.cf-page .cs-block li,
+.cf-page .cs-block strong,
+.cf-page .cf-head .cs-summary {
+  margin-top: 0;
+  color: inherit;
+}
+
+.cf-page .cs-block .cf-results span,
+.cf-page .cs-block .cf-stats span,
+.cf-page .cs-block .cf-takeaways p {
+  color: var(--cf-muted);
+}
+
+.cf-page .cs-block .cf-text {
+  margin: 24px 0;
+}
+
+.cf-page .cs-block .cf-label + .cf-text {
+  margin-top: 0;
+}
+
+.cf-page .cs-quote {
+  padding: 0;
+  border: 0;
+  font-style: normal;
+  color: var(--cf-text);
+}
+
+/* ---------- Contents rail (same list as the other case studies) ----------
+   Sits in the left margin beside the centred column; hidden where it would
+   crowd the column (the progress ring still lists the sections there). */
+.cf-page .cs-toc {
+  position: fixed;
+  top: 120px;
+  left: max(24px, calc(50% - var(--cf-column) / 2 - 260px));
+  z-index: 5;
+  width: 210px;
+  padding: 0;
+}
+
+.cf-page .cs-toc a {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #a8a29e;
+}
+
+.cf-page .cs-toc a:hover,
+.cf-page .cs-toc a.is-active {
+  color: var(--cf-text);
+  font-weight: 400;
+}
+
+[data-theme="dark"] .cf-page .cs-toc a {
+  color: #6b6b70;
+}
+
+[data-theme="dark"] .cf-page .cs-toc a:hover,
+[data-theme="dark"] .cf-page .cs-toc a.is-active {
+  color: var(--cf-text);
+}
+
+@media (max-width: 1239px) {
+  .cf-page .cs-toc { display: none; }
+}
+
+/* Section anchors land below the fixed back / theme buttons */
+.cf-page .cs-block[id] {
+  scroll-margin-top: 96px;
+}
+
+/* ---------- Chrome: back button (left) + theme toggle (right) ---------- */
+
+.cf-back {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--cf-card);
+  color: var(--cf-text);
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.cf-back:hover {
+  transform: translateX(-2px);
+  background: var(--cf-line);
+}
+
+.cf-back svg {
+  width: 20px;
+  height: 20px;
+}
+
+.cf-page .cs-theme {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 20;
+}
+
+/* ---------- Article column ---------- */
+
+.cf-page .cs-article.cf-article {
+  max-width: calc(var(--cf-column) + 32px);
+  margin: 0 auto;
+  padding: 88px 16px 48px;
+}
+
+.cf-head h1 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.cf-page .cf-head .cs-summary {
+  max-width: var(--cf-text-col);
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--cf-text);
+}
+
+/* Meta card: role / timeline / team / outcome */
+.cf-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 64px 0;
+  padding: 14px 0;
+  border: 1px solid var(--cf-line);
+  border-radius: var(--cf-radius);
+}
+
+.cf-meta > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  padding: 2px 12px;
+}
+
+.cf-meta > div + div {
+  border-left: 1px solid var(--cf-line);
+}
+
+.cf-meta dt {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.cf-meta dd {
+  display: contents;
+}
+
+.cf-meta strong {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.cf-meta strong svg {
+  width: 28px;
+  height: 28px;
+}
+
+.cf-meta span {
+  font-size: 12px;
+  color: var(--cf-muted);
+}
+
+/* Two tool icons with a "+" between them */
+.cf-meta strong.cf-tools {
+  gap: 6px;
+}
+
+.cf-tools i {
+  font-style: normal;
+  font-size: 16px;
+  color: var(--cf-muted);
+}
+
+.cf-avatars {
+  display: flex;
+}
+
+.cf-avatars i {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--cf-line);
+  border: 2px solid var(--cf-bg);
+}
+
+.cf-avatars i + i {
+  margin-left: -9px;
+}
+
+/* ---------- Sections ---------- */
+
+.cf-page .cs-block.cf-section {
+  margin: 64px 0 0;
+}
+
+.cf-label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 32px;
+}
+
+.cf-text {
+  max-width: var(--cf-text-col);
+  font-size: 16px;
+  line-height: 26px;
+  margin: 24px 0;
+}
+
+.cf-label + .cf-text {
+  margin-top: 0;
+}
+
+.cf-rule {
+  border: 0;
+  border-top: 1px solid var(--cf-line);
+  margin: 64px 0 0;
+}
+
+/* ---------- Visual panels ---------- */
+
+.cf-media {
+  position: relative;
+  overflow: hidden;
+  height: 450px;
+  margin: 64px 0 0;
+  border-radius: var(--cf-radius);
+  background: var(--cf-lavender);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+/* Swap the placeholder phone for a real export: <img src="..." alt="..."> */
+.cf-media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cf-media--rose { background: var(--cf-rose); }
+.cf-media--peach { background: var(--cf-peach); }
+.cf-media--periwinkle { background: var(--cf-periwinkle); }
+.cf-media--lime { background: var(--cf-lime); }
+.cf-media--mist { background: var(--cf-mist); }
+
+.cf-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 64px;
+}
+
+.cf-pair .cf-media {
+  margin: 0;
+  height: 400px;
+}
+
+.cf-text + .cf-pair {
+  margin-top: 24px;
+}
+
+.cf-pair + .cf-text {
+  margin-top: 32px;
+}
+
+.cf-text + .cf-media {
+  margin-top: 24px;
+}
+
+.cf-badge {
+  position: absolute;
+  top: 12px;
+  z-index: 2;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: var(--cf-pill);
+  color: var(--cf-pill-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cf-badge--left { left: 12px; }
+.cf-badge--right { right: 12px; }
+
+/* Placeholder phone frame (CSS only) */
+.cf-phone {
+  width: 340px;
+  max-width: 78%;
+  height: 86%;
+  padding: 8px 8px 0;
+  border-radius: 52px 52px 0 0;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.cf-phone__screen {
+  height: 100%;
+  overflow: hidden;
+  border-radius: 44px 44px 0 0;
+  background: #f4f2f8;
+  color: #0c0c0c;
+}
+
+.cf-phone__status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+  padding: 0 32px;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cf-phone__status i {
+  width: 22px;
+  height: 10px;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.cf-phone__nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e3e1ea;
+}
+
+.cf-phone__nav i {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  background: #e6e3ee;
+}
+
+.cf-phone__progress {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #6a4ff0 var(--p, 33%), #dedbe7 var(--p, 33%));
+}
+
+.cf-phone__body {
+  padding: 36px 16px 0;
+  text-align: center;
+}
+
+.cf-phone__body strong {
+  display: block;
+  font-family: var(--cf-serif);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.cf-phone__body small {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--cf-serif);
+  font-size: 14px;
+  color: #555;
+}
+
+.cf-phone__field {
+  height: 52px;
+  margin-top: 14px;
+  border-radius: 14px;
+  background: #e6e3ee;
+}
+
+.cf-phone__body .cf-phone__field:first-of-type {
+  margin-top: 36px;
+}
+
+.cf-phone__field--note {
+  background: #ecd2cc;
+}
+
+/* Before / after compare slider: two full-size panels stacked on top of each
+   other, each clipped to its side of the divider (--pos), with a 12px gap. */
+.cf-compare {
+  --pos: 50%;
+  --gap: 6px;
+  position: relative;
+  height: 450px;
+  margin-top: 64px;
+  cursor: ew-resize;
+  touch-action: pan-y; /* vertical scroll still works on touch */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.cf-text + .cf-compare {
+  margin-top: 24px;
+}
+
+.cf-compare .cf-compare__layer {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  margin: 0;
+}
+
+.cf-compare__layer--before {
+  clip-path: inset(0 calc(100% - var(--pos) + var(--gap)) 0 0 round var(--cf-radius));
+}
+
+.cf-compare__layer--after {
+  clip-path: inset(0 0 0 calc(var(--pos) + var(--gap)) round var(--cf-radius));
+}
+
+.cf-compare__handle {
+  position: absolute;
+  top: 50%;
+  left: var(--pos);
+  z-index: 3;
+  width: 6px;
+  height: 64px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.22);
+  transform: translate(-50%, -50%);
+  transition: background-color 0.2s ease, height 0.2s ease;
+}
+
+[data-theme="dark"] .cf-compare__handle {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Bigger invisible grab area */
+.cf-compare__handle::before {
+  content: '';
+  position: absolute;
+  inset: -12px -18px;
+}
+
+.cf-compare:hover .cf-compare__handle,
+.cf-compare.is-dragging .cf-compare__handle,
+.cf-compare__handle:focus-visible {
+  height: 80px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.cf-page .cf-compare__handle:focus-visible {
+  outline: 2px solid var(--cf-text);
+  outline-offset: 4px;
+}
+
+/* Real screenshot inside the phone frame (top of the screen shows by default) */
+.cf-phone__screen > img {
+  width: 100%;
+  height: auto;
+}
+
+/* Show the bottom of a tall screenshot instead */
+.cf-phone__screen--end {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+/* Wide crop (not a phone) centred in the panel */
+.cf-media.cf-media--fit {
+  align-items: center;
+  padding: 40px;
+}
+
+.cf-media.cf-media--fit > img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Heatmap pair inside one panel */
+.cf-media--duo {
+  gap: 20px;
+}
+
+.cf-media--duo .cf-phone {
+  width: 180px;
+  border-radius: 0;
+  padding: 0;
+  background: none;
+}
+
+.cf-media--duo .cf-phone__screen {
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255, 60, 0, 0.55), transparent 26%),
+    radial-gradient(circle at 65% 45%, rgba(80, 220, 120, 0.4), transparent 22%),
+    #b8b2c6;
+}
+
+/* Stat card: panel + 3-up numbers */
+.cf-statcard {
+  margin-top: 64px;
+  overflow: hidden;
+  border: 1px solid var(--cf-line);
+  border-radius: var(--cf-radius);
+}
+
+.cf-statcard .cf-media {
+  margin: 0;
+  border-radius: 0 0 var(--cf-radius) var(--cf-radius);
+}
+
+.cf-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 28px 0;
+}
+
+.cf-stats > div {
+  padding: 0 24px;
+  text-align: center;
+}
+
+.cf-stats > div + div {
+  border-left: 1px solid var(--cf-line);
+}
+
+.cf-stats strong {
+  display: block;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.cf-stats span {
+  display: block;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--cf-muted);
+}
+
+/* ---------- Process cards ---------- */
+
+.cf-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 64px;
+  list-style: none;
+}
+
+.cf-card {
+  padding: 24px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-card);
+}
+
+.cf-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.cf-card h3 span {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--cf-pill);
+  color: var(--cf-pill-text);
+  font-size: 14px;
+}
+
+.cf-card p {
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.cf-tag {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.cf-tag--blue { background: var(--cf-tag-blue-bg); color: var(--cf-tag-blue); }
+.cf-tag--amber { background: var(--cf-tag-amber-bg); color: var(--cf-tag-amber); }
+.cf-tag--green { background: var(--cf-tag-green-bg); color: var(--cf-tag-green); }
+.cf-tag--purple { background: var(--cf-tag-purple-bg); color: var(--cf-tag-purple); }
+
+/* ---------- Task flow (reuses .cs-flowgroup / .cs-steps markup) ---------- */
+
+.cf-page .cs-flowgroup {
+  margin-top: 0;
+  padding: 24px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-card);
+}
+
+.cf-page .cs-flowgroup + .cs-flowgroup {
+  margin-top: 12px;
+}
+
+.cf-page .cs-block .cs-flowgroup-label {
+  font-family: var(--cf-sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--cf-text);
+}
+
+.cf-page .cs-steps {
+  margin-top: 14px;
+  gap: 8px;
+}
+
+.cf-page .cs-block .cs-steps li {
+  align-items: center;
+  padding: 6px 14px 6px 6px;
+  font-size: 14px;
+  color: var(--cf-text);
+  border: 1px solid var(--cf-line);
+  background: var(--cf-bg);
+}
+
+.cf-page .cs-steps li::before {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--cf-pill);
+  color: var(--cf-pill-text);
+  font-family: var(--cf-sans);
+  font-size: 12px;
+}
+
+/* ---------- Design decisions ---------- */
+
+.cf-page .cs-block .cf-decision {
+  max-width: var(--cf-text-col);
+  margin: 64px 0 12px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.cf-page .cs-block .cf-decision + .cf-text {
+  margin-top: 0;
+}
+
+/* ---------- Header tagline, sub-headings, goals, scope ---------- */
+
+.cf-head h1 + .cf-tagline {
+  margin: -4px 0 12px;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--cf-muted);
+}
+
+.cf-page .cs-block .cf-sublabel {
+  margin: 64px 0 12px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.cf-page .cs-block .cf-sublabel + .cf-text {
+  margin-top: 0;
+}
+
+.cf-text + .cf-cards {
+  margin-top: 24px;
+}
+
+.cf-cards--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cf-page .cs-block .cf-cards--three h3 {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.cf-scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.cf-page .cs-block .cf-scope li {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--cf-card);
+  border: 1px solid var(--cf-line);
+  font-size: 14px;
+}
+
+.cf-media.cf-media--short {
+  height: 300px;
+}
+
+.cf-text + .cs-flowgroup,
+.cf-label + .cs-flowgroup {
+  margin-top: 0;
+}
+
+.cf-page .cs-block .cs-flowgroup + .cf-text {
+  margin-top: 24px;
+}
+
+/* ---------- Quote ---------- */
+
+.cf-page .cs-block.cf-quote {
+  margin-top: 0;
+  padding: 48px 0 64px;
+  border-bottom: 1px solid var(--cf-line);
+  text-align: center;
+}
+
+.cf-quote .cf-badge {
+  position: static;
+  display: inline-block;
+}
+
+.cf-page .cf-quote blockquote {
+  max-width: 540px;
+  margin: 16px auto 0;
+  font-family: var(--cf-serif);
+  font-size: 32px;
+  line-height: 48px;
+}
+
+.cf-page .cs-block .cf-quote-note {
+  max-width: 480px;
+  margin: 20px auto 0;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--cf-muted);
+}
+
+/* The quote's bottom rule already separates it from the footer */
+.cf-page .cf-quote + .cs-end.cf-foot {
+  margin-top: 0;
+  border-top: 0;
+}
+
+/* ---------- Results grid ---------- */
+
+.cf-results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 64px;
+}
+
+.cf-results > div {
+  padding: 24px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-card);
+}
+
+.cf-results strong {
+  display: block;
+  font-size: 32px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.cf-results span {
+  display: block;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--cf-muted);
+}
+
+/* ---------- Takeaways ---------- */
+
+.cf-takeaways {
+  max-width: var(--cf-text-col);
+  list-style: none;
+}
+
+.cf-page .cs-block .cf-takeaways li + li {
+  margin-top: 24px;
+}
+
+.cf-takeaways h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.cf-takeaways p {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--cf-muted);
+}
+
+/* ---------- Footer ---------- */
+
+.cf-page .cs-end.cf-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 64px;
+  padding: 40px 0 120px;
+  border-top: 1px solid var(--cf-line);
+  font-size: 14px;
+  color: var(--cf-muted);
+}
+
+.cf-foot a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cf-foot a:hover {
+  color: var(--cf-text);
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 720px) {
+  .cf-back { top: 16px; left: 16px; width: 40px; height: 40px; }
+  .cf-page .cs-theme { top: 16px; right: 16px; }
+
+  .cf-page .cs-article.cf-article { padding-top: 76px; }
+  .cf-head h1 { font-size: 26px; }
+
+  .cf-meta { grid-template-columns: 1fr 1fr; row-gap: 16px; margin: 40px 0; }
+  .cf-meta > div:nth-child(3) { border-left: 0; }
+
+  .cf-media { height: 320px; margin-top: 40px; }
+  .cf-pair { grid-template-columns: 1fr; margin-top: 40px; }
+  .cf-compare { height: 380px; }
+  .cf-pair .cf-media { height: 300px; }
+  .cf-media--duo .cf-phone { width: 42%; }
+
+  .cf-stats { grid-template-columns: 1fr; row-gap: 20px; }
+  .cf-stats > div + div { border-left: 0; }
+
+  .cf-cards, .cf-results { grid-template-columns: 1fr; margin-top: 40px; }
+  .cf-page .cs-block.cf-section, .cf-rule, .cf-statcard { margin-top: 40px; }
+
+  .cf-page .cf-quote blockquote { font-size: 24px; line-height: 34px; }
+  .cf-page .cs-block .cf-decision { margin-top: 40px; }
+  .cf-page .cs-flowgroup { padding: 18px; }
+  .cf-cards--three { grid-template-columns: 1fr; }
+  .cf-page .cs-block .cf-cards--three h3 { flex-direction: row; align-items: center; font-size: 16px; }
+  .cf-page .cs-block .cf-sublabel { margin-top: 40px; }
+  .cf-media.cf-media--short { height: 200px; padding: 20px; }
+  .cf-head h1 + .cf-tagline { font-size: 17px; }
+  .cf-page .cs-end.cf-foot { flex-direction: column; }
+}

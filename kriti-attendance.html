@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kriti Attendance — Case Study | Pradeep UX Portfolio</title>
+  <meta name="description" content="Making daily attendance clearer, from registration to check-out. A mobile app redesign for Kritilabs employees by Pradeep." />
+  <link rel="icon" href="assets/images/avatar.jpg" type="image/jpeg" />
+  <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/case-study-caseform.css" />
+  <link rel="stylesheet" href="css/bot-nav.css" />
+</head>
+<!--
+  Copy: supplied by Pradeep. Screens: assets/images/case-studies/kriti-attendance/
+  (mobile numbers blurred). No outcome metrics are claimed.
+-->
+<body class="cs-page cf-page">
+
+  <a href="projects.html" class="cf-back" aria-label="Back to all projects">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+  <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+
+  <!-- Contents rail: filled by js/case-study.js from each section's data-toc -->
+  <aside class="cs-toc" aria-label="On this page">
+    <nav><ol></ol></nav>
+  </aside>
+
+  <main class="cs-article cf-article">
+    <header class="cf-head">
+      <h1>Kriti Attendance</h1>
+      <p class="cf-tagline">Making daily attendance clearer, from registration to check-out.</p>
+      <p class="cs-summary">A mobile app redesign focused on helping employees register, understand their attendance status, review location accuracy, and access recent attendance records.</p>
+
+      <dl class="cf-meta">
+        <div><dt>Category</dt><dd><strong>B2E</strong><span>Enterprise · Business to Employee</span></dd></div>
+        <div>
+          <dt>Platform</dt>
+          <dd>
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></strong>
+            <span>Mobile application</span>
+          </dd>
+        </div>
+        <div><dt>Scope</dt><dd><strong>5</strong><span>Areas, from registration to error recovery</span></dd></div>
+        <div>
+          <dt>Tools</dt>
+          <dd>
+            <strong class="cf-tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5Z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2Z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0Z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0Z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5Z"/></svg><i aria-hidden="true">+</i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg></strong>
+            <span>Figma + my brain</span>
+          </dd>
+        </div>
+      </dl>
+    </header>
+
+    <!-- 1. The product -->
+    <section class="cs-block cf-section" id="product" data-toc="The product">
+      <h2 class="cf-label">Project overview</h2>
+      <p class="cf-text">Kriti Attendance is an employee-facing attendance application for Kritilabs. The redesign brings registration, attendance actions, GPS feedback, and daily records into a more structured experience.</p>
+
+      <figure class="cf-media" aria-label="Redesigned attendance home screen">
+        <div class="cf-phone">
+          <div class="cf-phone__screen">
+            <img src="assets/images/case-studies/kriti-attendance/attendance-after.webp" alt="Redesigned attendance screen showing the employee card, current status 'Not marked yet', GPS accuracy and the attendance summary" width="720" height="1600" />
+          </div>
+        </div>
+      </figure>
+    </section>
+
+    <!-- 2. Problem framing -->
+    <section class="cs-block cf-section" id="problem" data-toc="Problem framing">
+      <h2 class="cf-label">The challenge</h2>
+      <p class="cf-text">Attendance is a repeated daily task. Employees need to understand whether they have marked attendance, what action comes next, and whether their location information is ready.</p>
+      <p class="cf-text">The earlier interface displayed employee details, location timestamps, GPS accuracy, and attendance actions in a largely form-based layout. Technical labels such as "Fix Time" and "Accuracy" required interpretation, while the main screen gave limited visibility into attendance progress and recent records.</p>
+      <p class="cf-text">The design challenge was to make the process easier to understand, including situations where registration, location access, or connectivity interrupts the task.</p>
+
+      <div class="cf-statcard">
+        <figure class="cf-media cf-media--mist" aria-label="Earlier attendance screen">
+          <div class="cf-phone">
+            <div class="cf-phone__screen">
+              <img src="assets/images/case-studies/kriti-attendance/attendance-before.webp" alt="Earlier attendance screen: employee details in a form layout, Fix Time, Accuracy and Enroll / Work From Home buttons" width="720" height="1594" loading="lazy" />
+            </div>
+          </div>
+        </figure>
+        <div class="cf-stats">
+          <div><strong>Form</strong><span>layout for details, location and actions</span></div>
+          <div><strong>"Fix Time"</strong><span>technical labels that needed interpretation</span></div>
+          <div><strong>Limited</strong><span>visibility into progress and recent records</span></div>
+        </div>
+      </div>
+
+      <h3 class="cf-sublabel">The design goal</h3>
+      <p class="cf-text">Create an attendance experience that answers three questions clearly:</p>
+      <ol class="cf-cards cf-cards--three">
+        <li class="cf-card"><h3><span>1</span>What is my attendance status?</h3></li>
+        <li class="cf-card"><h3><span>2</span>What should I do next?</h3></li>
+        <li class="cf-card"><h3><span>3</span>If something goes wrong, how can I continue?</h3></li>
+      </ol>
+    </section>
+
+    <!-- 3. Users & scope -->
+    <section class="cs-block cf-section" id="users" data-toc="Users &amp; scope">
+      <h2 class="cf-label">Users and scope</h2>
+      <p class="cf-text">The users are Kritilabs employees, for whom attendance is a repeated daily task. The app is employee-facing (B2E), so each screen has to make status and next steps clear without training.</p>
+      <ul class="cf-scope">
+        <li>Registration</li>
+        <li>Attendance states</li>
+        <li>Location feedback</li>
+        <li>Attendance summary</li>
+        <li>Error recovery</li>
+      </ul>
+    </section>
+
+    <!-- 4. Task flow -->
+    <section class="cs-block cf-section" id="flow" data-toc="Task flow">
+      <h2 class="cf-label">The core journey</h2>
+
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Core journey</p>
+        <ol class="cs-steps">
+          <li>Enter employee details</li>
+          <li>Review and verify</li>
+          <li>Complete registration</li>
+          <li>Review attendance and location status</li>
+          <li>Mark attendance</li>
+          <li>Check out</li>
+          <li>Review the daily record</li>
+        </ol>
+      </div>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Recovery states</p>
+        <ol class="cs-steps">
+          <li>Location access disabled</li>
+          <li>Internet unavailable</li>
+          <li>Registration message not delivered</li>
+        </ol>
+      </div>
+      <p class="cf-text">Location and connectivity recovery states support this journey when the normal flow is interrupted.</p>
+    </section>
+
+    <!-- 5. Design decisions -->
+    <section class="cs-block cf-section" id="decisions" data-toc="Design decisions">
+      <h2 class="cf-label">Design decisions</h2>
+      <p class="cf-text">Drag across the panel to compare the earlier screen with the redesign.</p>
+
+      <!-- Drag (or use arrow keys on the handle) to compare; js/compare-slider.js -->
+      <div class="cf-compare">
+        <figure class="cf-media cf-media--rose cf-compare__layer cf-compare__layer--before" aria-label="Before: earlier attendance screen">
+          <span class="cf-badge cf-badge--left">Before</span>
+          <div class="cf-phone">
+            <div class="cf-phone__screen">
+              <img src="assets/images/case-studies/kriti-attendance/attendance-before.webp" alt="Before: earlier form-based attendance screen" width="720" height="1594" loading="lazy" draggable="false" />
+            </div>
+          </div>
+        </figure>
+        <figure class="cf-media cf-compare__layer cf-compare__layer--after" aria-label="After: redesigned attendance screen">
+          <span class="cf-badge cf-badge--right">After</span>
+          <div class="cf-phone">
+            <div class="cf-phone__screen">
+              <img src="assets/images/case-studies/kriti-attendance/attendance-after.webp" alt="After: redesigned attendance screen with employee card and status" width="720" height="1600" loading="lazy" draggable="false" />
+            </div>
+          </div>
+        </figure>
+        <div class="cf-compare__handle" role="slider" tabindex="0" aria-label="Compare before and after" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% before"></div>
+      </div>
+
+      <h3 class="cf-decision">1. A guided registration experience</h3>
+      <p class="cf-text">I divided registration into focused stages: entering employee information, reviewing the matched details, processing registration, and confirming completion.</p>
+      <p class="cf-text">The verification screen lets employees review their name, employee ID, department, and registered mobile number before proceeding. A "Not your details? Go back" option provides a clear way to correct a mismatch.</p>
+      <p class="cf-text">Processing and success screens explain what is happening during setup. The design also includes a verification-code flow and a message-delivery failure state with guidance to retry or contact HR/admin support.</p>
+
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--peach" aria-label="Review and verify step">
+          <div class="cf-phone">
+            <div class="cf-phone__screen">
+              <img src="assets/images/case-studies/kriti-attendance/verify-details.webp" alt="'You're almost there' screen: name, employee ID, department and mobile number to verify, with Register button and 'Not your details? Go back' link" width="720" height="1600" loading="lazy" />
+            </div>
+          </div>
+        </figure>
+        <figure class="cf-media cf-media--periwinkle" aria-label="Processing and verification code step">
+          <div class="cf-phone">
+            <div class="cf-phone__screen">
+              <img src="assets/images/case-studies/kriti-attendance/verification-code.webp" alt="'Setting up your profile' processing screen with countdown and verification code field" width="720" height="1600" loading="lazy" />
+            </div>
+          </div>
+        </figure>
+      </div>
+
+      <h3 class="cf-decision">2. Attendance status at the centre of the experience</h3>
+      <p class="cf-text">I designed separate screens for <strong>Not Marked</strong>, <strong>Checked In</strong>, and <strong>Checked Out</strong>.</p>
+      <p class="cf-text">Making these states explicit gives employees a clearer indication of where they are in the daily attendance process. The primary action changes with the state, including a check-out action after check-in.</p>
+      <p class="cf-text">Employee information, current status, location details, and the attendance summary are grouped into distinct sections so each serves a clear purpose.</p>
+
+      <figure class="cf-media" aria-label="Not Marked state with attendance actions">
+        <div class="cf-phone">
+          <div class="cf-phone__screen cf-phone__screen--end">
+            <img src="assets/images/case-studies/kriti-attendance/attendance-after.webp" alt="Not Marked state: attendance summary above the Enroll Now primary action, with Work From Home and On duty options" width="720" height="1600" loading="lazy" />
+          </div>
+        </div>
+      </figure>
+
+      <h3 class="cf-decision">3. More understandable location feedback</h3>
+      <p class="cf-text">Location information is part of the attendance decision, so the redesign makes it easier to interpret.</p>
+      <p class="cf-text">The interface pairs GPS accuracy values with descriptive feedback such as "Good" or "Low" and uses "Last location update" to explain the timestamp. A refresh interaction includes a visible "Refreshing…" state.</p>
+      <p class="cf-text">This approach is intended to help employees distinguish between their attendance status and the readiness of their location information.</p>
+
+      <figure class="cf-media cf-media--periwinkle cf-media--fit cf-media--short" aria-label="Location feedback card">
+        <img src="assets/images/case-studies/kriti-attendance/location-feedback.webp" alt="Location card: Last Location Update 27/05/2026 11:47 AM, GPS Accuracy 100m rated Low, with a refresh button" width="900" height="176" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-decision">4. Recent attendance in context</h3>
+      <p class="cf-text">The attendance summary brings recent records into the main experience. Entries show check-in and check-out times, recorded hours, and office or work-from-home labels.</p>
+      <p class="cf-text">Additional states cover unmarked attendance, incomplete entries, and weekly off days. These variations help represent the different situations employees may encounter when reviewing their records.</p>
+
+      <figure class="cf-media cf-media--lime cf-media--fit" aria-label="Attendance summary cards">
+        <img src="assets/images/case-studies/kriti-attendance/attendance-summary.webp" alt="Attendance summary: today 'Not marked'; yesterday with check-in, check-out, Office label and 8.25 hours" width="900" height="485" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-decision">5. Recovery when the task is interrupted</h3>
+      <p class="cf-text">I included recovery screens for disabled location access, unavailable internet connectivity, and unsuccessful registration-message delivery.</p>
+      <p class="cf-text">The messages describe the issue and suggest a next step, for example enabling location access or turning on Wi-Fi or mobile data. This gives employees practical guidance at the point where they need it.</p>
+
+      <hr class="cf-rule" />
+    </section>
+
+    <!-- 6. Outcome & validation -->
+    <section class="cs-block cf-section" id="outcome" data-toc="Outcome &amp; validation">
+      <h2 class="cf-label">Design outcome</h2>
+      <p class="cf-text">The redesign establishes a more explicit attendance journey through guided registration, visible attendance states, understandable location feedback, and accessible recent records.</p>
+
+      <div class="cf-results">
+        <div><strong>4</strong><span>Registration stages: enter, review, process, confirm</span></div>
+        <div><strong>3</strong><span>Attendance states with their own screens: Not Marked, Checked In, Checked Out</span></div>
+        <div><strong>Good · Low</strong><span>Descriptive feedback paired with GPS accuracy, plus a visible refresh state</span></div>
+        <div><strong>3</strong><span>Recovery screens: location access, connectivity and message delivery</span></div>
+      </div>
+
+      <p class="cf-text">These are design outcomes. Improvements in completion time, attendance errors, or support requests would need to be measured through usability testing and production use.</p>
+      <p class="cf-text">The next validation step would be to test whether employees can identify their current status, complete registration, and recover from location or connectivity issues without assistance.</p>
+
+      <hr class="cf-rule" />
+    </section>
+
+    <!-- 7. Reflection -->
+    <section class="cs-block cf-quote" id="reflection" data-toc="Reflection">
+      <span class="cf-badge">Reflection</span>
+      <blockquote class="cs-quote">"This project reinforced the importance of designing beyond the main action."</blockquote>
+      <p class="cf-quote-note">An attendance experience also needs to explain waiting, confirmation, missing information, and failure.</p>
+    </section>
+
+    <footer class="cs-end cf-foot">
+      <p>Pradeep © 2026</p>
+      <a href="mailto:pradeep.tasp.0802@gmail.com">pradeep.tasp.0802@gmail.com</a>
+    </footer>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script src="js/case-study.js"></script>
+  <script src="js/compare-slider.js"></script>
+  <script src="js/bot-nav.js"></script>
+</body>
+</html>

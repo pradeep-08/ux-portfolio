@@ -17,6 +17,7 @@
     { href: 'facility-management.html', kicker: 'B2B · Facility operations', name: 'Facility Management', platform: 'Mobile · Office project', pitch: 'Connecting facility tasks from assignment to completion', img: null, featured: true },
     { href: 'gcc-safe-subway.html', kicker: 'Public-sector operations', name: 'GCC Safe Subway', platform: 'Mobile · Office project', pitch: 'Making subway barrier operations clear and deliberate', img: null },
     { href: 'e-seal.html', kicker: 'B2B · Asset and seal operations', name: 'E-Seal', platform: 'Web · Office project', pitch: 'Bringing seal activity into one operational view', img: null },
+    { href: 'kriti-attendance.html', kicker: 'Enterprise · B2E', name: 'Kriti Attendance', platform: 'Mobile · Office project', pitch: 'Making daily attendance clearer, from registration to check-out', img: null },
   ];
 
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>';
