@@ -71,6 +71,15 @@
   function init() {
     if (document.querySelector('.botnav')) return;
 
+    // Progressive blur strip behind the dock: content softens as it scrolls under the bar.
+    if (!document.querySelector('.edge-blur')) {
+      const edge = document.createElement('div');
+      edge.className = 'edge-blur';
+      edge.setAttribute('aria-hidden', 'true');
+      edge.innerHTML = '<span></span>'.repeat(6);
+      document.body.appendChild(edge);
+    }
+
     const page = detectPage();
     const nav = buildNav(page);
     document.body.appendChild(nav);

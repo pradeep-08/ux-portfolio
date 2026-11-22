@@ -230,6 +230,67 @@ body.cs-page {
   font-weight: 500;
 }
 
+/* --- Progress bars: one per section, height proportional to the section's
+       length (set by js/case-study.js), ink fills it as the section is read --- */
+.cs-toc {
+  --cs-bar-track: #d6d3d1;
+  --cs-bar-ink: #111111;
+}
+
+[data-theme="dark"] .cs-toc {
+  --cs-bar-track: #3a3a3d;
+  --cs-bar-ink: #f4f4f3;
+}
+
+.cs-toc .cs-toc__list--bars {
+  gap: 5px;
+}
+
+.cs-toc__list--bars li {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  transition: min-height 0.3s ease;
+}
+
+.cs-toc__bar {
+  position: relative;
+  flex: none;
+  align-self: stretch;
+  width: 4px;
+  min-height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--cs-bar-track);
+}
+
+.cs-toc__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--cs-bar-ink);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.15s linear;
+}
+
+/* The label hangs from the top of its bar */
+.cs-toc__list--bars a {
+  margin-top: -3px;
+}
+
+/* Hovering a row darkens its bar slightly as a click target cue */
+.cs-toc__list--bars li:hover .cs-toc__bar {
+  background: color-mix(in srgb, var(--cs-bar-track) 70%, var(--cs-bar-ink));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-toc__fill,
+  .cs-toc__list--bars li {
+    transition: none;
+  }
+}
+
 /* --- Header --- */
 .cs-eyebrow {
   font-family: var(--cs-mono);
@@ -788,5 +849,81 @@ body.cs-page {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* ==========================================================================
+   EDGE RAIL + WIDE READING (ref: andreas.vision case studies)
+   The contents rail is pinned to the far left edge in small type; the article
+   becomes one centred column with a wider text measure, and figures run wider
+   than the text. Below 1240px the rail hides (the progress ring lists the
+   sections there) and everything is one column.
+   ========================================================================== */
+:root {
+  --cs-column: 760px;          /* text measure */
+  --cs-edge-rail: 176px;       /* rail width at the left edge */
+  /* Wide media: as wide as fits without reaching under the rail */
+  --cs-wide: min(1120px, calc(100vw - 2 * (var(--cs-edge-rail) + 56px)));
+}
+
+.cs-layout {
+  display: block;
+  max-width: calc(var(--cs-column) + 48px);
+}
+
+.cs-topbar {
+  max-width: calc(var(--cs-column) + 48px);
+}
+
+.cs-toc {
+  display: none;
+}
+
+@media (min-width: 1240px) {
+  .cs-toc {
+    display: block;
+    position: fixed;
+    top: 120px;
+    left: 24px;
+    z-index: 5;
+    width: var(--cs-edge-rail);
+    padding: 0;
+  }
+
+  /* Top bar spans the page so the theme toggle (and the progress ring under
+     it) sit at the right edge, clear of the wider column */
+  .cs-topbar {
+    max-width: none;
+    padding-left: 24px;
+    padding-right: 32px;
+  }
+
+  .cs-toc a {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .cs-toc a.is-active {
+    font-weight: 400;
+  }
+
+  .cs-toc__list--bars li {
+    gap: 14px;
+  }
+
+  .cs-toc__bar {
+    width: 3px;
+  }
+
+  .cs-toc__list--bars a {
+    margin-top: -2px;
+  }
+
+  /* Wide figures and the cover break out of the text column, centred on it */
+  .cs-figure--wide,
+  .cs-cover {
+    width: var(--cs-wide);
+    margin-left: calc((100% - var(--cs-wide)) / 2);
+    margin-right: 0;
   }
 }

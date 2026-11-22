@@ -961,3 +961,32 @@ body.cs-page.cf-page {
   .cf-head h1 + .cf-tagline { font-size: 17px; }
   .cf-page .cs-end.cf-foot { flex-direction: column; }
 }
+
+/* ---------- Edge rail + wide reading (ref: andreas.vision) ----------
+   Rail pinned to the far left in small type; media runs wide while the text
+   keeps a centred reading measure. */
+@media (min-width: 1240px) {
+  .cf-page {
+    --cf-column: min(1120px, calc(100vw - 2 * (176px + 56px)));
+    --cf-text-col: 760px;
+  }
+
+  .cf-page .cs-toc {
+    left: 24px;
+    width: 176px;
+  }
+
+  .cf-page .cs-toc a {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* Text keeps the reading measure, centred over the wide media */
+  .cf-page .cf-head > *,
+  .cf-page .cs-block > :not(.cf-media):not(.cf-pair):not(.cf-compare):not(.cf-statcard):not(.cf-cards):not(.cf-results),
+  .cf-page .cs-end.cf-foot {
+    max-width: var(--cf-text-col);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

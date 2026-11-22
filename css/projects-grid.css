@@ -12,7 +12,29 @@ body.has-project-grid .framer-6v64ie {
 /* Projects page heading: Framer leaves 150px above and 100px below the title */
 body.has-project-grid .framer-6subr0 {
   padding-top: 72px !important;
-  padding-bottom: 48px !important;
+  padding-bottom: 40px !important;
+}
+
+/* ...centred over the toolbar and grid, and a size smaller than Framer's 55px */
+body.has-project-grid .framer-6subr0,
+body.has-project-grid .framer-6subr0 .framer-n6hpnc,
+body.has-project-grid .framer-6subr0 .framer-x112we {
+  align-items: center !important;
+}
+
+body.has-project-grid .framer-6subr0 .framer-x112we,
+body.has-project-grid .framer-6subr0 .framer-x112we .framer-text {
+  text-align: center !important;
+}
+
+body.has-project-grid .framer-6subr0 h1.framer-text {
+  font-size: clamp(32px, 3vw, 42px) !important;
+  letter-spacing: -0.02em !important;
+}
+
+body.has-project-grid .framer-6subr0 .framer-1i5gwvo p.framer-text {
+  font-size: 16px !important;
+  line-height: 1.55 !important;
 }
 
 .pgrid {
@@ -29,7 +51,8 @@ body.has-project-grid .framer-6subr0 {
   box-sizing: border-box;
   width: 100%;
   align-self: stretch;
-  padding: 0 100px 200px;
+  --pg-pad: 100px;
+  padding: 0 var(--pg-pad) 200px;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -44,11 +67,11 @@ body[toggle-theme="dark"] .pgrid {
 }
 
 .pgrid__list {
-  /* Left-aligned so the grid shares the heading's left edge on wide screens */
+  /* Centred under the toolbar so there is no empty band on the right */
   max-width: 1240px;
-  margin: 0;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--pg-cols, 3), minmax(0, 1fr));
   gap: 20px;
   list-style: none;
   padding: 0;
@@ -237,7 +260,8 @@ body[toggle-theme="dark"] .pgrid {
 /* --- Tablet: two columns --- */
 @media (max-width: 1199.98px) {
   .pgrid {
-    padding: 0 40px 160px;
+    --pg-pad: 40px;
+    padding: 0 var(--pg-pad) 160px;
   }
   .pgrid__list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -258,7 +282,8 @@ body[toggle-theme="dark"] .pgrid {
 /* --- Phone: one column --- */
 @media (max-width: 809.98px) {
   .pgrid {
-    padding: 0 20px 120px;
+    --pg-pad: 20px;
+    padding: 0 var(--pg-pad) 120px;
   }
   .pgrid__list {
     grid-template-columns: minmax(0, 1fr);
@@ -316,4 +341,447 @@ body[toggle-theme="dark"] .pgrid {
   .pcard__media img {
     transition: none;
   }
+}
+
+/* ==========================================================================
+   VIEW TOOLBAR (Grid / Shelf) + SHELF VIEW - projects page only
+   ========================================================================== */
+.pgrid {
+  --pv-track: #efefee;
+  --pv-pill: #ffffff;
+  --pv-ink: #111111;
+  --pv-muted: #6b6b6b;
+  --pv-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+body[toggle-theme="dark"] .pgrid {
+  --pv-track: #1f1f21;
+  --pv-pill: #3a3a3d;
+  --pv-ink: #f2f2f0;
+  --pv-muted: #9b9b9e;
+  --pv-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.pgrid [hidden] {
+  display: none !important;
+}
+
+.pview {
+  max-width: 1240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 32px;
+}
+
+.pview__toggle {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--pv-track);
+  border-radius: 9999px;
+}
+
+/* White pill that glides between Grid and Shelf (positioned by JS) */
+.pview__glider {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  width: 0;
+  border-radius: 9999px;
+  background: var(--pv-pill);
+  box-shadow: var(--pv-shadow);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pview__btn {
+  position: relative;
+  z-index: 1;
+}
+
+.pview__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  font: 500 15px/1 "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--pv-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.pview__btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.pview__btn[aria-pressed="true"] {
+  color: var(--pv-ink);
+}
+
+.pview__btn[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.pview__btn:hover {
+  color: var(--pv-ink);
+}
+
+.pview__btn:focus-visible,
+.pview__size:focus-visible {
+  outline: 2px solid var(--pg-accent);
+  outline-offset: 4px;
+}
+
+/* Size slider (reference style): thick ink fill up to the thumb, stage dots along
+   the rail, round thumb with a light centre. Five stages; it always snaps. */
+.pgrid {
+  --pv-rail: #e2e2e0;
+  --pv-tick: #a9a9a7;
+  --pv-tick-on: #8a8a8a;
+  --pv-hole: #ffffff;
+}
+
+body[toggle-theme="dark"] .pgrid {
+  --pv-rail: #333336;
+  --pv-tick: #6b6b6e;
+  --pv-tick-on: #8a8a8c;
+  --pv-hole: #111111;
+}
+
+.pview__size {
+  --pv-pos: 0%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 150px;
+  height: 32px;
+  margin-left: 24px;
+  padding: 0 13px;
+  cursor: pointer;
+  touch-action: none;
+  border-radius: 9999px;
+  outline: none;
+  overflow: hidden;
+  transition:
+    width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    margin 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease;
+}
+
+/* Shelf view: the slider folds away so the toggle glides to the centre */
+.pview__size.is-off {
+  width: 0;
+  margin-left: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pview__rail {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--pv-rail);
+}
+
+.pview__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--pv-pos);
+  border-radius: inherit;
+  background: var(--pv-ink);
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pview__rail i {
+  position: absolute;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--pv-tick);
+}
+
+.pview__thumb {
+  position: absolute;
+  top: 50%;
+  left: var(--pv-pos);
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: 50%;
+  background: var(--pv-ink);
+  transition: left 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s ease;
+}
+
+.pview__thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 6px;
+  height: 6px;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--pv-hole);
+}
+
+.pview__size:hover .pview__thumb,
+.pview__size:focus-visible .pview__thumb {
+  transform: scale(1.15);
+}
+
+.pview__size.is-dragging .pview__thumb {
+  transform: scale(1.25);
+}
+
+/* While dragging, the thumb tracks the pointer exactly */
+.pview__size.is-dragging .pview__thumb,
+.pview__size.is-dragging .pview__fill {
+  transition: transform 0.2s ease;
+}
+
+/* Desktop stages: card text scales with the card's own width (cqi), so it grows
+   and shrinks smoothly while the layout animates between stages. */
+@media (min-width: 1200px) {
+  .pgrid:not(.pgrid--home) .pcard {
+    container-type: inline-size;
+  }
+  .pgrid:not(.pgrid--home) .pcard__pitch {
+    font-size: clamp(15px, 4cqi, 40px);
+  }
+  .pgrid:not(.pgrid--home) .pgrid__item--wide .pcard__pitch {
+    font-size: clamp(18px, 2.6cqi, 40px);
+  }
+  .pgrid:not(.pgrid--home) .pcard__media--text {
+    padding: clamp(14px, 3.6cqi, 28px);
+  }
+  .pgrid:not(.pgrid--home) .pcard__title {
+    font-size: clamp(14px, 2.9cqi, 18px);
+  }
+
+  /* Stage restrictions: the wide card spans two columns except at 1 per row,
+     and each stage gets a cover shape that suits its card width. */
+  .pgrid__list[data-cols="1"] .pgrid__item--wide {
+    grid-column: auto;
+  }
+  .pgrid__list[data-cols="1"] .pcard__media,
+  .pgrid__list[data-cols="1"] .pgrid__item--wide .pcard__media {
+    flex: none;
+    aspect-ratio: 21 / 9;
+  }
+  .pgrid__list[data-cols="1"] .pgrid__item--wide .pcard__pitch {
+    font-size: clamp(18px, 3cqi, 40px);
+  }
+  .pgrid__list[data-cols="2"] .pcard__media {
+    aspect-ratio: 16 / 10;
+  }
+  .pgrid__list[data-cols="2"] .pgrid__item--wide .pcard__media {
+    aspect-ratio: auto;
+  }
+  .pgrid__list[data-cols="5"] .pcard__platform {
+    font-size: 11px;
+  }
+}
+
+/* --- Shelf --- */
+.pshelf {
+  --ps-w: min(745px, 42vw);
+  /* Bleed past the section padding so the side stacks can reach the edges */
+  margin: 0 calc(var(--pg-pad) * -1);
+  padding: 40px 0 24px;
+  overflow: hidden;
+  overflow: clip;
+  outline: none;
+  text-align: center;
+}
+
+.pshelf__title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pg-text);
+}
+
+/* The solution line under the card */
+.pshelf__sub {
+  max-width: min(52ch, var(--ps-w));
+  margin: 20px auto 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--pv-muted);
+}
+
+.pshelf__stage {
+  position: relative;
+  height: calc(var(--ps-w) * 9 / 16 + 8px);
+  perspective: calc(var(--ps-w) * 4);
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pshelf__card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--ps-w);
+  aspect-ratio: 16 / 9;
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--pg-media);
+  border: 1px solid var(--pg-border);
+  color: var(--pg-text);
+  text-decoration: none;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transform: translate(-50%, -50%);
+  /* Selection ring (reference style): sits off the card edge, fades in on the centre card */
+  outline: 3px solid transparent;
+  outline-offset: 10px;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease,
+    outline-color 0.3s ease,
+    outline-offset 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  cursor: pointer;
+}
+
+.pshelf__card.is-active {
+  outline-color: var(--ps-ring);
+  outline-offset: 5px;
+  cursor: none;
+}
+
+.pshelf__card:focus-visible {
+  outline-color: var(--pg-accent);
+}
+
+.pgrid {
+  --ps-ring: #3b6ae0;
+}
+
+body[toggle-theme="dark"] .pgrid {
+  --ps-ring: #7393ff;
+}
+
+/* "Click to read" pill: follows the pointer over the centre card */
+.pshelf__cta {
+  position: absolute;
+  top: var(--my, 50%);
+  left: var(--mx, 50%);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--pg-btn-ink);
+  background: var(--pg-btn);
+  border-radius: 9999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  transition: opacity 0.18s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pshelf__cta svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pshelf__card.is-active:hover .pshelf__cta {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Touch / keyboard: no pointer to follow, so the normal cursor and no pill */
+@media not all and (hover: hover) {
+  .pshelf__card.is-active {
+    cursor: pointer;
+  }
+}
+
+.pshelf__card .pcard__media {
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+
+.pshelf__card .pcard__media--text {
+  padding: clamp(18px, 2.4vw, 32px);
+}
+
+.pshelf__card .pcard__pitch {
+  max-width: 20ch;
+  font-size: clamp(20px, 2.3vw, 34px);
+}
+
+/* Toolbar + shelf on smaller screens; the size slider only matters on desktop,
+   where the column count can change */
+@media (max-width: 1199.98px) {
+  .pview__size {
+    display: none;
+  }
+  .pshelf {
+    --ps-w: min(560px, 56vw);
+  }
+}
+
+@media (max-width: 809.98px) {
+  .pview {
+    margin-bottom: 20px;
+  }
+  .pshelf {
+    --ps-w: min(70vw, 380px);
+    padding-top: 24px;
+  }
+  .pshelf__card {
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+  }
+  .pshelf__stage {
+    height: calc(var(--ps-w) + 8px);
+  }
+  .pshelf__card .pcard__pitch {
+    font-size: 21px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pshelf__card,
+  .pview__thumb,
+  .pview__glider,
+  .pview__size,
+  .pshelf__cta,
+  .pview__fill,
+  .pview__btn {
+    transition: none;
+  }
+}
+
+/* Shelf is centred on the page, so centre the toolbar with it */
+.pgrid[data-layout="shelf"] .pview {
+  max-width: none;
 }

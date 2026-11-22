@@ -25,15 +25,50 @@
   const list = document.querySelector('.cs-toc ol');
   if (!list || !sections.length) return;
 
-  const links = sections.map(section => {
+  // Each entry has a bar beside its label. Bar height is proportional to the
+  // section's length, and it fills with ink as that section is read.
+  const rows = sections.map(section => {
     const li = document.createElement('li');
+    const bar = document.createElement('span');
+    bar.className = 'cs-toc__bar';
+    bar.setAttribute('aria-hidden', 'true');
+    const fill = document.createElement('span');
+    fill.className = 'cs-toc__fill';
+    bar.appendChild(fill);
     const a = document.createElement('a');
     a.href = '#' + section.id;
     a.textContent = section.dataset.toc || section.querySelector('h2').textContent;
-    li.appendChild(a);
+    li.append(bar, a);
     list.appendChild(li);
-    return a;
+    return { li, fill, a };
   });
+  const links = rows.map(r => r.a);
+  list.classList.add('cs-toc__list--bars');
+
+  // Share out the available rail height by section length; a row never gets
+  // shorter than its label.
+  function sizeBars() {
+    // Where the rail sits once stuck/fixed, minus room for the bottom dock
+    const cs = getComputedStyle(list.closest('.cs-toc'));
+    const railTop = (parseFloat(cs.top) || 0) + (parseFloat(cs.paddingTop) || 0);
+    const avail = Math.max(260, Math.min(720, window.innerHeight - railTop - 150));
+    const heights = sections.map(s => s.offsetHeight);
+    const total = heights.reduce((a, b) => a + b, 0) || 1;
+    rows.forEach((r, i) => {
+      r.li.style.minHeight = Math.round((avail * heights[i]) / total) + 'px';
+    });
+  }
+
+  // Fill = how far the reading line (35% down the viewport) has moved through
+  // each section; everything is full once the page bottom is reached.
+  function fillBars(line, atBottom) {
+    sections.forEach((section, i) => {
+      const r = section.getBoundingClientRect();
+      const p = atBottom ? 1 : Math.min(1, Math.max(0, (line - r.top) / (r.height || 1)));
+      rows[i].fill.style.transform = `scaleY(${p})`;
+      rows[i].li.classList.toggle('is-read', p >= 1);
+    });
+  }
 
   // Active = last section whose top has passed 35% of the viewport
   function update() {
@@ -43,9 +78,9 @@
       if (section.getBoundingClientRect().top <= line) active = i;
     });
     // At the very bottom, the last section is the one being read
-    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-      active = sections.length - 1;
-    }
+    const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    if (atBottom) active = sections.length - 1;
+    fillBars(line, atBottom);
     [...links, ...progress.links].forEach(a => {
       const on = a.hash === '#' + sections[active].id;
       a.classList.toggle('is-active', on);
@@ -119,7 +154,12 @@
   }
 
   window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', () => { progress.align(); update(); });
+  window.addEventListener('resize', () => { progress.align(); sizeBars(); update(); });
+  // Images loading in change section lengths, so re-measure when the article resizes
+  if (typeof ResizeObserver === 'function') {
+    new ResizeObserver(() => { sizeBars(); update(); }).observe(article);
+  }
   progress.align();
+  sizeBars();
   update();
 })();
