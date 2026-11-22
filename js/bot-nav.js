@@ -76,7 +76,6 @@
       const edge = document.createElement('div');
       edge.className = 'edge-blur';
       edge.setAttribute('aria-hidden', 'true');
-      edge.innerHTML = '<span></span>'.repeat(6);
       document.body.appendChild(edge);
     }
 
@@ -305,7 +304,19 @@
     let lastY = window.scrollY;
     let scrollIdle = null;
 
+    // Scroll fires several times per frame; every pass reads layout and writes
+    // styles, so coalesce the work into one pass per animation frame.
+    let scrollQueued = false;
     window.addEventListener('scroll', () => {
+      if (scrollQueued) return;
+      scrollQueued = true;
+      requestAnimationFrame(() => {
+        scrollQueued = false;
+        onScrollFrame();
+      });
+    }, { passive: true });
+
+    function onScrollFrame() {
       const goingDown = window.scrollY > lastY;
       lastY = window.scrollY;
 
@@ -321,9 +332,16 @@
         bot.classList.remove('is-bobbing');
         lookAt(0, 0);
       }, 220);
-    }, { passive: true });
 
-    window.addEventListener('resize', moveWithScroll);
+      checkFinished();
+    }
+
+    let resizeQueued = false;
+    window.addEventListener('resize', () => {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      requestAnimationFrame(() => { resizeQueued = false; moveWithScroll(); });
+    });
 
     /* --- Hover & focus on items --- */
     items.forEach(item => {
@@ -566,7 +584,6 @@
     };
     window.addEventListener('pointerup', endDrag);
     window.addEventListener('pointercancel', endDrag);
-    window.addEventListener('scroll', checkFinished, { passive: true });
 
     // Leaving the desktop layout sends the bot home
     canSeat.addEventListener('change', () => { if (!canSeat.matches && free) backToBar(); });

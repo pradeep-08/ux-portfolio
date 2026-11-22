@@ -285,3 +285,15 @@ body[toggle-theme="dark"] .framer-lzGIe.framer-g8ikc9 {
     --framer-font-size: 30px !important;
   }
 }
+
+/* --- Home "Process" timeline in dark mode ---
+   Framer keeps the light-theme colours here: a near-white track (#edeef1) that
+   glares over the dark cards, and a near-black progress fill that disappears.
+   Invert them for dark: a dim track and a light fill. */
+body[toggle-theme="dark"] .framer-e6rkk7 [style*="--token-09721aba"] {
+  background: #3a3a3d !important;
+}
+
+body[toggle-theme="dark"] .framer-e6rkk7 [style*="--token-9eeddc74"] {
+  background: #f4f4f3 !important;
+}

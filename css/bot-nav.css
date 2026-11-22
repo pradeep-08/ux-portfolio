@@ -4,6 +4,24 @@
    [data-bn-theme] on .botnav (set from Framer's toggle-theme or data-theme).
    ========================================================================== */
 
+/* Site-wide motion tokens. bot-nav.css loads on every page, so they live here.
+   ease-out: enter/exit and press feedback; ease-in-out: things moving on screen.
+   Pressables scale to --press on :active so the UI answers the pointer at once. */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --press: 0.97;
+  --press-small: 0.92;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --press: 1;
+    --press-small: 1;
+  }
+}
+
 /* Shared tokens: the bar and the stool corner (.botseat) where the bot can sit */
 .botnav,
 .botseat {
@@ -122,12 +140,22 @@
   background: transparent;
   color: var(--bn-text);
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out);
 }
 
-.botnav__icon:hover,
 .botnav__icon:focus-visible {
   transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .botnav__icon:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.botnav__icon:active {
+  transform: scale(var(--press-small));
+  transition-duration: 100ms;
 }
 
 .botnav__icon svg {
@@ -149,13 +177,24 @@
   border-radius: 9999px;
   text-decoration: none;
   white-space: nowrap;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: transform 160ms var(--ease-out), background-color 0.2s ease;
 }
 
-.botnav__resume:hover,
 .botnav__resume:focus-visible {
   transform: translateY(-1px);
   background: var(--bn-accent-fill-hover);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .botnav__resume:hover {
+    transform: translateY(-1px);
+    background: var(--bn-accent-fill-hover);
+  }
+}
+
+.botnav__resume:active {
+  transform: scale(var(--press));
+  transition-duration: 100ms;
 }
 
 .botnav__resume svg {
@@ -722,7 +761,12 @@
   background: transparent;
   color: var(--bn-bubble-text);
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 160ms var(--ease-out);
+}
+
+.botnav__bubble-btn:active {
+  transform: scale(var(--press));
+  transition-duration: 100ms;
 }
 
 .botnav__bubble-btn:hover {
@@ -806,23 +850,14 @@
   height: calc(110px + env(safe-area-inset-bottom, 0px));
   z-index: 9980; /* under .botnav (9990) */
   pointer-events: none;
+  /* One blur layer faded in by a mask. The earlier six stacked backdrop-filter
+     bands looked marginally smoother but re-blurred the page six times every
+     frame: measured Lighthouse 67 -> 91 on a case study, blocking 3.9s -> 0.15s. */
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 80%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 80%);
 }
-
-.edge-blur > span {
-  position: absolute;
-  inset: 0;
-  -webkit-backdrop-filter: blur(var(--eb-blur));
-  backdrop-filter: blur(var(--eb-blur));
-  -webkit-mask-image: linear-gradient(to bottom, transparent var(--eb-a), #000 var(--eb-b), #000 var(--eb-c), transparent var(--eb-d));
-  mask-image: linear-gradient(to bottom, transparent var(--eb-a), #000 var(--eb-b), #000 var(--eb-c), transparent var(--eb-d));
-}
-
-.edge-blur > span:nth-child(1) { --eb-blur: 0.5px; --eb-a: 0%;    --eb-b: 12.5%; --eb-c: 25%;  --eb-d: 37.5%; }
-.edge-blur > span:nth-child(2) { --eb-blur: 1px;   --eb-a: 12.5%; --eb-b: 25%;   --eb-c: 37.5%; --eb-d: 50%; }
-.edge-blur > span:nth-child(3) { --eb-blur: 2px;   --eb-a: 25%;   --eb-b: 37.5%; --eb-c: 50%;  --eb-d: 62.5%; }
-.edge-blur > span:nth-child(4) { --eb-blur: 4px;   --eb-a: 37.5%; --eb-b: 50%;   --eb-c: 62.5%; --eb-d: 75%; }
-.edge-blur > span:nth-child(5) { --eb-blur: 8px;   --eb-a: 50%;   --eb-b: 62.5%; --eb-c: 75%;  --eb-d: 87.5%; }
-.edge-blur > span:nth-child(6) { --eb-blur: 16px;  --eb-a: 62.5%; --eb-b: 75%;   --eb-c: 100%; --eb-d: 100%; }
 
 @media (max-width: 640px) {
   .edge-blur { height: calc(84px + env(safe-area-inset-bottom, 0px)); }

@@ -4,9 +4,14 @@
 
 <!-- Published Oct 27, 2026, 5:00 PM UTC -->
 
-<html>
+<html lang="en">
 
 <head>
+<!-- Perf: open connections to the CDNs early. Framer renders the whole page in JS,
+     so its modules and fonts are on the critical path. -->
+<link rel="preconnect" href="https://framerusercontent.com" crossorigin>
+<link rel="preconnect" href="https://framerusercontent.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script>
 // Framer's router renders from its own route ("/about"), so the URL is swapped
 // while the page boots. Once loaded the real file URL is put back, so Back
@@ -1467,8 +1472,6 @@ document.addEventListener("click", function(e) {
 
 <body>
 
-	<script async src="https://events.framer.com/script?v=2" data-fid="d2e758a95bccc4a778016859661f14ed1c591501e8592ed187830fa9fb85a7cb" data-no-nt></script>
-
 	<!-- Start of bodyStart -->
 
     
@@ -1491,7 +1494,7 @@ document.addEventListener("click", function(e) {
 
 	<script>typeof document<"u"&&(window.process={...window.process,env:{...window.process?.env,NODE_ENV:"production"}});</script>
 
-	<link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/rolldown-runtime.Bi-D_2cA.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/react.BF5K0J5z.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/framer.V_qDDvA7.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/motion.Cn2ykAj0.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/toplevel-deps.C5BzG98k.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/5KlVioUu9S_-WN7RnbM-Q95YODDef0fTaWO0ty0dcmE.BYbj1zVi.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/index.es.DEv1sDhD.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/shared-lib.cb2qaJVT.mjs"><link rel="modulepreload" fetchpriority="low" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/augiA20Il.DcgDAQYd.mjs"><script type="module" async data-framer-bundle="main" fetchpriority="low" src="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/script_main.C20uLURn.mjs"></script>
+	<link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/rolldown-runtime.Bi-D_2cA.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/react.BF5K0J5z.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/framer.V_qDDvA7.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/motion.Cn2ykAj0.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/toplevel-deps.C5BzG98k.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/5KlVioUu9S_-WN7RnbM-Q95YODDef0fTaWO0ty0dcmE.BYbj1zVi.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/index.es.DEv1sDhD.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/shared-lib.cb2qaJVT.mjs"><link rel="modulepreload" fetchpriority="high" href="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/augiA20Il.DcgDAQYd.mjs"><script type="module" async data-framer-bundle="main" fetchpriority="high" src="https://framerusercontent.com/sites/4tGCKX4DF1nGIVxzL1r9zE/script_main.C20uLURn.mjs"></script>
 
 	<!-- Start of bodyEnd -->
 

@@ -6,7 +6,8 @@
    Theme follows html[data-theme] (set by js/main.js).
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&display=swap');
+/* Fonts are linked from each page's <head> (one preconnected request) instead of
+   @import, which made the browser download this file before it could ask for them. */
 
 :root {
   --cs-bg: #fafaf9;
@@ -158,11 +159,13 @@ body.cs-page {
 .cs-back svg {
   width: 16px;
   height: 16px;
-  transition: transform 0.2s ease;
+  transition: transform 200ms var(--ease-out);
 }
 
-.cs-back:hover svg {
-  transform: translateX(-3px);
+@media (hover: hover) and (pointer: fine) {
+  .cs-back:hover svg {
+    transform: translateX(-3px);
+  }
 }
 
 .cs-theme {
@@ -176,11 +179,16 @@ body.cs-page {
   background: transparent;
   color: var(--cs-muted);
   cursor: pointer;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 160ms var(--ease-out);
 }
 
 .cs-theme:hover {
   color: var(--cs-text);
+}
+
+.cs-theme:active {
+  transform: scale(var(--press-small));
+  transition-duration: 100ms;
 }
 
 .cs-theme svg {
@@ -610,12 +618,22 @@ body.cs-page {
   border-radius: 12px;
   background: var(--cs-surface);
   text-decoration: none;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, transform 200ms var(--ease-out);
 }
 
 .cs-next:hover {
   border-color: var(--cs-accent);
-  transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-next:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.cs-next:active {
+  transform: scale(0.985);
+  transition-duration: 100ms;
 }
 
 .cs-next small {
@@ -706,7 +724,7 @@ body.cs-page {
   border-radius: 4px;
   background: var(--cs-text);
   color: var(--cs-bg);
-  transition: transform 0.2s ease;
+  transition: transform 200ms var(--ease-out);
 }
 
 .cs-progress__badge svg {
@@ -714,9 +732,14 @@ body.cs-page {
   height: 14px;
 }
 
-.cs-progress__btn:hover .cs-progress__badge,
 .cs-progress.is-open .cs-progress__badge {
   transform: translateY(-2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-progress__btn:hover .cs-progress__badge {
+    transform: translateY(-2px);
+  }
 }
 
 .cs-progress__menu {
@@ -849,6 +872,15 @@ body.cs-page {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* Colour feedback stays; movement (lifts, nudges, presses) goes */
+  .cs-next,
+  .cs-back svg,
+  .cs-theme,
+  .cs-progress__badge,
+  .cf-back {
+    transform: none !important;
   }
 }
 

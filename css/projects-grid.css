@@ -93,7 +93,13 @@ body[toggle-theme="dark"] .pgrid {
   border-radius: 26px;
   color: var(--pg-text);
   text-decoration: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 160ms var(--ease-out);
+}
+
+/* Press feedback: a card is one big link, so it gives slightly under the finger */
+.pcard:active {
+  transform: scale(0.985);
+  transition-duration: 100ms;
 }
 
 .pcard__media {
@@ -156,9 +162,16 @@ body[toggle-theme="dark"] .pgrid {
   font-size: 30px;
 }
 
-.pcard:hover .pcard__media img,
 .pcard:focus-visible .pcard__media img {
   transform: scale(1.03);
+}
+
+/* Touch screens fire :hover on tap, so the zoom would flash just before the
+   page changes; only real pointers get it */
+@media (hover: hover) and (pointer: fine) {
+  .pcard:hover .pcard__media img {
+    transform: scale(1.03);
+  }
 }
 
 /* --- Footer: title + round arrow; on hover the arrow grows into "View case".
@@ -412,7 +425,12 @@ body[toggle-theme="dark"] .pgrid {
   border: 0;
   border-radius: 9999px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, transform 160ms var(--ease-out);
+}
+
+.pview__btn:active {
+  transform: scale(var(--press));
+  transition-duration: 100ms;
 }
 
 .pview__btn svg {

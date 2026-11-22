@@ -271,7 +271,8 @@
       const out = from === 'grid' ? gridList : shelf;
       out.animate(
         [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'scale(0.985)' }],
-        { duration: 150, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' }
+        // ease-out, not ease-in: the old view starts leaving the instant it's clicked
+        { duration: 150, easing: 'cubic-bezier(0.23, 1, 0.32, 1)', fill: 'forwards' }
       ).finished.then(show, () => {});
     }
     btns.forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
