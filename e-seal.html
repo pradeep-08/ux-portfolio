@@ -1,124 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- theme-boot: apply the saved dark theme before the first paint, so moving
+     between pages never flashes a white screen while the page loads. -->
+<script>try{if((localStorage.getItem("pradeep_theme")||localStorage.getItem("currentToggleState"))==="dark"){var d=document.documentElement;d.setAttribute("data-theme","dark")}}catch(e){}</script>
+<style>html[data-theme="dark"],html[data-theme="dark"] body{background-color:#0f0f10;color-scheme:dark}</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>E-Seal — Case Study | Pradeep UX Portfolio</title>
-  <meta name="description" content="Bringing seal activity into one operational view. Case study on an asset and seal operations web dashboard by Pradeep." />
+  <meta name="description" content="Bringing seal activity into one operational view. Case study on an asset and seal operations web dashboard and field app by Pradeep." />
   <link rel="icon" href="assets/images/favicon-64.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
   <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/case-study-caseform.css" />
+  <link rel="stylesheet" href="css/case-study-story.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
 </head>
-<body class="cs-page">
+<!--
+  E-Seal case study. Two views share this page: the case study (default, the earlier copy
+  unchanged) and Design decisions, switched by the toggle at the top (js/case-study-story.js).
+  Web screens are rendered from "Ebaton(e-seal) Web(UI) App Design.fig", app screens from
+  "Ebaton(e-seal) Mobile App Design.fig". Vehicle numbers are replaced with demo values and seal
+  serial numbers are blurred. No outcome metrics are claimed.
+  Sources and open questions: docs/e-seal-case-study/.
+-->
+<body class="cs-page cf-page">
 
-  <div class="cs-topbar">
-    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
-      <span class="cs-avatar"><img src="assets/images/avatar-132.webp" alt="" width="44" height="44" decoding="async" /><i aria-hidden="true"></i></span>
-      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
-    </a>
-    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  <a href="projects.html" class="cf-back" aria-label="Back to all projects">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+  <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+
+  <!-- View toggle: case study (default) / design decisions -->
+  <div class="ds-viewtoggle" role="tablist" aria-label="Choose a view">
+    <button type="button" role="tab" id="view-tab-overview" aria-controls="view-overview" aria-selected="true">Case study</button>
+    <button type="button" role="tab" id="view-tab-decisions" aria-controls="view-decisions" aria-selected="false" tabindex="-1"><span class="ds-viewtoggle__long">Design decisions</span><span class="ds-viewtoggle__short" aria-hidden="true">Decisions</span><span class="ds-viewtoggle__count" aria-hidden="true">4</span></button>
+  </div>
+  <!-- First-visit nudge towards the decisions view; shown by js/case-study-story.js -->
+  <div class="ds-viewhint" hidden>
+    <button type="button" class="ds-viewhint__go"><span class="ds-viewhint__lead">Short on time?&nbsp;</span>See the 4 key design decisions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+    <button type="button" class="ds-viewhint__x" aria-label="Dismiss tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
 
-  <div class="cs-layout">
-    <aside class="cs-toc" aria-label="On this page">
-      <nav><ol></ol></nav>
-    </aside>
+  <!-- Contents rail: filled by js/case-study.js from each section's data-toc -->
+  <aside class="cs-toc" aria-label="On this page">
+    <nav><ol></ol></nav>
+  </aside>
 
-    <main class="cs-article">
-      <header>
-        <a href="projects.html" class="cs-back">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-          back
-        </a>
-        <p class="cs-eyebrow">E-Seal · case study · <span data-read-time>4 min read</span></p>
-        <h1 class="cs-title">Bringing seal activity into one operational view</h1>
-        <p class="cs-summary">A web dashboard that connects asset totals, seal status, weekly activity and transaction records.</p>
+  <main class="cs-article cf-article">
+    <header class="cf-head">
+      <h1>E-Seal</h1>
+      <p class="cf-tagline">Bringing seal activity into one operational view</p>
+      <p class="cs-summary">A web dashboard that connects asset totals, seal status, weekly activity and transaction records.</p>
 
-        <dl class="cs-meta">
-          <div><dt>Sector</dt><dd>B2B</dd></div>
-          <div><dt>Domain</dt><dd>Asset and seal operations</dd></div>
-          <div><dt>Platform</dt><dd>Web</dd></div>
-          <div><dt>Project</dt><dd>Office project</dd></div>
-        </dl>
-      </header>
-
-      <section class="cs-block" id="product" data-toc="The product">
-        <p class="cs-eyebrow">The product</p>
-        <h2>What E-Seal brings together</h2>
-        <p>The E-Seal designs provide an administrative overview of assets and seal activity. The dashboard brings together status summaries, weekly activity, location information and recent transactions. A transaction table identifies records through company, asset, seal serial number, scan timestamps and status.</p>
-      </section>
-
-      <section class="cs-block" id="problem" data-toc="Problem framing">
-        <p class="cs-eyebrow">Problem framing</p>
-        <h2>The challenge</h2>
-        <p>An overview is useful only if it leads to records an operator can identify. Counts can indicate a pattern, while individual transactions explain what happened to a particular asset or seal. The design challenge is to place these two levels of information together without making the dashboard as dense as a full transaction report.</p>
-      </section>
-
-      <section class="cs-block" id="users" data-toc="Users &amp; scope">
-        <p class="cs-eyebrow">Users and scope</p>
-        <h2>Who it serves</h2>
-        <p>The visible experience is designed for administrators and operational teams reviewing seal records. The file demonstrates dashboard and transaction-table design, with light and dark dashboard variants. It does not establish the full physical sealing workflow or the mechanism that generates each scan.</p>
-      </section>
-
-      <section class="cs-block" id="flow" data-toc="Task flow">
-        <p class="cs-eyebrow">Task flow</p>
-        <h2>How the work moves</h2>
-        <div class="cs-flowgroup">
-          <p class="cs-flowgroup-label">Administrator</p>
-          <ol class="cs-steps">
-            <li>Sign in</li>
-            <li>Review asset and seal summaries</li>
-            <li>Inspect activity or location information</li>
-            <li>Open transactions</li>
-            <li>Identify a record by asset, serial number and timestamps</li>
-            <li>Use the available View action</li>
-          </ol>
+      <dl class="cf-meta">
+        <div><dt>Sector</dt><dd><strong>B2B</strong><span>Business to business</span></dd></div>
+        <div><dt>Domain</dt><dd><strong>Assets</strong><span>Asset and seal operations</span></dd></div>
+        <div>
+          <dt>Platform</dt>
+          <dd>
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></strong>
+            <span>Web, plus a field app</span>
+          </dd>
         </div>
-      </section>
+        <div><dt>Project</dt><dd><strong>Office</strong><span>Office project</span></dd></div>
+      </dl>
+    </header>
 
-      <section class="cs-block" id="decisions" data-toc="Design decisions">
-        <p class="cs-eyebrow">Design decisions</p>
-        <h2>Key decisions</h2>
-        <h3>1. Summary metrics establish the scale of activity.</h3>
-        <p>Total assets and seal-distribution information offer a starting point before the user moves into individual records. Weekly activity adds a time-based view, while location information provides another way to interpret the overview.</p>
-        <h3>2. Recent transactions make the overview concrete.</h3>
-        <p>Asset and serial identifiers sit alongside scan times and state labels, allowing a record to be distinguished from similar entries. The separate transaction table provides a larger workspace for this more detailed information.</p>
-        <h3>3. One hierarchy, two themes.</h3>
-        <p>Light and dark variants explore how the same information hierarchy can work across different display preferences.</p>
-      </section>
+    <!-- ============ VIEW 1: Case study (default) ============ -->
+    <div class="cs-view" id="view-overview" data-view="overview" role="tabpanel" aria-labelledby="view-tab-overview">
 
-      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
-        <p class="cs-eyebrow">Design outcome and next validation</p>
-        <h2>What the design achieves, and how to test it</h2>
-        <p>The design connects aggregate visibility with identifiable transaction records. Validation should ask users to find a specific seal, interpret a missing scan time and explain the difference between status categories. Measure lookup completion and interpretation errors before claiming an efficiency gain.</p>
-      </section>
+    <section class="cs-block cf-section" id="product" data-toc="The product">
+      <h2 class="cf-label">What E-Seal brings together</h2>
+      <p class="cf-text">The E-Seal designs provide an administrative overview of assets and seal activity. The dashboard brings together status summaries, weekly activity, location information and recent transactions. A transaction table identifies records through company, asset, seal serial number, scan timestamps and status.</p>
+      <figure class="cf-media cf-media--lime ds-media--web" aria-label="E-Seal dashboard">
+        <img src="assets/images/case-studies/e-seal/web-dashboard.webp" alt="E-Seal dashboard: weekly sealed and un-sealed status chart, total assets, sealed and un-sealed counts, seal distribution, top 5 locations and a live transactions list" width="1440" height="1024" />
+      </figure>
+    </section>
 
-      <section class="cs-block" id="reflection" data-toc="Reflection">
-        <p class="cs-eyebrow">Pausing to reflect</p>
-        <h2>Reflection</h2>
-        <blockquote class="cs-quote">Operational dashboards need a path from a number to an identifiable record. The most useful story here is how the overview and transaction table support different levels of inspection.</blockquote>
-      </section>
+    <section class="cs-block cf-section" id="problem" data-toc="Problem framing">
+      <h2 class="cf-label">The challenge</h2>
+      <p class="cf-text">An overview is useful only if it leads to records an operator can identify. Counts can indicate a pattern, while individual transactions explain what happened to a particular asset or seal. The design challenge is to place these two levels of information together without making the dashboard as dense as a full transaction report.</p>
+    </section>
 
-      <footer class="cs-end">
-        <p class="cs-thanks">Thanks for reading</p>
-        <ul class="cs-links">
-          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
-          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
-          <li><a href="projects.html"><span>all projects</span></a></li>
-        </ul>
-        <a href="projects.html" class="cs-next">
-          <div><small>that’s all for now</small><strong>Back to all projects</strong></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-        </a>
-      </footer>
-    </main>
-  </div>
+    <section class="cs-block cf-section" id="users" data-toc="Users &amp; scope">
+      <h2 class="cf-label">Who it serves</h2>
+      <p class="cf-text">The visible experience is designed for administrators and operational teams reviewing seal records. The file demonstrates dashboard and transaction-table design, with light and dark dashboard variants. It does not establish the full physical sealing workflow or the mechanism that generates each scan.</p>
+    </section>
+
+    <section class="cs-block cf-section" id="flow" data-toc="Task flow">
+      <h2 class="cf-label">How the work moves</h2>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Administrator</p>
+        <ol class="cs-steps">
+          <li>Sign in</li>
+          <li>Review asset and seal summaries</li>
+          <li>Inspect activity or location information</li>
+          <li>Open transactions</li>
+          <li>Identify a record by asset, serial number and timestamps</li>
+          <li>Use the available View action</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="cs-block cf-section" id="decisions" data-toc="Design decisions">
+      <h2 class="cf-label">Key decisions</h2>
+
+      <h3 class="cf-decision">1. Summary metrics establish the scale of activity.</h3>
+      <p class="cf-text">Total assets and seal-distribution information offer a starting point before the user moves into individual records. Weekly activity adds a time-based view, while location information provides another way to interpret the overview.</p>
+
+      <h3 class="cf-decision">2. Recent transactions make the overview concrete.</h3>
+      <p class="cf-text">Asset and serial identifiers sit alongside scan times and state labels, allowing a record to be distinguished from similar entries. The separate transaction table provides a larger workspace for this more detailed information.</p>
+      <figure class="cf-media cf-media--mist ds-media--web" aria-label="Transaction table">
+        <img src="assets/images/case-studies/e-seal/web-transactions.webp" alt="Transaction table with date and time, company, asset, serial number (blurred), first scan, last scan and a View action, with pagination" width="1440" height="1024" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-decision">3. One hierarchy, two themes.</h3>
+      <p class="cf-text">Light and dark variants explore how the same information hierarchy can work across different display preferences.</p>
+      <p class="cf-text">Drag across the panel to compare the light and dark dashboards.</p>
+      <div class="cf-compare ds-compare--web">
+        <figure class="cf-media cf-media--lime cf-compare__layer cf-compare__layer--before" aria-label="Light dashboard">
+          <span class="cf-badge cf-badge--left">Light</span>
+          <img src="assets/images/case-studies/e-seal/web-dashboard.webp" alt="Light dashboard" width="1440" height="1024" loading="lazy" draggable="false" />
+        </figure>
+        <figure class="cf-media cf-media--mist cf-compare__layer cf-compare__layer--after" aria-label="Dark dashboard">
+          <span class="cf-badge cf-badge--right">Dark</span>
+          <img src="assets/images/case-studies/e-seal/web-dashboard-dark.webp" alt="Dark dashboard with the same layout" width="1440" height="1024" loading="lazy" draggable="false" />
+        </figure>
+        <div class="cf-compare__handle" role="slider" tabindex="0" aria-label="Compare light and dark dashboards" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% light"></div>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-section" id="outcome" data-toc="Outcome &amp; validation">
+      <h2 class="cf-label">What the design achieves, and how to test it</h2>
+      <p class="cf-text">The design connects aggregate visibility with identifiable transaction records. Validation should ask users to find a specific seal, interpret a missing scan time and explain the difference between status categories. Measure lookup completion and interpretation errors before claiming an efficiency gain.</p>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-quote" id="reflection" data-toc="Reflection">
+      <span class="cf-badge">Reflection</span>
+      <blockquote class="cs-quote">Operational dashboards need a path from a number to an identifiable record.</blockquote>
+      <p class="cf-quote-note">The most useful story here is how the overview and transaction table support different levels of inspection.</p>
+    </section>
+
+    </div>
+
+    <!-- ============ VIEW 2: Design decisions (Decision Stories framework) ============ -->
+    <div class="cs-view" id="view-decisions" data-view="decisions" role="tabpanel" aria-labelledby="view-tab-decisions">
+
+    <section class="cs-block cf-section" id="dd-intro" data-toc="Key decisions">
+      <h2 class="cf-label">Design decisions</h2>
+      <p class="cf-text">E-Seal has two sides: a web dashboard for administrators and a mobile app for the people who seal and unseal assets in the field. Four decisions shaped them. Each story follows the same structure: the situation before, the alternatives, the reasoning and trade-off, what I designed, and what can honestly be said about the result.</p>
+
+      <ol class="cf-cards ds-index">
+        <li class="cf-card"><a href="#decision-1"><h3><span>1</span>Web for oversight, mobile for the field</h3><p class="ds-index__take">Two purpose-built surfaces instead of one app stretched across both jobs.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-2"><h3><span>2</span>One scan screen, three ways to read a seal</h3><p class="ds-index__take">QR, RFID and NFC share the same card, fields and Seal action.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-3"><h3><span>3</span>Connecting the RFID reader inside the app</h3><p class="ds-index__take">Not connected → pick a device → connected → scan, without leaving the task.</p><p>Tactical · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-4"><h3><span>4</span>A dashboard that leads to records</h3><p class="ds-index__take">Counts and a live feed on top, the full transaction table one click away.</p><p>Tactical · Read story</p></a></li>
+      </ol>
+
+      <ul class="ds-legend" aria-label="Image labels">
+        <li><span class="cf-tag cf-tag--purple">Exploration</span>Lo-fi wireframes and drafts from my Figma files</li>
+        <li><span class="cf-tag ds-tag--concept">Conceptual</span>An option described for comparison, not a design I made</li>
+        <li><span class="cf-tag cf-tag--green">Final design</span>The hi-fi screens</li>
+      </ul>
+    </section>
+
+    <!-- ---------- Decision 01 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-1" data-toc="01 · Web and mobile">
+      <p class="ds-story__num">Decision 01 · Strategic</p>
+      <h2 class="ds-story__title">Why oversight lives on the web and sealing lives on a phone</h2>
+      <p class="cf-text ds-story__hook">An administrator reviewing a week of seal activity and an operator sealing a tanker at the gate need very different tools.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The two jobs share data (assets, seals, scans) but almost nothing else. One happens at a desk across many records; the other happens standing next to an asset, one seal at a time, with a scanner in hand.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>One responsive app for both</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">One product to build and maintain</li>
+            <li class="is-con">Dashboards squeezed onto phones</li>
+            <li class="is-con">Scanning features clutter the desktop</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Two purpose-built surfaces</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Web: totals, trends, tables</li>
+            <li class="is-pro">Mobile: one big Scan button and the seal at hand</li>
+            <li class="is-con">Two designs to keep consistent</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Each surface can be shaped around its moment of use: wide screens for comparison and lookup, a single obvious action for someone with their hands full.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Two products to maintain, and two visual languages to reconcile. The web uses sage green with Outfit and Roboto; the app uses Inter with a brighter green.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--lime ds-media--web" aria-label="Web dashboard">
+        <span class="cf-badge cf-badge--left">Web · administrators</span>
+        <img src="assets/images/case-studies/e-seal/web-dashboard.webp" alt="Web dashboard with summaries, weekly chart, top locations and live transactions" width="1440" height="1024" loading="lazy" />
+      </figure>
+      <figure class="cf-media cf-media--periwinkle ds-trio" aria-label="Mobile app: sign in, home and scan">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/e-seal/app-login.webp" alt="App sign in with login ID and password" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-home.webp" alt="App home: a single large green Scan button" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-success.webp" alt="Sealed: scanned ID and 'eSeal mapped to Dome3' details" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Sign in</strong>Login ID and password</li>
+        <li><strong>Home</strong>One action: Scan</li>
+        <li><strong>Sealed</strong>Confirmation with the mapped asset</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Intended outcome · not measured</span>
+        <p>Administrators get a desk tool for patterns and records; field staff get a phone tool with one primary action. Whether the two stay consistent enough is a question for the next round.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Match between system and real world</li><li>Flexibility and efficiency of use</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 02 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-2" data-toc="02 · Three scan methods">
+      <p class="ds-story__num">Decision 02 · Strategic</p>
+      <h2 class="ds-story__title">Why QR, RFID and NFC share one scan screen</h2>
+      <p class="cf-text ds-story__hook">The seal might carry a QR code, an RFID tag or an NFC chip. The operator's job is the same either way.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">Each technology reads a seal differently: a camera for QR, a paired Bluetooth reader (the "Ebaton") for RFID, the phone's own antenna for NFC. Designing them separately would mean three flows for one task.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>A separate flow per technology</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Each tuned to its hardware</li>
+            <li class="is-con">Three layouts to learn</li>
+            <li class="is-con">The Seal step drifts between them</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>One card, method in the header</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">"Scan with QR / RFID / NFC" with a time stamp</li>
+            <li class="is-pro">Same fields, same "Enter details", same Seal button</li>
+            <li class="is-con">RFID needs extra pairing states</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>The technology is a detail of how the code arrives. Keeping one card means the operator learns the sealing task once, and only the header and icon change.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>A shared card has to fit the most complex case. RFID's device pairing adds states the other two never need (see Decision 03).</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--lime ds-trio" aria-label="Scanned with QR, RFID and NFC">
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-scanned-qr.webp" alt="Scanned with QR: QR code value, Enter details and Seal" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-scanned-rfid.webp" alt="Scanned with Ebaton: QR code and RFID code, Enter details and Seal" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-scanned-nfc.webp" alt="Scanned with NFC: QR code and NFC code, Enter details and Seal" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>QR</strong>Camera scan</li>
+        <li><strong>RFID</strong>Via the paired Ebaton reader</li>
+        <li><strong>NFC</strong>The phone's own antenna</li>
+      </ul>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Sealed confirmation">
+          <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-success.webp" alt="Sealed confirmation with scanned ID and details" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--mist" aria-label="Un-seal">
+          <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-unseal.webp" alt="Sealed record with Checked and Un-Seal actions" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>Sealed</strong>Same confirmation for every method</li>
+        <li><strong>Un-seal</strong>Checked or Un-Seal on an existing seal</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Intended outcome · not measured</span>
+        <p>Three input technologies lead to one sealing flow and one confirmation. Time to seal and errors by method would show whether the shared card holds up.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Consistency and standards</li><li>Recognition rather than recall</li><li>Visibility of system status</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 03 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-3" data-toc="03 · Device pairing">
+      <p class="ds-story__num">Decision 03 · Tactical</p>
+      <h2 class="ds-story__title">Why the RFID reader connects inside the app</h2>
+      <p class="cf-text ds-story__hook">If the reader isn't connected, the scan simply doesn't happen, and the operator may not know why.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">RFID scanning depends on a separate Bluetooth reader, the Ebaton. Without in-app handling, the operator would have to leave the task, find the device in the phone's Bluetooth settings and come back.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Rely on system Bluetooth settings</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Nothing extra to design</li>
+            <li class="is-con">The operator leaves the sealing task</li>
+            <li class="is-con">"Not connected" looks like a broken scan</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Pairing as a step in the scan card</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Says "Ebaton is not Connected" plainly</li>
+            <li class="is-pro">Lists nearby readers with Connect</li>
+            <li class="is-con">More states to design, build and test</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>The connection is part of scanning, so it belongs in the scan card. Naming the problem and offering the fix in place keeps the operator on task.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Four extra states, and a device list that must handle several readers nearby (Ebaton_1 to Ebaton_5) and connection failures.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--peach ds-trio" aria-label="Not connected, device list, connected">
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-rfid-not-connected.webp" alt="Ebaton is not Connected, with a Connect with Ebaton button" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-rfid-devices.webp" alt="Available devices list: Ebaton_1 to Ebaton_5, each with Connect" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/e-seal/app-rfid-connected.webp" alt="Device Connected: Ebaton_1 with a Scan RFID button" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Not connected</strong>The problem, named, with one fix</li>
+        <li><strong>Pick a reader</strong>Nearby devices, each with Connect</li>
+        <li><strong>Connected</strong>Ready to Scan RFID</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>Pairing happens inside the sealing task with clear connected and not-connected states. Failure and reconnection states are still to be designed.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Visibility of system status</li><li>Help users recover from errors</li><li>User control and freedom</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 04 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-4" data-toc="04 · Numbers to records">
+      <p class="ds-story__num">Decision 04 · Tactical</p>
+      <h2 class="ds-story__title">Why the dashboard leads to individual records</h2>
+      <p class="cf-text ds-story__hook">"112 un-sealed" is a worry. "PB01AB1004, first scanned 13:53, last 13:56" is something you can act on.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The lo-fi wireframe already set out the pieces: a weekly chart, summary cards, a distribution ring, a locations list and a table preview. The question was how numbers and records should relate on one screen.</p>
+      <figure class="cf-media cf-media--mist ds-media--web" aria-label="Lo-fi dashboard wireframe">
+        <span class="cf-badge cf-badge--left">Lo-fi</span>
+        <img src="assets/images/case-studies/e-seal/web-lofi-dashboard.webp" alt="Lo-fi dashboard wireframe with chart, cards, ring, list and table placeholders" width="1440" height="1024" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Counts only, report elsewhere</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">A calm, simple dashboard</li>
+            <li class="is-con">No path from a number to a seal</li>
+            <li class="is-con">A separate report for every question</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Counts plus a live feed and a full table</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Sealed and un-sealed in the past hour</li>
+            <li class="is-pro">"Transactions · Live" with Show more → full table</li>
+            <li class="is-con">A denser first screen</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>A count is only useful if you can follow it to the records behind it. The live feed shows the latest few; the table gives room to search and compare.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Five widgets on one screen. Grouping them into cards and keeping the table to a short preview stops the dashboard turning into a report.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--lime ds-media--web" aria-label="Final dashboard">
+        <span class="cf-badge cf-badge--left">Final</span>
+        <img src="assets/images/case-studies/e-seal/web-dashboard.webp" alt="Final dashboard with summaries, weekly chart, top locations and live transactions" width="1440" height="1024" loading="lazy" />
+      </figure>
+      <figure class="cf-media cf-media--mist ds-media--web" aria-label="Transaction table">
+        <span class="cf-badge cf-badge--left">Final</span>
+        <img src="assets/images/case-studies/e-seal/web-transactions.webp" alt="Transaction table with company, asset, serial number (blurred), first and last scan and View" width="1440" height="1024" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Intended outcome · not measured</span>
+        <p>Every summary has a route to the records behind it. Lookup completion and interpretation errors would show whether it works.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Information hierarchy</li><li>Progressive disclosure</li><li>Recognition rather than recall</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Iterations ---------- -->
+    <section class="cs-block cf-section" id="iterations" data-toc="Iterations">
+      <h2 class="cf-label">Explorations along the way</h2>
+      <p class="cf-text">The scanning flow in the order it unfolds, then the app icon directions I explored.</p>
+      <ol class="ds-timeline ds-wide">
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/e-seal/app-home.webp" alt="Home with Scan" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">1</span><p><strong>Home</strong>One large Scan button.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/e-seal/app-scan-qr.webp" alt="Scan with QR card" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">2</span><p><strong>Scan</strong>Method, time and the scanned code.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/e-seal/app-nfc-scanning.webp" alt="Scan with NFC: Scanning…" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">3</span><p><strong>Waiting</strong>"Scanning…" with Cancel.</p></li>
+      </ol>
+      <h3 class="cf-sublabel">App icon explorations</h3>
+      <ul class="ds-icons ds-wide" aria-label="App icon explorations">
+        <li><img src="assets/images/case-studies/e-seal/icon-1.webp" alt="Padlock with a QR mark on a purple gradient" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/e-seal/icon-2.webp" alt="Cable seal tag with a QR mark" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/e-seal/icon-3.webp" alt="Cable seal inside scan brackets" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/e-seal/icon-5.webp" alt="Padlock inside scan brackets on green, matching the app" width="320" height="320" loading="lazy" /></li>
+      </ul>
+    </section>
+
+    <!-- ---------- Design system ---------- -->
+    <section class="cs-block cf-section" id="system" data-toc="Design system">
+      <h2 class="cf-label">Designing consistency across desk and field</h2>
+      <p class="cf-text">These values come from the hi-fi frames. The web file also defines colour variables (for example Grey/800 #222529).</p>
+
+      <div class="ds-sys ds-wide">
+        <div class="cf-card">
+          <h3>Typography</h3>
+          <ul class="ds-type">
+            <li><span style="font:400 20px/26px Outfit,Inter,sans-serif">Weekly Status</span><small>Web · Outfit 12–18 · headings and labels</small></li>
+            <li><span style="font:300 15px/22px Roboto,Inter,sans-serif">09-09-25 13:53 · PUNBUS · View</span><small>Web · Roboto Light / Bold 14.4 · table data</small></li>
+            <li><span style="font:600 16px/22px Inter,sans-serif">Scanned with Ebaton</span><small>App · Inter Semi Bold 12–16 · everything</small></li>
+          </ul>
+        </div>
+        <div class="cf-card">
+          <h3>Colour and meaning</h3>
+          <ul class="ds-swatches">
+            <li><i style="background:#657a61"></i><b>#657A61</b><small>Web · sage primary</small></li>
+            <li><i style="background:#cce2c8"></i><b>#CCE2C8</b><small>Web · sealed tint</small></li>
+            <li><i style="background:#212529"></i><b>#212529</b><small>Web · text</small></li>
+            <li><i style="background:#80a256"></i><b>#80A256</b><small>App · Scan, Seal</small></li>
+            <li><i style="background:#62a90b"></i><b>#62A90B</b><small>App · connected</small></li>
+            <li><i style="background:#4574ae"></i><b>#4574AE</b><small>App · icons, info</small></li>
+            <li><i style="background:#2a2a2a"></i><b>#2A2A2A</b><small>App · dark buttons</small></li>
+            <li><i style="background:#f78787"></i><b>#F78787</b><small>App · required, errors</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="cf-sublabel">Contrast check</h3>
+      <p class="cf-text">I checked the main pairs against WCAG 2.2 text contrast.</p>
+      <div class="ds-table ds-wide">
+        <table>
+          <thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">AA text</th></tr></thead>
+          <tbody>
+            <tr><td>Web text #212529 on sealed tint #CCE2C8</td><td>11.2:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>White on app blue #4574AE</td><td>4.8:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>White on web sage #657A61</td><td>4.7:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>App secondary text #7C7C7C on white</td><td>4.2:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Connected #62A90B on white</td><td>2.9:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Web muted text #999999 on white</td><td>2.8:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Required marker #F78787 on white</td><td>2.4:1</td><td class="is-fail">Fail</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    </div>
+
+    <footer class="cs-end">
+      <p class="cs-thanks">Thanks for reading</p>
+      <ul class="cs-links">
+        <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+        <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+        <li><a href="projects.html"><span>all projects</span></a></li>
+      </ul>
+      <a href="projects.html" class="cs-next">
+        <div><small>that’s all for now</small><strong>Back to all projects</strong></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+    </footer>
+  </main>
 
   <script src="js/main.js" defer></script>
   <script src="js/case-study.js" defer></script>
+  <script src="js/compare-slider.js" defer></script>
+  <script src="js/case-study-story.js" defer></script>
   <script src="js/bot-nav.js" defer></script>
 </body>
 </html>

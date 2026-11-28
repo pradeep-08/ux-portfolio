@@ -34,7 +34,7 @@
   --cs-text: #f4f4f3;
   --cs-body: #c9c9cc;
   --cs-muted: #8e8e93;
-  --cs-faint: #5c5c62;
+  --cs-faint: #7c7c82;  /* lifted from #5c5c62 so dark-mode TOC links stay readable */
   --cs-border: #26262a;
   --cs-surface: #18181a;
   --cs-accent-text: #ff7666;

@@ -270,6 +270,193 @@ body[toggle-theme="dark"] .pgrid {
   outline-offset: 4px;
 }
 
+/* --- Screens cover: real case-study screens rising out of a tinted panel ---
+   Phones are sized from the panel width so the composition scales with the grid
+   size slider; the panel clips their lower part. */
+.pgrid,
+.pshelf {
+  --tint-teal: #d5ecea;
+  --tint-peach: #fbe4d8;
+  --tint-blue: #dbe7f4;
+  --tint-sage: #e2edd9;
+  --tint-lilac: #e5e1fb;
+  --tint-neutral: #eeeeec;
+}
+
+body[toggle-theme="dark"] .pgrid,
+body[toggle-theme="dark"] .pshelf {
+  --tint-teal: #1d3837;
+  --tint-peach: #3d2d26;
+  --tint-blue: #1d2c3d;
+  --tint-sage: #26321f;
+  --tint-lilac: #2b2747;
+  --tint-neutral: #262628;
+}
+
+.pcard__media--shots { background: var(--tint-neutral); }
+.pcard__media--shots[data-tint="teal"] { background: var(--tint-teal); }
+.pcard__media--shots[data-tint="peach"] { background: var(--tint-peach); }
+.pcard__media--shots[data-tint="blue"] { background: var(--tint-blue); }
+.pcard__media--shots[data-tint="sage"] { background: var(--tint-sage); }
+.pcard__media--shots[data-tint="lilac"] { background: var(--tint-lilac); }
+
+.pshots {
+  position: absolute;
+  inset: 0;
+  container-type: inline-size;
+}
+
+.pshot {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 28%;
+  aspect-ratio: 9 / 20;
+  overflow: hidden;
+  border-radius: 7cqw;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 0.6cqw rgba(255, 255, 255, 0.75),
+    0 1.6cqw 4cqw rgba(16, 24, 40, 0.18);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Screens fill their frame from the top (override the generic cover-image rule) */
+.pcard__media .pshot img {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: initial;
+  transform: none;
+  transition: none;
+}
+
+.pshot--centre {
+  z-index: 2;
+  transform: translate(-50%, 16%);
+}
+
+.pshot--left,
+.pshot--right {
+  width: 25%;
+  transform: translate(-50%, 32%);
+}
+
+.pshot--left { left: 22%; }
+.pshot--right { left: 78%; }
+
+/* Web window with a phone laid over its corner */
+.pshot--web {
+  left: 46%;
+  width: 78%;
+  aspect-ratio: 1440 / 1024;
+  border-radius: 1.6cqw;
+  transform: translate(-50%, 14%);
+}
+
+.pshot--over {
+  z-index: 2;
+  left: 84%;
+  width: 22%;
+  transform: translate(-50%, 30%);
+}
+
+/* The wide feature card is short and broad: smaller phones, spread further */
+.pgrid__item--wide .pshot { width: 17%; border-radius: 4.4cqw; }
+.pgrid__item--wide .pshot--left,
+.pgrid__item--wide .pshot--right { width: 15.5%; }
+.pgrid__item--wide .pshot--left { left: 30%; }
+.pgrid__item--wide .pshot--right { left: 70%; }
+.pgrid__item--wide .pshot--centre { transform: translate(-50%, 22%); }
+.pgrid__item--wide .pshot--left,
+.pgrid__item--wide .pshot--right { transform: translate(-50%, 36%); }
+
+/* Chips: platform and, for live products, a Live marker */
+.pcard__chips {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: calc(100% - 28px);
+}
+
+.pcard__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  font-family: "DM Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--pg-sub);
+  background: var(--pg-card);
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.pcard__chip--live {
+  color: #1f6b33;
+  background: #e6f4e8;
+}
+
+body[toggle-theme="dark"] .pcard__chip--live {
+  color: #a6e3b4;
+  background: #1c3322;
+}
+
+.pcard__chip--live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2f9e44;
+}
+
+/* One-line pitch under the project name */
+.pcard__title em {
+  display: -webkit-box;
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--pg-sub);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* Hover: the screens rise a little, the centre one first */
+@media (hover: hover) and (pointer: fine) {
+  .pcard:hover .pshot--centre { transform: translate(-50%, 11%); }
+  .pcard:hover .pshot--left,
+  .pcard:hover .pshot--right { transform: translate(-50%, 27%); transition-delay: 0.04s; }
+  .pcard:hover .pshot--web { transform: translate(-50%, 10%); }
+  .pcard:hover .pshot--over { transform: translate(-50%, 24%); transition-delay: 0.04s; }
+  .pgrid__item--wide .pcard:hover .pshot--centre { transform: translate(-50%, 17%); }
+  .pgrid__item--wide .pcard:hover .pshot--left,
+  .pgrid__item--wide .pcard:hover .pshot--right { transform: translate(-50%, 31%); }
+}
+
+.pcard:focus-visible .pshot--centre { transform: translate(-50%, 11%); }
+
+/* Phone: the wide card is a normal 4:3 card, so it uses the standard composition */
+@media (max-width: 809.98px) {
+  .pgrid__item--wide .pshot { width: 28%; border-radius: 7cqw; }
+  .pgrid__item--wide .pshot--left,
+  .pgrid__item--wide .pshot--right { width: 25%; transform: translate(-50%, 32%); }
+  .pgrid__item--wide .pshot--left { left: 22%; }
+  .pgrid__item--wide .pshot--right { left: 78%; }
+  .pgrid__item--wide .pshot--centre { transform: translate(-50%, 16%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pshot { transition: none; }
+}
+
 /* --- Tablet: two columns --- */
 @media (max-width: 1199.98px) {
   .pgrid {

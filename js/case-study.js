@@ -9,7 +9,10 @@
   const article = document.querySelector('.cs-article');
   if (!article) return;
 
-  const sections = [...article.querySelectorAll('.cs-block[id]')];
+  // Sections inside a hidden view (see js/case-study-story.js) are left out;
+  // a 'cs:viewchange' event rebuilds the rail and the ring's menu.
+  const visibleSections = () => [...article.querySelectorAll('.cs-block[id]')].filter(s => !s.closest('[hidden]'));
+  let sections = visibleSections();
 
   /* --- Reading time (~220 words per minute) --- */
   const readTime = document.querySelector('[data-read-time]');
@@ -25,9 +28,23 @@
   const list = document.querySelector('.cs-toc ol');
   if (!list || !sections.length) return;
 
+  let rows = buildRows();
+  let links = rows.map(r => r.a);
+  list.classList.add('cs-toc__list--bars');
+
+  document.addEventListener('cs:viewchange', () => {
+    sections = visibleSections();
+    list.textContent = '';
+    rows = buildRows();
+    links = rows.map(r => r.a);
+    progress.rebuild();
+    sizeBars();
+    update();
+  });
+
   // Each entry has a bar beside its label. Bar height is proportional to the
   // section's length, and it fills with ink as that section is read.
-  const rows = sections.map(section => {
+  function buildRows() { return sections.map(section => {
     const li = document.createElement('li');
     const bar = document.createElement('span');
     bar.className = 'cs-toc__bar';
@@ -41,9 +58,7 @@
     li.append(bar, a);
     list.appendChild(li);
     return { li, fill, a };
-  });
-  const links = rows.map(r => r.a);
-  list.classList.add('cs-toc__list--bars');
+  }); }
 
   // Share out the available rail height by section length; a row never gets
   // shorter than its label.
@@ -114,6 +129,7 @@
     const btn = wrap.querySelector('.cs-progress__btn');
     const bar = wrap.querySelector('.cs-progress__bar');
     const menu = wrap.querySelector('.cs-progress__menu');
+    const menuList = menu.querySelector('ol');
     const menuLinks = [...menu.querySelectorAll('a')];
 
     function setOpen(open, returnFocus) {
@@ -125,7 +141,7 @@
     }
 
     btn.addEventListener('click', () => setOpen(menu.hidden));
-    menuLinks.forEach(a => a.addEventListener('click', () => setOpen(false)));
+    menuList.addEventListener('click', e => { if (e.target.closest('a')) setOpen(false); });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && !menu.hidden) setOpen(false, true);
     });
@@ -135,6 +151,11 @@
 
     return {
       links: menuLinks,
+      rebuild() {
+        menuList.innerHTML = sections.map(s => `<li><a href="#${s.id}">${s.dataset.toc || s.querySelector('h2').textContent}</a></li>`).join('');
+        // Keep the same array object so callers holding progress.links see the new links
+        menuLinks.splice(0, menuLinks.length, ...menuList.querySelectorAll('a'));
+      },
       update() {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 1;

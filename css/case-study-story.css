@@ -1,0 +1,975 @@
+/* ==========================================================================
+   CASE STUDY - view toggle + decision stories (kriti-attendance.html)
+   Extends case-study-caseform.css: same tokens (--cf-*), column, panels and
+   phone frames. Adds the top "Case study / Design decisions" toggle and the
+   pieces a decision story needs: options, reasoning/trade-off, captions,
+   result, iteration timeline, icon grid, design-system cards and a table.
+   Text-level rules use ".cf-page .cs-block .x" so they beat the generic
+   ".cf-page .cs-block p/li/h3" resets in case-study-caseform.css.
+   ========================================================================== */
+
+/* ---------- View toggle: fixed, centred between back and theme buttons ---------- */
+
+.ds-viewtoggle {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  z-index: 20;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--cf-card);
+  box-shadow: 0 0 0 1px var(--cf-line), 0 6px 20px rgba(0, 0, 0, 0.06);
+  transform: translateX(-50%);
+}
+
+.ds-viewtoggle button {
+  position: relative;
+  height: 40px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--cf-muted);
+  font: 500 14px/1 var(--cf-sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 160ms var(--ease-out);
+}
+
+.ds-viewtoggle button:hover {
+  color: var(--cf-text);
+}
+
+.ds-viewtoggle button[aria-selected="true"] {
+  background: var(--cf-pill);
+  color: var(--cf-pill-text);
+}
+
+.ds-viewtoggle button:active {
+  transform: scale(var(--press, 0.97));
+  transition-duration: 100ms;
+}
+
+.cf-page .ds-viewtoggle button:focus-visible {
+  outline: 2px solid var(--cf-text);
+  outline-offset: 2px;
+}
+
+/* Count badge on the Design decisions tab: signals a short, specific set */
+.ds-viewtoggle__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #d93a26; /* same coral fill as the bot dock's Resume button */
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: 1px;
+}
+
+/* ---------- First-visit nudge under the toggle ---------- */
+
+.ds-viewhint {
+  position: fixed;
+  top: 84px;
+  left: 50%;
+  z-index: 19;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: calc(100vw - 32px);
+  padding: 4px 4px 4px 4px;
+  border-radius: 999px;
+  background: var(--cf-text);
+  color: var(--cf-bg);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  transform: translateX(-50%);
+  /* backwards, not both: once it ends, .is-leaving can fade it out */
+  animation: ds-hint-in 420ms var(--ease-out, ease-out) 600ms backwards;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Small notch pointing up at the toggle */
+.ds-viewhint::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: calc(50% + 62px);
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  border-radius: 2px;
+  transform: rotate(45deg);
+}
+
+.ds-viewhint[hidden] { display: none; }
+
+.ds-viewhint.is-leaving {
+  opacity: 0;
+  transform: translate(-50%, -6px);
+}
+
+@keyframes ds-hint-in {
+  from { opacity: 0; transform: translate(-50%, -6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.ds-viewhint button {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: 500 13px/1 var(--cf-sans);
+  cursor: pointer;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, transform 160ms var(--ease-out);
+}
+
+.ds-viewhint__go {
+  gap: 8px;
+  height: 34px;
+  padding: 0 10px 0 14px;
+  white-space: nowrap;
+}
+
+.ds-viewhint__go svg {
+  width: 15px;
+  height: 15px;
+  color: #ff7666;
+  transition: transform 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ds-viewhint__go:hover svg { transform: translateX(3px); }
+}
+
+.ds-viewhint__x {
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  opacity: 0.6;
+}
+
+.ds-viewhint__x svg { width: 14px; height: 14px; }
+
+.ds-viewhint button:hover { background: rgba(127, 127, 127, 0.18); }
+.ds-viewhint__x:hover { opacity: 1; }
+.ds-viewhint button:active { transform: scale(var(--press, 0.97)); }
+
+.cf-page .ds-viewhint button:focus-visible {
+  outline: 2px solid #ff7666;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-viewhint { animation: none; transition: none; }
+}
+
+/* Hidden views stay out of layout, reading time and the contents rail */
+.cs-view[hidden] {
+  display: none;
+}
+
+/* A short fade when the view changes (skipped for reduced motion) */
+.cs-view.is-entering {
+  animation: ds-view-in 320ms var(--ease-out, ease-out) both;
+}
+
+@keyframes ds-view-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-view.is-entering { animation: none; }
+}
+
+/* ---------- Decision index (reuses .cf-cards / .cf-card) ---------- */
+
+.cf-page .ds-index {
+  margin-top: 24px;
+}
+
+.ds-index .cf-card {
+  padding: 0;
+  transition: background-color 0.2s ease, transform 200ms var(--ease-out);
+}
+
+.ds-index a {
+  display: block;
+  height: 100%;
+  padding: 24px;
+  border-radius: var(--cf-radius);
+  color: inherit;
+  text-decoration: none;
+}
+
+.cf-page .cs-block .ds-index h3 {
+  align-items: flex-start;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.cf-page .cs-block .ds-index h3 span {
+  flex: none;
+}
+
+.cf-page .cs-block .ds-index p {
+  padding-left: 38px;
+  font-size: 13px;
+  color: var(--cf-muted);
+}
+
+/* One-line takeaway: the 30-second version of each story */
+.cf-page .cs-block .ds-index .ds-index__take {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--cf-text);
+}
+
+.ds-index .cf-card:hover {
+  background: var(--cf-line);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ds-index .cf-card:hover { transform: translateY(-2px); }
+}
+
+/* Image-label legend */
+.ds-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+  margin-top: 32px;
+  list-style: none;
+}
+
+.cf-page .cs-block .ds-legend li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--cf-muted);
+}
+
+.cf-page .ds-legend .cf-tag {
+  margin-top: 0;
+}
+
+/* "Conceptual" tag: outlined, so it never reads as real work */
+.cf-tag.ds-tag--concept {
+  background: transparent;
+  color: var(--cf-muted);
+  box-shadow: inset 0 0 0 1px var(--cf-line);
+  border: 1px dashed var(--cf-muted);
+  padding: 1px 7px;
+}
+
+/* ---------- Story header ---------- */
+
+.cf-page .cs-block.ds-story {
+  margin-top: 96px;
+  padding-top: 40px;
+  border-top: 1px solid var(--cf-line);
+}
+
+.cf-page .cs-block .ds-story__num {
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--cf-muted);
+}
+
+.cf-page .cs-block .ds-story__title {
+  max-width: var(--cf-text-col);
+  margin: 10px 0 16px;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.cf-page .cs-block .ds-story__hook {
+  margin: 0;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--cf-muted);
+}
+
+/* ---------- Options (the turning point) ---------- */
+
+.ds-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.ds-options--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.ds-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-card);
+  border: 1px solid transparent;
+}
+
+.ds-option--chosen {
+  border-color: var(--cf-text);
+  background: var(--cf-bg);
+}
+
+.cf-page .ds-option .cf-tag {
+  margin-top: 0;
+}
+
+.cf-page .cs-block .ds-option h4 {
+  margin: 14px 0 8px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.cf-page .cs-block .ds-option > p {
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--cf-muted);
+}
+
+.ds-option__media {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  margin: 4px 0 4px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--cf-mist);
+}
+
+.ds-option__media img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.ds-pros {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  list-style: none;
+}
+
+.cf-page .cs-block .ds-pros li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.ds-pros li::before {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.ds-pros li.is-pro::before {
+  content: '+';
+  background: var(--cf-tag-green-bg);
+  color: var(--cf-tag-green);
+}
+
+.ds-pros li.is-con::before {
+  content: '−';
+  background: var(--cf-tag-amber-bg);
+  color: var(--cf-tag-amber);
+}
+
+/* ---------- Reasoning + trade-off ---------- */
+
+.ds-reason {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ds-reason > div {
+  padding: 20px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-card);
+}
+
+.ds-reason > .ds-reason--trade {
+  background: var(--cf-tag-amber-bg);
+}
+
+.cf-page .cs-block .ds-reason__label {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cf-page .cs-block .ds-reason--trade .ds-reason__label {
+  color: var(--cf-tag-amber);
+}
+
+.cf-page .cs-block .ds-reason p:not(.ds-reason__label) {
+  font-size: 15px;
+  line-height: 23px;
+}
+
+/* ---------- Panels: three phones, stacked crops ---------- */
+
+.cf-media.ds-trio {
+  gap: 16px;
+  padding: 0 24px;
+}
+
+.ds-trio .cf-phone {
+  flex: 1 1 0;
+  width: auto;
+  max-width: 220px;
+  height: 84%;
+  padding: 6px 6px 0;
+  border-radius: 34px 34px 0 0;
+}
+
+.ds-trio .cf-phone__screen {
+  border-radius: 28px 28px 0 0;
+}
+
+.cf-media.ds-stack {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: auto;
+  padding: 40px;
+}
+
+.cf-media.ds-stack > img {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Short captions under a panel, one per phone */
+.ds-captions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+  list-style: none;
+}
+
+.ds-captions--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cf-page .cs-block .ds-captions li {
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--cf-muted);
+  text-align: center;
+}
+
+.cf-page .cs-block .ds-captions strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cf-text);
+}
+
+/* Spacing between story blocks */
+.cf-page .cs-block .ds-story .cf-sublabel,
+.cf-page .ds-story .cf-sublabel {
+  margin-top: 56px;
+}
+
+/* Direct children only, so panels inside .cf-pair / .cf-compare keep margin 0 */
+.cf-page .ds-story > .cf-text + .cf-media,
+.cf-page .ds-story > .cf-sublabel + .cf-media,
+.cf-page .ds-story > .cf-text + .cf-pair,
+.cf-page .ds-story > .cf-text + .cf-compare {
+  margin-top: 24px;
+}
+
+.cf-page .ds-story > .cf-media + .cf-media,
+.cf-page .ds-story > .cf-media + .cf-pair,
+.cf-page .ds-story > .ds-captions + .cf-media,
+.cf-page .ds-story > .ds-captions + .cf-pair {
+  margin-top: 40px;
+}
+
+.cf-page .ds-story > .cf-media + .cf-text,
+.cf-page .ds-story > .cf-pair + .cf-text,
+.cf-page .ds-story > .ds-captions + .cf-text {
+  margin-top: 24px;
+}
+
+/* Header: the tagline's own margin rule cancelled the centring on wide screens,
+   so it sat left of the title */
+@media (min-width: 1240px) {
+  .cf-page .cf-head h1 + .cf-tagline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ---------- Result ---------- */
+
+.ds-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 24px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-card);
+}
+
+.cf-page .ds-result .cf-tag {
+  margin-top: 0;
+}
+
+.cf-page .cs-block .ds-result > p {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.ds-principles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+}
+
+.cf-page .cs-block .ds-principles li {
+  padding: 4px 12px;
+  border: 1px solid var(--cf-line);
+  border-radius: 999px;
+  background: var(--cf-bg);
+  font-size: 13px;
+  color: var(--cf-muted);
+}
+
+.cf-page .ds-story .cf-sublabel + .ds-result {
+  margin-top: 0;
+}
+
+/* ---------- Iteration timeline ---------- */
+
+.ds-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px 12px;
+  margin-top: 24px;
+  list-style: none;
+}
+
+.ds-timeline li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ds-timeline__shot {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 20px 20px 0;
+  overflow: hidden;
+  border-radius: var(--cf-radius);
+  background: var(--cf-mist);
+  aspect-ratio: 4 / 5;
+}
+
+.ds-timeline__shot img {
+  width: 100%;
+  height: auto;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.cf-page .ds-timeline .cf-tag {
+  margin-top: 0;
+}
+
+.cf-page .cs-block .ds-timeline p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--cf-muted);
+}
+
+.cf-page .cs-block .ds-timeline strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cf-text);
+}
+
+/* ---------- App icons ---------- */
+
+.ds-icons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+  padding: 32px;
+  border-radius: var(--cf-radius);
+  background: var(--cf-mist);
+  list-style: none;
+}
+
+.ds-icons img {
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- Design system ---------- */
+
+.ds-sys {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cf-page .cs-block .ds-sys h3 {
+  margin-bottom: 18px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.ds-type,
+.ds-swatches {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+}
+
+.cf-page .cs-block .ds-type li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ds-type small,
+.ds-swatches small {
+  font-size: 12px;
+  color: var(--cf-muted);
+}
+
+.ds-swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+}
+
+.cf-page .cs-block .ds-swatches li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.ds-swatches i {
+  grid-row: span 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.ds-swatches b {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.cf-page .ds-reuse {
+  margin-top: 12px;
+}
+
+.cf-page .ds-reuse strong {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+/* ---------- Table ---------- */
+
+.ds-table {
+  margin-top: 24px;
+  overflow-x: auto;
+  border: 1px solid var(--cf-line);
+  border-radius: var(--cf-radius);
+}
+
+.ds-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ds-table th,
+.ds-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--cf-line);
+}
+
+.ds-table th {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--cf-muted);
+  background: var(--cf-card);
+}
+
+.ds-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.ds-table td.is-pass { color: var(--cf-tag-green); font-weight: 500; }
+.ds-table td.is-fail { color: #b3261e; font-weight: 500; }
+[data-theme="dark"] .ds-table td.is-fail { color: #f2a19b; }
+
+/* Start the article below the fixed toggle and its tip, so neither covers the header */
+.cf-page .cs-article.cf-article {
+  padding-top: 144px;
+}
+
+@media (max-width: 720px) {
+  .cf-page .cs-article.cf-article {
+    padding-top: 122px;
+  }
+}
+
+/* ---------- Live status chip above the title ---------- */
+
+.cf-page .cf-head .ds-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 4px 12px 4px 10px;
+  border-radius: 999px;
+  background: var(--cf-tag-green-bg);
+  color: var(--cf-tag-green);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+/* Wide screens: the header text sits in a centred reading column; line the chip up
+   with it (auto margins don't apply to an inline-flex pill) */
+@media (min-width: 1240px) {
+  .cf-page .cf-head .ds-status {
+    display: flex;
+    width: fit-content;
+    margin-left: max(0px, calc((100% - var(--cf-text-col)) / 2));
+    margin-right: 0;
+  }
+}
+
+.ds-status span {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2f9e44;
+}
+
+/* A soft ring that breathes out from the dot */
+.ds-status span::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: ds-live 2.4s var(--ease-out, ease-out) infinite;
+}
+
+@keyframes ds-live {
+  from { transform: scale(1); opacity: 0.6; }
+  to { transform: scale(2.6); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-status span::after { animation: none; }
+}
+
+/* ---------- Extra panels ---------- */
+
+/* Show the middle of a tall screenshot (for centred dialogs and empty states) */
+.cf-phone__screen.ds-screen--mid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Soft teal panel (LOMO Track brand) */
+.cf-page { --ds-teal: #cdeaea; }
+[data-theme="dark"] .cf-page { --ds-teal: #2b5e5e; }
+.cf-media.ds-media--teal { background: var(--ds-teal); }
+
+/* Wide diagram (e.g. information architecture): natural height, scrolls sideways on phones */
+.cf-media.ds-media--ia {
+  height: auto;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.cf-media.ds-media--ia > img {
+  min-width: 640px;
+  border-radius: 12px;
+}
+
+/* Tall diagram (e.g. a user-flow board): natural height, not wider than it needs */
+.cf-media.ds-media--tall {
+  height: auto;
+  padding: 32px;
+}
+
+.cf-media.ds-media--tall > img {
+  width: 100%;
+  max-width: 560px;
+  max-height: none;
+  border-radius: 14px;
+}
+
+/* Web screenshot: full panel width, natural height */
+.cf-media.ds-media--web {
+  height: auto;
+  padding: 28px;
+  align-items: center;
+}
+
+.cf-media.ds-media--web > img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Compare slider holding two web screenshots: show each whole, not cropped */
+.cf-compare.ds-compare--web {
+  height: auto;
+  aspect-ratio: 1440 / 1100;
+}
+
+.cf-compare.ds-compare--web .cf-compare__layer {
+  align-items: center;
+  padding: 24px;
+}
+
+.cf-compare.ds-compare--web .cf-compare__layer > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+@media (max-width: 720px) {
+  .cf-media.ds-media--web { padding: 12px; }
+  .cf-compare.ds-compare--web .cf-compare__layer { padding: 10px; }
+}
+
+/* Long-form footer (thanks, links, next project) inside the caseform column */
+.cf-page .cs-article > .cs-end:not(.cf-foot) {
+  padding-bottom: 120px;
+}
+
+@media (min-width: 1240px) {
+  .cf-page .cs-article > .cs-end:not(.cf-foot) {
+    max-width: var(--cf-text-col);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* ---------- Tablet and phone ---------- */
+
+@media (max-width: 720px) {
+  .ds-viewhint { top: 66px; }
+  .ds-viewhint::before { left: calc(50% + 50px); }
+  .ds-viewhint__go { font-size: 12px; padding: 0 8px 0 12px; }
+  .ds-viewtoggle { top: 16px; padding: 3px; }
+  .ds-viewtoggle button { height: 34px; padding: 0 12px; font-size: 13px; }
+
+  .cf-page .cs-block.ds-story { margin-top: 64px; padding-top: 32px; }
+  .cf-page .cs-block .ds-story__title { font-size: 22px; }
+  .cf-page .cs-block .ds-story__hook { font-size: 16px; line-height: 25px; }
+  .cf-page .ds-story .cf-sublabel { margin-top: 40px; }
+
+  .ds-options,
+  .ds-options--three,
+  .ds-reason,
+  .ds-sys,
+  .ds-legend { grid-template-columns: 1fr; }
+
+  .cf-media.ds-trio { gap: 8px; padding: 0 12px; }
+  .ds-trio .cf-phone { height: 80%; padding: 4px 4px 0; border-radius: 22px 22px 0 0; }
+  .ds-trio .cf-phone__screen { border-radius: 18px 18px 0 0; }
+  .ds-captions--three { gap: 6px; }
+  .cf-page .cs-block .ds-captions li { font-size: 12px; line-height: 17px; }
+
+  .cf-media.ds-stack { padding: 20px; gap: 10px; }
+
+  .ds-timeline { grid-template-columns: 1fr 1fr; gap: 24px 10px; }
+  .ds-timeline__shot { padding: 12px 12px 0; }
+  .ds-timeline__shot img { border-radius: 12px 12px 0 0; }
+
+  .ds-icons { grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 16px; }
+  .ds-swatches { grid-template-columns: 1fr; }
+  .ds-table th, .ds-table td { padding: 10px 12px; }
+}
+
+.ds-viewtoggle__short { display: none; }
+
+@media (max-width: 420px) {
+  .ds-viewhint__lead { display: none; }
+}
+
+@media (max-width: 380px) {
+  .ds-viewtoggle button { padding: 0 12px; }
+  .ds-viewtoggle__long { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ds-viewtoggle__short { display: inline; }
+  .ds-icons { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media print {
+  .ds-viewtoggle { display: none; }
+  .cs-view[hidden] { display: block; }
+}

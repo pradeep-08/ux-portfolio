@@ -994,7 +994,7 @@ body.cs-page.cf-page {
 
   /* Text keeps the reading measure, centred over the wide media */
   .cf-page .cf-head > *,
-  .cf-page .cs-block > :not(.cf-media):not(.cf-pair):not(.cf-compare):not(.cf-statcard):not(.cf-cards):not(.cf-results),
+  .cf-page .cs-block > :not(.cf-media):not(.cf-pair):not(.cf-compare):not(.cf-statcard):not(.cf-cards):not(.cf-results):not(.ds-wide),
   .cf-page .cs-end.cf-foot {
     max-width: var(--cf-text-col);
     margin-left: auto;

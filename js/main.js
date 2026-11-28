@@ -23,7 +23,7 @@ function initThemeToggle() {
   const themeIcon = document.getElementById('themeIcon');
   // Light by default, whatever the system setting. A choice made here or on the
   // Framer pages (saved as currentToggleState) carries over between pages.
-  const storedTheme = localStorage.getItem('currentToggleState') || localStorage.getItem('pradeep_theme');
+  const storedTheme = localStorage.getItem('pradeep_theme') || localStorage.getItem('currentToggleState');
 
   const currentTheme = storedTheme === 'dark' ? 'dark' : 'light';
   applyTheme(currentTheme);

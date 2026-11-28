@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- theme-boot: apply the saved dark theme before the first paint, so moving
+     between pages never flashes a white screen while the page loads. -->
+<script>try{if((localStorage.getItem("pradeep_theme")||localStorage.getItem("currentToggleState"))==="dark"){var d=document.documentElement;d.setAttribute("data-theme","dark")}}catch(e){}</script>
+<style>html[data-theme="dark"],html[data-theme="dark"] body{background-color:#0f0f10;color-scheme:dark}</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LOMO Track — Case Study | Pradeep UX Portfolio</title>
@@ -8,130 +12,550 @@
   <link rel="icon" href="assets/images/favicon-64.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
   <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/case-study-caseform.css" />
+  <link rel="stylesheet" href="css/case-study-story.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
 </head>
-<body class="cs-page">
+<!--
+  LOMO Track case study. Two views share this page: the case study (default, the earlier
+  copy unchanged) and Design decisions, switched by the toggle at the top
+  (js/case-study-story.js). Screens are rendered from "Lomo Track Mobile App Design.fig";
+  original-* are screenshots of the earlier "Tanker Lorry Locking System" app from the same
+  file. Vehicle numbers are replaced with demo values; invoice and mobile numbers are blurred.
+  No outcome metrics are claimed. Sources and open questions: docs/lomo-track-case-study/.
+-->
+<body class="cs-page cf-page">
 
-  <div class="cs-topbar">
-    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
-      <span class="cs-avatar"><img src="assets/images/avatar-132.webp" alt="" width="44" height="44" decoding="async" /><i aria-hidden="true"></i></span>
-      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
-    </a>
-    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  <a href="projects.html" class="cf-back" aria-label="Back to all projects">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+  <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+
+  <!-- View toggle: case study (default) / design decisions -->
+  <div class="ds-viewtoggle" role="tablist" aria-label="Choose a view">
+    <button type="button" role="tab" id="view-tab-overview" aria-controls="view-overview" aria-selected="true">Case study</button>
+    <button type="button" role="tab" id="view-tab-decisions" aria-controls="view-decisions" aria-selected="false" tabindex="-1"><span class="ds-viewtoggle__long">Design decisions</span><span class="ds-viewtoggle__short" aria-hidden="true">Decisions</span><span class="ds-viewtoggle__count" aria-hidden="true">4</span></button>
+  </div>
+  <!-- First-visit nudge towards the decisions view; shown by js/case-study-story.js -->
+  <div class="ds-viewhint" hidden>
+    <button type="button" class="ds-viewhint__go"><span class="ds-viewhint__lead">Short on time?&nbsp;</span>See the 4 key design decisions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+    <button type="button" class="ds-viewhint__x" aria-label="Dismiss tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
 
-  <div class="cs-layout">
-    <aside class="cs-toc" aria-label="On this page">
-      <nav><ol></ol></nav>
-    </aside>
+  <!-- Contents rail: filled by js/case-study.js from each section's data-toc -->
+  <aside class="cs-toc" aria-label="On this page">
+    <nav><ol></ol></nav>
+  </aside>
 
-    <main class="cs-article">
-      <header>
-        <a href="projects.html" class="cs-back">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-          back
-        </a>
-        <p class="cs-eyebrow">LOMO Track · case study · <span data-read-time>4 min read</span></p>
-        <h1 class="cs-title">Making tanker trips easier to understand on the move</h1>
-        <p class="cs-summary">A mobile experience that connects trip status, vehicle location, route exceptions and support requests for logistics teams.</p>
+  <main class="cs-article cf-article">
+    <header class="cf-head">
+      <p class="ds-status"><span aria-hidden="true"></span>Live · in use by logistics teams</p>
+      <h1>LOMO Track</h1>
+      <p class="cf-tagline">Making tanker trips easier to understand on the move</p>
+      <p class="cs-summary">A mobile experience that connects trip status, vehicle location, route exceptions and support requests for logistics teams.</p>
 
-        <dl class="cs-meta">
-          <div><dt>Sector</dt><dd>B2B</dd></div>
-          <div><dt>Domain</dt><dd>Logistics and IoT</dd></div>
-          <div><dt>Platform</dt><dd>Mobile</dd></div>
-          <div><dt>Project</dt><dd>Office project</dd></div>
-        </dl>
-      </header>
-
-      <section class="cs-block" id="product" data-toc="The product">
-        <p class="cs-eyebrow">The product</p>
-        <h2>What LOMO Track brings together</h2>
-        <p>LOMO Track brings trip monitoring into a mobile workflow. The designs include an administrator’s trip list, an assigned-trip experience, trip details, location views, route exceptions and support tickets. The central design challenge was deciding what users need to understand immediately and what they can open when investigating a particular journey.</p>
-      </section>
-
-      <section class="cs-block" id="problem" data-toc="Problem framing">
-        <p class="cs-eyebrow">Problem framing</p>
-        <h2>The challenge</h2>
-        <p>A vehicle’s location is only one part of an operational decision. Users also need the trip’s source and destination, its current status and the events associated with it. On a small screen, these details compete for attention. The design addresses that complexity by separating the trip overview from deeper map and exception views while maintaining the vehicle and journey context.</p>
-      </section>
-
-      <section class="cs-block" id="users" data-toc="Users &amp; scope">
-        <p class="cs-eyebrow">Users and scope</p>
-        <h2>Who it serves</h2>
-        <p>The file distinguishes administrator and user authentication and shows both a multi-trip list and an assigned-trip home screen. The experience therefore supports two different starting points: finding a trip across a fleet and checking the trip relevant to an individual user. The case study focuses on these visible workflows rather than claiming a complete production permission model.</p>
-      </section>
-
-      <section class="cs-block" id="flow" data-toc="Task flow">
-        <p class="cs-eyebrow">Task flow</p>
-        <h2>How the work moves</h2>
-        <div class="cs-flowgroup">
-          <p class="cs-flowgroup-label">Administrator</p>
-          <ol class="cs-steps">
-            <li>Sign in</li>
-            <li>Search or filter trips</li>
-            <li>Select a trip</li>
-            <li>Review trip information</li>
-            <li>Inspect the route</li>
-            <li>Open an exception</li>
-            <li>Return to the list</li>
-          </ol>
+      <dl class="cf-meta">
+        <div><dt>Sector</dt><dd><strong>B2B</strong><span>Business to business</span></dd></div>
+        <div><dt>Domain</dt><dd><strong>IoT</strong><span>Logistics and IoT</span></dd></div>
+        <div>
+          <dt>Platform</dt>
+          <dd>
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></strong>
+            <span>Mobile</span>
+          </dd>
         </div>
-        <div class="cs-flowgroup">
-          <p class="cs-flowgroup-label">Assigned-trip user</p>
-          <ol class="cs-steps">
-            <li>Sign in</li>
-            <li>Review assigned trip</li>
-            <li>Open location or navigation</li>
-            <li>Raise a ticket when help is needed</li>
-            <li>Review ticket status</li>
-          </ol>
+        <div><dt>Project</dt><dd><strong>Office</strong><span>Office project</span></dd></div>
+      </dl>
+    </header>
+
+    <!-- ============ VIEW 1: Case study (default) ============ -->
+    <div class="cs-view" id="view-overview" data-view="overview" role="tabpanel" aria-labelledby="view-tab-overview">
+
+    <section class="cs-block cf-section" id="product" data-toc="The product">
+      <h2 class="cf-label">What LOMO Track brings together</h2>
+      <p class="cf-text">LOMO Track brings trip monitoring into a mobile workflow. The designs include an administrator’s trip list, an assigned-trip experience, trip details, location views, route exceptions and support tickets. The central design challenge was deciding what users need to understand immediately and what they can open when investigating a particular journey.</p>
+
+      <figure class="cf-media ds-trio ds-media--teal" aria-label="Trip list, trip information and route exceptions">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-list.webp" alt="Administrator trip list: search, Created / En-Route / Completed filters and trip cards with vehicle, status and endpoints" width="720" height="1600" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-info.webp" alt="Trip info: vehicle, En-Route status, source and destination, trip start and estimated arrival, and a Locate on Map button" width="720" height="1600" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-events.webp" alt="Route view with Forward, Reverse and Route Deviation chips above a list of forward-trip events, each with a time and a Map link" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+    </section>
+
+    <section class="cs-block cf-section" id="problem" data-toc="Problem framing">
+      <h2 class="cf-label">The challenge</h2>
+      <p class="cf-text">A vehicle’s location is only one part of an operational decision. Users also need the trip’s source and destination, its current status and the events associated with it. On a small screen, these details compete for attention. The design addresses that complexity by separating the trip overview from deeper map and exception views while maintaining the vehicle and journey context.</p>
+    </section>
+
+    <section class="cs-block cf-section" id="users" data-toc="Users &amp; scope">
+      <h2 class="cf-label">Who it serves</h2>
+      <p class="cf-text">The file distinguishes administrator and user authentication and shows both a multi-trip list and an assigned-trip home screen. The experience therefore supports two different starting points: finding a trip across a fleet and checking the trip relevant to an individual user. The case study focuses on these visible workflows rather than claiming a complete production permission model.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--periwinkle" aria-label="Administrator starting point">
+          <span class="cf-badge cf-badge--left">Administrator</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-list.webp" alt="Administrator home: a searchable, filterable list of trips" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--lime" aria-label="Assigned-trip starting point">
+          <span class="cf-badge cf-badge--left">Assigned-trip user</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/driver-home.webp" alt="User home: the assigned trip with source, destination, actual distance 437 km and trip details" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="cs-block cf-section" id="flow" data-toc="Task flow">
+      <h2 class="cf-label">How the work moves</h2>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Administrator</p>
+        <ol class="cs-steps">
+          <li>Sign in</li>
+          <li>Search or filter trips</li>
+          <li>Select a trip</li>
+          <li>Review trip information</li>
+          <li>Inspect the route</li>
+          <li>Open an exception</li>
+          <li>Return to the list</li>
+        </ol>
+      </div>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Assigned-trip user</p>
+        <ol class="cs-steps">
+          <li>Sign in</li>
+          <li>Review assigned trip</li>
+          <li>Open location or navigation</li>
+          <li>Raise a ticket when help is needed</li>
+          <li>Review ticket status</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="cs-block cf-section" id="decisions" data-toc="Design decisions">
+      <h2 class="cf-label">Key decisions</h2>
+
+      <h3 class="cf-decision">1. Trip context comes first.</h3>
+      <p class="cf-text">The trip summary groups vehicle identity, journey endpoints, status and distance before the user moves into detailed tracking. This gives the map a purpose: inspecting a journey the user already understands.</p>
+      <figure class="cf-media cf-media--periwinkle" aria-label="Trip information">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-info.webp" alt="Trip info screen: vehicle and status, source and destination, invoice, SAP location and plant, trip start and estimated arrival" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-decision">2. Route views distinguish different parts of the journey.</h3>
+      <p class="cf-text">Forward, reverse and deviation labels give users a way to inspect route information in smaller groups. Event lists connect categories such as harsh braking, overspeed and halt with timestamps and a Map action, helping users move from a summary into a specific incident.</p>
+      <figure class="cf-media cf-media--lime" aria-label="Route events">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-events.webp" alt="Forward trip event list: Harsh Acceleration, Halt, Over Speed, Harsh Braking and Harsh Manoeuvring, each with a timestamp and a Map link" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-decision">3. Support stays connected to the trip.</h3>
+      <p class="cf-text">The ticket creation and created-ticket screens retain vehicle and route information alongside the issue type and status. The intended benefit is to reduce the amount of context a user must reconstruct when reporting a tracking issue.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--peach" aria-label="Create ticket">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/ticket-create.webp" alt="Create New Ticket dialog with the vehicle number and route already filled in and a 'What's wrong?' issue selector" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--peach" aria-label="Created ticket">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/ticket-created.webp" alt="Created ticket: Needs action status, ticket ID, issue type VTS Offline, vehicle, route, creator and time" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-decision">4. The design includes situations beyond an active trip.</h3>
+      <p class="cf-text">No-trip, loading, restricted-access and application-update screens make system state explicit. A playback screen adds Pause and Reset controls for reviewing recorded movement.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="No trip today">
+          <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/lomo-track/no-trip.webp" alt="Empty state: 'No Trip found Today' with an illustration" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--rose" aria-label="Access restricted">
+          <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/lomo-track/access-restricted.webp" alt="Access Restricted dialog: 'You do not have the required permissions to access this resource', with Logout" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <figure class="cf-media cf-media--lavender" aria-label="Trip playback">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/playback.webp" alt="Trip playback: the recorded route on the map with Pause and Reset controls" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-section" id="outcome" data-toc="Outcome &amp; validation">
+      <h2 class="cf-label">What the design achieves, and how to test it</h2>
+      <p class="cf-text">The design provides distinct paths from trip overview to investigation and support. The next validation should test whether users can find a vehicle, explain an exception and raise a ticket without losing the original trip context. Useful measures are task completion, time to locate the relevant event and incorrect trip selections. These are proposed measures, not reported results.</p>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-quote" id="reflection" data-toc="Reflection">
+      <span class="cf-badge">Reflection</span>
+      <blockquote class="cs-quote">This project shows how information hierarchy can turn a dense tracking interface into a sequence of operational questions.</blockquote>
+      <p class="cf-quote-note">A useful trip overview helps users decide what to inspect next, while the detailed views preserve the context needed to understand it.</p>
+    </section>
+
+    </div>
+
+    <!-- ============ VIEW 2: Design decisions (Decision Stories framework) ============ -->
+    <div class="cs-view" id="view-decisions" data-view="decisions" role="tabpanel" aria-labelledby="view-tab-decisions">
+
+    <section class="cs-block cf-section" id="dd-intro" data-toc="Key decisions">
+      <h2 class="cf-label">Design decisions</h2>
+      <p class="cf-text">Four decisions shaped the redesign of the earlier Tanker Lorry Locking System app. Each story follows the same structure: the situation before, the alternatives, the reasoning and trade-off, what I designed, and what can honestly be said about the result.</p>
+
+      <ol class="cf-cards ds-index">
+        <li class="cf-card"><a href="#decision-1"><h3><span>1</span>Trip context before the map</h3><p class="ds-index__take">Every trip opens on vehicle, status and route; the map is one tap away.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-2"><h3><span>2</span>Splitting the route into forward, reverse and deviation</h3><p class="ds-index__take">Events are grouped by part of the journey, each with a time and a Map link.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-3"><h3><span>3</span>Tickets that carry the trip with them</h3><p class="ds-index__take">Vehicle and route are filled in; the user only says what's wrong.</p><p>Tactical · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-4"><h3><span>4</span>One app for transporters and drivers</h3><p class="ds-index__take">One structure for both roles, with a different home for each.</p><p>Strategic · Read story</p></a></li>
+      </ol>
+
+      <ul class="ds-legend" aria-label="Image labels">
+        <li><span class="cf-tag cf-tag--amber">Original app</span>The earlier Tanker Lorry Locking System</li>
+        <li><span class="cf-tag cf-tag--purple">Exploration</span>Wireframes and earlier frames from my Figma file</li>
+        <li><span class="cf-tag ds-tag--concept">Conceptual</span>An option described for comparison, not a design I made</li>
+        <li><span class="cf-tag cf-tag--green">Final design</span>The redesigned screens</li>
+      </ul>
+    </section>
+
+    <!-- ---------- Decision 01 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-1" data-toc="01 · Trip context">
+      <p class="ds-story__num">Decision 01 · Strategic</p>
+      <h2 class="ds-story__title">Why I put trip context before the map</h2>
+      <p class="cf-text ds-story__hook">A dot on a map doesn't say which trip it is, where it's going, or whether anything is wrong.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">In the earlier Tanker Lorry Locking System, trip cards showed the invoice and vehicle numbers in small type next to a large "Map" button. Opening a trip went straight to a map with a single pin, followed by lock steps.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Original trip list">
+          <span class="cf-badge cf-badge--left">Original app</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/original-trips.webp" alt="Original trip list: a date range and one trip card with small invoice and vehicle numbers and a dark Map button" width="540" height="1200" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--mist" aria-label="Original trip map">
+          <span class="cf-badge cf-badge--left">Original app</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/original-trip-map.webp" alt="Original trip screen: vehicle and invoice numbers above a map with a single pin, then lock verify and unload steps and a Create ticket button" width="540" height="1200" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag cf-tag--amber">Option A · Original app</span>
+          <h4>Map-first</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">The fastest route to a location</li>
+            <li class="is-con">Trip identity and status are small or missing</li>
+            <li class="is-con">The map has to explain everything on its own</li>
+          </ul>
         </div>
-      </section>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Context-first</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Vehicle, status and endpoints come before the map</li>
+            <li class="is-pro">Each list card answers "which trip is this?"</li>
+            <li class="is-con">One more tap to reach the map</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>A location only means something once you know which journey it belongs to. Showing the trip first gives the map a job: inspecting a journey the user already understands.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>An extra step before the map. "View" on each card and a full-width "Locate on Map" button keep that step short.</p></div>
+      </div>
 
-      <section class="cs-block" id="decisions" data-toc="Design decisions">
-        <p class="cs-eyebrow">Design decisions</p>
-        <h2>Key decisions</h2>
-        <h3>1. Trip context comes first.</h3>
-        <p>The trip summary groups vehicle identity, journey endpoints, status and distance before the user moves into detailed tracking. This gives the map a purpose: inspecting a journey the user already understands.</p>
-        <h3>2. Route views distinguish different parts of the journey.</h3>
-        <p>Forward, reverse and deviation labels give users a way to inspect route information in smaller groups. Event lists connect categories such as harsh braking, overspeed and halt with timestamps and a Map action, helping users move from a summary into a specific incident.</p>
-        <h3>3. Support stays connected to the trip.</h3>
-        <p>The ticket creation and created-ticket screens retain vehicle and route information alongside the issue type and status. The intended benefit is to reduce the amount of context a user must reconstruct when reporting a tracking issue.</p>
-        <h3>4. The design includes situations beyond an active trip.</h3>
-        <p>No-trip, loading, restricted-access and application-update screens make system state explicit. A playback screen adds Pause and Reset controls for reviewing recorded movement.</p>
-      </section>
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--periwinkle ds-trio" aria-label="Trip list, trip info and driver home">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-list.webp" alt="Trip list with search, status filters and trip cards" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-info.webp" alt="Trip info with route, invoice, plant, timings and Locate on Map" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/driver-home.webp" alt="Driver home with the assigned trip and actual distance" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Trip list</strong>Vehicle, status, trip type, endpoints; search and status filters</li>
+        <li><strong>Trip info</strong>Route, invoice, plant, start and ETA, then Locate on Map</li>
+        <li><strong>Driver home</strong>The assigned trip, route and actual distance</li>
+      </ul>
 
-      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
-        <p class="cs-eyebrow">Design outcome and next validation</p>
-        <h2>What the design achieves, and how to test it</h2>
-        <p>The design provides distinct paths from trip overview to investigation and support. The next validation should test whether users can find a vehicle, explain an exception and raise a ticket without losing the original trip context. Useful measures are task completion, time to locate the relevant event and incorrect trip selections. These are proposed measures, not reported results.</p>
-      </section>
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>Every trip is identified by vehicle, status and route before any tracking. Time to find a vehicle and incorrect trip selections would show whether this works.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Information hierarchy</li><li>Recognition rather than recall</li><li>Progressive disclosure</li></ul>
+      </div>
+    </section>
 
-      <section class="cs-block" id="reflection" data-toc="Reflection">
-        <p class="cs-eyebrow">Pausing to reflect</p>
-        <h2>Reflection</h2>
-        <blockquote class="cs-quote">This project shows how information hierarchy can turn a dense tracking interface into a sequence of operational questions. A useful trip overview helps users decide what to inspect next, while the detailed views preserve the context needed to understand it.</blockquote>
-      </section>
+    <!-- ---------- Decision 02 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-2" data-toc="02 · Route segments">
+      <p class="ds-story__num">Decision 02 · Strategic</p>
+      <h2 class="ds-story__title">Why I split the route into forward, reverse and deviation</h2>
+      <p class="cf-text ds-story__hook">A tanker trip isn't one line on a map. It goes out, comes back, and sometimes leaves the planned route.</p>
 
-      <footer class="cs-end">
-        <p class="cs-thanks">Thanks for reading</p>
-        <ul class="cs-links">
-          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
-          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
-          <li><a href="projects.html"><span>all projects</span></a></li>
-        </ul>
-        <a href="curio-snap.html" class="cs-next">
-          <div><small>next project</small><strong>Curio Snap</strong></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-        </a>
-      </footer>
-    </main>
-  </div>
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The earlier app's trip map showed one location pin. It had no route line and no driving events, so there was nothing to investigate.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Everything on one map</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">The complete picture at once</li>
+            <li class="is-con">Outbound and return routes overlap</li>
+            <li class="is-con">Event pins compete; hard to tie an event to a leg</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Route segments and an event sheet</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Forward, Reverse and Route Deviation chips</li>
+            <li class="is-pro">Each event has a type, time and Map link</li>
+            <li class="is-con">The combined picture needs a summary</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Grouping events by leg lets someone answer "what happened on the way back?" without filtering a crowded map.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Segments hide the whole journey. A summary sheet lists all three with event counts (12 forward, 13 reverse, 9 deviation) so nothing is out of sight.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--lime ds-trio" aria-label="Forward, reverse and deviation views">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-forward.webp" alt="Forward segment selected: the outbound route in green with event pins" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-reverse.webp" alt="Reverse segment selected: the return route highlighted" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-deviation.webp" alt="Route Deviation selected: where the vehicle left the planned route" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Forward</strong>The outbound leg and its events</li>
+        <li><strong>Reverse</strong>The return leg</li>
+        <li><strong>Route deviation</strong>Where it left the plan</li>
+      </ul>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Route summary sheet">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-summary.webp" alt="Summary sheet listing Forward Trip, Reverse Trip and Route Deviation with event counts" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--mist" aria-label="Event list">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/route-events.webp" alt="Expanded event list for the forward trip, each event with a timestamp and a Map link" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>Summary</strong>All three segments with counts</li>
+        <li><strong>Events</strong>Type, time and a Map link to the spot</li>
+      </ul>
+      <p class="cf-text">My file holds more than a dozen Locate frames that explore route colours, pins and sheet states before this structure settled.</p>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>Every driving event belongs to a leg of the journey and links to its place on the map. Time to locate the relevant event would show whether this helps.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Chunking</li><li>Progressive disclosure</li><li>Visibility of system status</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 03 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-3" data-toc="03 · Tickets">
+      <p class="ds-story__num">Decision 03 · Tactical</p>
+      <h2 class="ds-story__title">Why support tickets carry the trip with them</h2>
+      <p class="cf-text ds-story__hook">When tracking fails mid-trip, the person reporting it shouldn't have to retype the vehicle and route.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The earlier app ended the trip screen with a full-width "Create ticket" button and had a Tickets tab. The available screenshots don't show what the ticket form itself asked for.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>A blank support form</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Flexible for any problem</li>
+            <li class="is-con">Vehicle and route typed again, with errors</li>
+            <li class="is-con">Support has to work out which trip it is</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>A ticket pre-filled from the trip</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Vehicle number and route carried over</li>
+            <li class="is-pro">One question: "What's wrong?"</li>
+            <li class="is-con">Issue categories need maintaining</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>The app already knows the trip. Asking for it again adds effort and mistakes at the worst moment.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>A fixed list of issue types is quick but can't cover everything, so unusual problems need a fallback.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--peach ds-trio" aria-label="Ticket empty state, create and created">
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/lomo-track/ticket-empty.webp" alt="No ticket found, with a Create Ticket button" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/ticket-create.webp" alt="Create New Ticket with vehicle and route pre-filled and a What's wrong selector" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/ticket-created.webp" alt="Created ticket with Needs action status, ticket ID and issue type" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Empty</strong>No tickets yet, one clear action</li>
+        <li><strong>Create</strong>Trip details filled in, one question</li>
+        <li><strong>Created</strong>Status, ticket ID, issue and trip</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>Tickets keep the vehicle and route alongside the issue type and status. The intended benefit, less context to reconstruct, hasn't been measured.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Error prevention</li><li>Recognition rather than recall</li><li>Visibility of system status</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 04 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-4" data-toc="04 · Two roles">
+      <p class="ds-story__num">Decision 04 · Strategic</p>
+      <h2 class="ds-story__title">Why one app serves transporters and drivers</h2>
+      <p class="cf-text ds-story__hook">A transporter watching a fleet and a driver on one trip open the same app for very different reasons.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The earlier app's screens show one trip list as the home screen, with Home, Tickets and Profile tabs.</p>
+      <figure class="cf-media cf-media--mist" aria-label="Original trip list, 2025">
+        <span class="cf-badge cf-badge--left">Original app</span>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/original-trips-2025.webp" alt="Original trip list with four trip cards, each with an invoice number, vehicle, destination and a green Map button" width="571" height="1280" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Two separate apps</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Each tailored to one role</li>
+            <li class="is-con">Two products to design, build and maintain</li>
+            <li class="is-con">Patterns drift apart over time</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>One structure, a home per role</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Shared Home, Locate, Ticket and Profile</li>
+            <li class="is-pro">Admin home: trip list; driver home: assigned trip</li>
+            <li class="is-con">Permissions must be explicit</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Both roles care about the same objects: trips, locations and tickets. One structure keeps them speaking the same language; only the starting point changes.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Shared navigation means some areas matter less to drivers, and permission limits need their own screens (Unauthorized, Access Restricted).</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <p class="cf-text">The file has an information architecture for each role. They contain the same structure: onboarding, authentication, and Dashboard, Locate, Tickets and Account under one navigation.</p>
+      <figure class="cf-media cf-media--mist cf-media--fit ds-media--ia" aria-label="Information architecture">
+        <img src="assets/images/case-studies/lomo-track/ia-user.webp" alt="Information architecture: LOMO Track splits into Onboarding (splash, loading), Authentication (sign in, forgot password, OTP verification, reset password, trip info entry) and Navigation (Dashboard: home, trip list, alerts; Locate: map view, locate, trip details with forward, reverse and route deviation; Tickets: list, details, create, issue category; Account: profile, settings, change password, appearance, sign out)" width="2000" height="826" loading="lazy" />
+      </figure>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--periwinkle" aria-label="Transporter home">
+          <span class="cf-badge cf-badge--left">Transporter</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/trip-list.webp" alt="Transporter home: trip list with search and filters" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--lime" aria-label="Driver home">
+          <span class="cf-badge cf-badge--left">Driver</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/lomo-track/driver-home.webp" alt="Driver home: the assigned trip" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>Both roles share one navigation and vocabulary, and each starts where their work starts. Whether drivers find their trip without help is the next thing to test.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Consistency and standards</li><li>Flexibility and efficiency of use</li><li>Error prevention</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Iterations ---------- -->
+    <section class="cs-block cf-section" id="iterations" data-toc="Iterations">
+      <h2 class="cf-label">From the original app to the final design</h2>
+      <p class="cf-text">The same screens at three points: the earlier app, the lo-fi wireframes in my file, and the final design.</p>
+      <ol class="ds-timeline ds-wide">
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/original-trips.webp" alt="Original trip list" width="540" height="1200" loading="lazy" /></div><span class="cf-tag cf-tag--amber">Original</span><p><strong>Trip list</strong>Small identifiers, a large Map button.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/lofi-trip-list.webp" alt="Lo-fi trip list wireframe: search, filters and trip cards in grey" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Lo-fi</span><p><strong>Trip list</strong>Search, filters and structured trip cards.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/trip-list.webp" alt="Final trip list" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Final</span><p><strong>Trip list</strong>Vehicle, status, trip type and endpoints.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/original-trip-map.webp" alt="Original trip map" width="540" height="1200" loading="lazy" /></div><span class="cf-tag cf-tag--amber">Original</span><p><strong>Trip</strong>A single pin and lock steps.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/lofi-home.webp" alt="Lo-fi assigned-trip home wireframe" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Lo-fi</span><p><strong>Assigned trip</strong>Route card first, details below.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/driver-home.webp" alt="Final driver home" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Final</span><p><strong>Assigned trip</strong>Route, distance and trip details.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/original-open-lock.webp" alt="Original Open Lock screen: Step 1 Fetch OTP, Step 2 Input OTP" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--amber">Original</span><p><strong>Lock OTP</strong>Two boxed steps on a blank screen.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/lofi-locate.webp" alt="Lo-fi locate wireframe with vehicle markers" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Lo-fi</span><p><strong>Locate</strong>Vehicle markers under a trip card.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/lomo-track/secondary-otp.webp" alt="Final Secondary OTP screen: vehicle and invoice, map of the destination outlet and a Request OTP card" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Final</span><p><strong>Secondary OTP</strong>Trip, location and request in one place.</p></li>
+      </ol>
+    </section>
+
+    <!-- ---------- Design system ---------- -->
+    <section class="cs-block cf-section" id="system" data-toc="Design system">
+      <h2 class="cf-label">Designing consistency across the fleet workflow</h2>
+      <p class="cf-text">These values come from the final frames in the Figma file.</p>
+
+      <div class="ds-sys ds-wide">
+        <div class="cf-card">
+          <h3>Typography · Inter</h3>
+          <ul class="ds-type">
+            <li><span style="font:600 24px/30px Inter,sans-serif">TN01AB1234</span><small>Inter Semi Bold 24 · vehicle and key values</small></li>
+            <li><span style="font:600 16px/22px Inter,sans-serif">Forward Trip</span><small>Inter Semi Bold 16–18 · titles</small></li>
+            <li><span style="font:500 14px/20px Inter,sans-serif">Harsh Acceleration</span><small>Inter Semi Bold / Medium 14 · list items</small></li>
+            <li><span style="font:500 12px/16px Inter,sans-serif">17-12-2025 | 21:04</span><small>Inter Medium 12 · metadata</small></li>
+          </ul>
+        </div>
+        <div class="cf-card">
+          <h3>Colour and meaning</h3>
+          <ul class="ds-swatches">
+            <li><i style="background:#147070"></i><b>#147070</b><small>Brand teal · headers, chips</small></li>
+            <li><i style="background:#00adb7"></i><b>#00ADB7</b><small>Primary buttons</small></li>
+            <li><i style="background:#3b82f6"></i><b>#3B82F6</b><small>Links · View, Map</small></li>
+            <li><i style="background:#d26326"></i><b>#D26326</b><small>En-Route status</small></li>
+            <li><i style="background:#4ea780"></i><b>#4EA780</b><small>Forward route</small></li>
+            <li><i style="background:#d23a26"></i><b>#D23A26</b><small>Deviation · alerts</small></li>
+            <li><i style="background:#6b7280"></i><b>#6B7280</b><small>Secondary text</small></li>
+            <li><i style="background:#f8f9fd"></i><b>#F8F9FD</b><small>Screen background</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="cf-sublabel">States beyond the active trip</h3>
+      <figure class="cf-media cf-media--mist ds-trio" aria-label="System states">
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/lomo-track/loading.webp" alt="Loading: Please wait, with a truck-to-pin progress card" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/lomo-track/update-mandatory.webp" alt="Mandatory update available dialog with Update and Exit" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/lomo-track/access-restricted.webp" alt="Access Restricted dialog" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Loading</strong>A truck-to-pin progress card</li>
+        <li><strong>Mandatory update</strong>Update or exit</li>
+        <li><strong>No permission</strong>Explained, with Logout</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Contrast check</h3>
+      <p class="cf-text">I checked the main colours against WCAG 2.2 text contrast. Several fall short and are on the refinement list.</p>
+      <div class="ds-table ds-wide">
+        <table>
+          <thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">AA text</th></tr></thead>
+          <tbody>
+            <tr><td>White on brand teal #147070</td><td>5.9:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Secondary text #6B7280 on white</td><td>4.8:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Deviation #D23A26 on white</td><td>4.8:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>En-Route #D26326 on white</td><td>3.8:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Links #3B82F6 on white</td><td>3.7:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>White on primary button #00ADB7</td><td>2.7:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Forward route #4EA780 on white</td><td>2.9:1</td><td class="is-fail">Fail (as text)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    </div>
+
+    <footer class="cs-end">
+      <p class="cs-thanks">Thanks for reading</p>
+      <ul class="cs-links">
+        <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+        <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+        <li><a href="projects.html"><span>all projects</span></a></li>
+      </ul>
+      <a href="curio-snap.html" class="cs-next">
+        <div><small>next project</small><strong>Curio Snap</strong></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+    </footer>
+  </main>
 
   <script src="js/main.js" defer></script>
   <script src="js/case-study.js" defer></script>
+  <script src="js/case-study-story.js" defer></script>
   <script src="js/bot-nav.js" defer></script>
 </body>
 </html>

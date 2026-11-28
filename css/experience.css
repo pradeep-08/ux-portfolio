@@ -68,47 +68,160 @@ body[toggle-theme="dark"] .xp {
   color: var(--xp-text);
 }
 
-/* --- Experience timeline --- */
+/* --- Experience timeline: logo + company, then each role hanging off a line
+       that curves out of the logo. Current role: green line. Older companies
+       fade (set per company as --xp-fade) and come back on hover. --- */
+.xp {
+  --xp-meta: #6b7280;
+  --xp-line: #e3e4e6;
+  --xp-live: #16a34a;
+  --xp-ring: #ffffff;
+}
+
+body[toggle-theme="dark"] .xp {
+  --xp-meta: #9a9aa2;
+  --xp-line: #3a3a3e;
+  --xp-live: #22c55e;
+  --xp-ring: #1d1d1d;
+}
+
 .xp__list {
   margin-top: 40px;
   list-style: none;
-  border-top: 1px solid var(--xp-border);
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
 }
 
-.xp__job {
+.xp__co {
+  --x-logo: 40px;   /* logo size */
+  --x-indent: 56px; /* role text lines up with the company name */
+  --x-mid: 15px;    /* half the role title's line height */
+}
+
+.xp__co-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.xp__logo {
+  position: relative;
+  z-index: 1;
+  flex: none;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 24px;
-  padding: 32px 0;
-  border-bottom: 1px solid var(--xp-border);
+  place-items: center;
+  width: var(--x-logo);
+  height: var(--x-logo);
+  border-radius: 50%;
+  background: var(--logo, #888);
+  box-shadow: 0 0 0 3px var(--xp-ring), 0 0 0 4px var(--xp-line);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  object-fit: cover;
 }
 
-.xp__dates {
-  font-family: "DM Mono", ui-monospace, Menlo, monospace;
-  font-size: 13px;
-  line-height: 1.9;
-  color: var(--xp-muted);
-}
-
-.xp__company {
+.xp__co-name {
   font-size: 20px;
-  font-weight: 600;
-  line-height: 1.35;
+  font-weight: 400;
+  line-height: 1.3;
   color: var(--xp-text);
 }
 
-.xp__company span {
-  font-weight: 400;
-  color: var(--xp-muted);
+.xp__roles {
+  list-style: none;
+  padding-left: var(--x-indent);
 }
 
-.xp__company span::before {
-  content: "·";
+.xp__role {
+  --x-top: 22px; /* space above the title; the line curves in at its middle */
+  position: relative;
+  padding-top: var(--x-top);
+  opacity: var(--xp-fade, 1);
+  transition: opacity 0.3s ease;
+}
+
+.xp__role + .xp__role {
+  --x-top: 34px;
+}
+
+/* Branch: down from the logo (or the previous role), then a rounded turn into the title */
+.xp__role::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--x-logo) / 2 - var(--x-indent) - 1px);
+  top: 0;
+  width: calc(var(--x-indent) - var(--x-logo) / 2 - 8px);
+  height: calc(var(--x-top) + var(--x-mid));
+  border-left: 2px solid var(--xp-line);
+  border-bottom: 2px solid var(--xp-line);
+  border-bottom-left-radius: 14px;
+}
+
+/* Trunk continues past a role when another role follows */
+.xp__role:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--x-logo) / 2 - var(--x-indent) - 1px);
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--xp-line);
+}
+
+.xp__role.is-current::before {
+  border-color: var(--xp-live);
+}
+
+.xp__role-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: calc(var(--x-mid) * 2);
+  letter-spacing: -0.01em;
+  color: var(--xp-text);
+}
+
+.xp__badge {
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+
+.xp__badge-seal {
+  fill: var(--xp-live);
+}
+
+.xp__badge-tick {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.xp__role-meta {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--xp-meta);
+}
+
+.xp__role-meta strong {
+  font-weight: 600;
+}
+
+.xp__role-meta span::before {
+  content: "•";
   margin: 0 8px;
 }
 
+/* Description and Tools / Methods under each role (as in the previous design) */
 .xp__summary {
-  margin-top: 10px;
+  margin-top: 12px;
   max-width: 68ch;
   font-size: 16px;
   line-height: 1.65;
@@ -116,7 +229,7 @@ body[toggle-theme="dark"] .xp {
 }
 
 .xp__meta {
-  margin-top: 16px;
+  margin-top: 14px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px 28px;
@@ -136,50 +249,102 @@ body[toggle-theme="dark"] .xp {
   color: var(--xp-text);
 }
 
-/* --- Skills grid --- */
+@media (hover: hover) {
+  .xp__co:hover .xp__role { opacity: 1; }
+}
+
+/* --- Skills: one row per group (name, count and a one-line note on the left,
+       skills on the right), split by hairlines. No cards, so no empty space when
+       one group is longer than another. --- */
 .xp__skills {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   margin-top: 40px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  border-top: 1px solid var(--xp-border);
 }
 
 .xp__group {
-  padding: 22px;
-  border: 1px solid var(--xp-border);
-  border-radius: 20px;
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: 16px 48px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--xp-border);
 }
 
 .xp__group-title {
-  font-size: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 18px;
   font-weight: 600;
+  line-height: 1.35;
   color: var(--xp-text);
 }
 
+.xp__group-count {
+  font-family: "DM Mono", ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--xp-muted);
+}
+
+.xp__group-note {
+  margin-top: 6px;
+  max-width: 30ch;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--xp-muted);
+}
+
 .xp__chips {
-  margin-top: 14px;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  align-content: flex-start;
+  gap: 8px;
 }
 
 .xp__chips li {
-  padding: 5px 10px;
-  font-size: 13px;
-  line-height: 1.35;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.4;
   color: var(--xp-body);
-  background: var(--xp-chip);
+  border: 1px solid var(--xp-border);
   border-radius: 999px;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+/* Hovering a row brings its skills forward (pointer devices only) */
+@media (hover: hover) and (pointer: fine) {
+  .xp__group:hover .xp__chips li {
+    color: var(--xp-text);
+    border-color: var(--xp-muted);
+  }
+  .xp__chips li:hover {
+    background: var(--xp-chip);
+  }
+}
+
+/* Entrance: rows fade up once, 60ms apart, when the section scrolls in */
+.xp__skills.is-waiting .xp__group {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.xp__skills.is-in .xp__group {
+  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xp__skills.is-waiting .xp__group { transform: none; }
+  .xp__skills.is-in .xp__group { transition: opacity 300ms ease; transition-delay: 0ms; }
 }
 
 /* --- Tablet --- */
 @media (max-width: 1199.98px) {
-  .xp__job {
-    grid-template-columns: 180px minmax(0, 1fr);
-  }
-  .xp__skills {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .xp__group {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 16px 32px;
   }
 }
 
@@ -197,31 +362,54 @@ body[toggle-theme="dark"] .xp {
   }
   .xp__list {
     margin-top: 28px;
+    gap: 44px;
   }
-  .xp__job {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 6px;
-    padding: 24px 0;
+  .xp__co {
+    --x-logo: 34px;
+    --x-indent: 46px;
+    --x-mid: 13px;
   }
-  .xp__company {
-    font-size: 18px;
+  .xp__logo {
+    font-size: 15px;
   }
-  .xp__company span {
-    display: block;
+  .xp__co-name {
+    font-size: 17px;
   }
-  .xp__company span::before {
-    content: none;
+  .xp__role-title {
+    font-size: 17px;
+    gap: 8px;
+  }
+  .xp__badge {
+    width: 19px;
+    height: 19px;
+  }
+  .xp__role-meta {
+    font-size: 14px;
   }
   .xp__summary {
     font-size: 15px;
   }
+  /* Long meta lines wrap: keep each part whole */
+  .xp__role-meta strong,
+  .xp__role-meta span {
+    white-space: nowrap;
+  }
   .xp__skills {
     margin-top: 28px;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
   }
   .xp__group {
-    padding: 18px;
-    border-radius: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 22px 0;
+  }
+  .xp__group-note {
+    max-width: none;
+  }
+  .xp__chips {
+    gap: 6px;
+  }
+  .xp__chips li {
+    font-size: 13px;
+    padding: 5px 11px;
   }
 }

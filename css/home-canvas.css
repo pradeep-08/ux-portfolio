@@ -1,0 +1,198 @@
+/* Pradeep UX Portfolio - Home "drag around" canvas: my projects
+   Cards are copies of Framer's own Project Card (see js/home-canvas.js), so
+   frame, shadow, title and badge come from Framer's CSS. This file adds the
+   project screens inside the image frame, the entrance and the hover.
+   Theme follows Framer's body[toggle-theme]. */
+
+/* Framer's template cards (Cryptix, Novera) step aside for the project copies */
+html.hc-on .framer-11ixlot > .framer-1ksv5u5:not(.hc-card),
+html.hc-on .framer-11ixlot > .framer-49ihvo,
+html.hc-on .framer-11ixlot > .framer-iobhsj {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* The template's contract widgets make way for components from my projects */
+html.hc-on .framer-11ixlot > .framer-b2dkv,
+html.hc-on .framer-11ixlot > .framer-lkc22k,
+html.hc-on .framer-11ixlot > .framer-qqwfae,
+html.hc-on .framer-11ixlot > .framer-1tnvjoc,
+html.hc-comps .framer-11ixlot > .framer-b2dkv,
+html.hc-comps .framer-11ixlot > .framer-lkc22k,
+html.hc-comps .framer-11ixlot > .framer-qqwfae,
+html.hc-comps .framer-11ixlot > .framer-1tnvjoc {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* --- Components: real UI pieces, tilted and draggable like Framer's widgets --- */
+.hc-comp {
+  position: absolute;
+  z-index: 1;
+  transform: translate(-50%, -50%) rotate(var(--hc-r, 0deg));
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  /* Framer's layered canvas shadow */
+  box-shadow:
+    0.67px 0.84px 1.94px -0.19px rgba(0, 0, 0, 0.02),
+    1.59px 1.99px 4.59px -0.38px rgba(0, 0, 0, 0.03),
+    2.9px 3.63px 8.37px -0.56px rgba(0, 0, 0, 0.03),
+    4.83px 6.04px 13.91px -0.75px rgba(0, 0, 0, 0.03),
+    7.8px 9.75px 22.47px -0.94px rgba(0, 0, 0, 0.03),
+    12.77px 15.96px 36.78px -1.13px rgba(0, 0, 0, 0.03),
+    21.98px 27.48px 63.34px -1.31px rgba(0, 0, 0, 0.04),
+    40px 50px 115.26px -1.5px rgba(0, 0, 0, 0.06);
+  animation: hc-in 0.8s cubic-bezier(0.12, 0.23, 0.38, 1) backwards;
+  transition: scale 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+}
+
+.hc-comp img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.hc-comp {
+  display: block;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Notched or badge-topped pieces: the shadow follows the image's outline */
+.hc-comp--cutout {
+  box-shadow: none;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.06)) drop-shadow(0 24px 36px rgba(0, 0, 0, 0.1));
+}
+
+@media (hover: hover) {
+  .hc-comp:hover { scale: 1.02; }
+}
+
+.hc-comp:focus-visible {
+  outline: 2px solid #199af2;
+  outline-offset: 4px;
+}
+
+.hc-comp.is-dragging {
+  cursor: grabbing;
+  scale: 1.03;
+}
+
+/* --- Card: same entrance as Framer's (fade up 24px, soft landing) --- */
+.hc-card {
+  opacity: 1;
+  animation: hc-in 0.8s cubic-bezier(0.12, 0.23, 0.38, 1) backwards;
+}
+
+@keyframes hc-in {
+  from { opacity: 0; translate: 0 24px; }
+}
+
+.hc-link {
+  cursor: pointer;
+  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* Framer's hover: a small extra tilt and lift */
+@media (hover: hover) {
+  .hc-link:hover { transform: rotate(-2deg) scale(1.02); }
+  .hc-link:hover .hc-shot--centre,
+  .hc-link:hover .hc-shot--web { transform: translate(-50%, 8%); }
+}
+
+.hc-link:focus-visible { outline: none; }
+.hc-link:focus-visible [data-framer-name="Image"] {
+  outline: 2px solid #199af2;
+  outline-offset: 4px;
+}
+
+/* --- Image frame: real case-study screens rising out of a tinted panel --- */
+.hc-media {
+  --hc-tint: #eeeeec;
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--hc-tint);
+  container-type: inline-size;
+}
+
+.hc-media[data-tint="teal"]  { --hc-tint: #d5ecea; }
+.hc-media[data-tint="peach"] { --hc-tint: #fbe4d8; }
+.hc-media[data-tint="blue"]  { --hc-tint: #dbe7f4; }
+.hc-media[data-tint="sage"]  { --hc-tint: #e2edd9; }
+.hc-media[data-tint="lilac"] { --hc-tint: #e5e1fb; }
+
+body[toggle-theme="dark"] .hc-media                     { --hc-tint: #262628; }
+body[toggle-theme="dark"] .hc-media[data-tint="teal"]   { --hc-tint: #1d3837; }
+body[toggle-theme="dark"] .hc-media[data-tint="peach"]  { --hc-tint: #3d2d26; }
+body[toggle-theme="dark"] .hc-media[data-tint="blue"]   { --hc-tint: #1d2c3d; }
+body[toggle-theme="dark"] .hc-media[data-tint="sage"]   { --hc-tint: #26321f; }
+body[toggle-theme="dark"] .hc-media[data-tint="lilac"]  { --hc-tint: #2b2747; }
+
+.hc-shot {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 27%;
+  aspect-ratio: 9 / 20;
+  overflow: hidden;
+  border-radius: 6cqw;
+  background: #fff;
+  box-shadow:
+    0 0 0 0.6cqw rgba(255, 255, 255, 0.75),
+    0 1.6cqw 4cqw rgba(16, 24, 40, 0.18);
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.hc-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+.hc-shot--centre {
+  z-index: 2;
+  transform: translate(-50%, 14%);
+}
+
+.hc-shot--left,
+.hc-shot--right {
+  width: 24%;
+  transform: translate(-50%, 30%);
+}
+
+.hc-shot--left  { left: 22%; }
+.hc-shot--right { left: 78%; }
+
+/* Web window with a phone laid over its corner */
+.hc-shot--web {
+  left: 46%;
+  width: 80%;
+  aspect-ratio: 1440 / 1024;
+  border-radius: 1.6cqw;
+  transform: translate(-50%, 12%);
+}
+
+.hc-shot--over {
+  z-index: 2;
+  left: 85%;
+  width: 21%;
+  transform: translate(-50%, 28%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-card,
+  .hc-comp { animation: none; transition: none; }
+  .hc-link,
+  .hc-shot { transition: none; }
+  .hc-link:hover { transform: none; }
+}

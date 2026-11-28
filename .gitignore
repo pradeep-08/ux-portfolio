@@ -18,3 +18,11 @@ node_modules/
 Thumbs.db
 .vscode/
 .idea/
+
+# Figma source files: design work files, not used by the site (and too large for GitHub)
+*.fig
+assets/images/fig/
+
+# Local Claude Code tooling (design skills), not part of the site
+.claude/
+skills-lock.json

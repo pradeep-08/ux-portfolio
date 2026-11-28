@@ -62,43 +62,69 @@ body[toggle-theme="dark"] .framer-lzGIe.framer-g8ikc9 {
   display: none;
 }
 
-@media (max-width: 809.98px) {
+/* --- Dark theme (every breakpoint): Framer's dark token set only redefines some
+       colour tokens, so parts of the pages kept their light-theme colours (white
+       sticky header, white resume card, dark-grey text on the dark page). Give
+       those tokens dark values here. The always-dark footer and the
+       "Selected work" / "Process" pills are left as is. --- */
+body[toggle-theme="dark"] {
+  --token-e16847f2-b192-48e1-a890-7bbcce11cc6e: #1d1d1d;  /* header surface */
+  --token-6404906a-a8f6-4a20-b609-163acb7b17d6: #1d1d1d;  /* page surface */
+  --token-266c8d71-9990-411c-9a11-ecf80446ea66: #ececea;  /* headings, menu icon */
+  --token-b1106767-fbaa-4a24-bd97-dfbf18764b12: #b4b4b4;  /* body text */
+  --token-1655f33c-54b8-43d4-8f16-a9e920ed6c1b: #a9aab1;  /* section intro text */
+  --token-28e7f1eb-c89e-4bb0-ab33-0c0caa957f39: #3a3a3a;  /* outline button border */
+}
+/* The hero's surface token doubles as the footer's white text colour, so
+   override the hero background (and the resume card) itself instead of the token. */
+body[toggle-theme="dark"] .framer-KlBLr .framer-ufjqu5,
+body[toggle-theme="dark"] .framer-ewt1ny {
+  background-color: #1d1d1d !important;
+}
+/* Text presets with hard-coded dark colours (section headings, project titles, intro copy) */
+body[toggle-theme="dark"] .framer-styles-preset-4u6n5c,
+body[toggle-theme="dark"] .framer-styles-preset-13c3248,
+body[toggle-theme="dark"] .framer-styles-preset-1sksvyh,
+body[toggle-theme="dark"] .framer-styles-preset-1e7jon0 {
+  --framer-text-color: #ececea !important;
+}
+body[toggle-theme="dark"] .framer-styles-preset-1y1gyft {
+  --framer-text-color: #b4b4b4 !important;
+}
+/* "What I bring" label: match the colour the desktop layout uses in dark */
+body[toggle-theme="dark"] .framer-styles-preset-10ljhlf {
+  --framer-text-color: #c9c9c9 !important;
+}
+/* "Download Resume as PDF" outline button uses a white fill */
+body[toggle-theme="dark"] .framer-C1xb4.framer-v-u3nqzu {
+  background-color: #262626 !important;
+}
+/* Footer link text (Work, About, Resume, location) is painted with a gradient
+   built on the page-background token, which turns near-black in dark mode.
+   The footer stays dark in both themes, so keep that text white. */
+body[toggle-theme="dark"] span.framer-text[style*="--token-7b2b7174"][style*="linear-gradient"] {
+  background-image: linear-gradient(0deg, #ffffff 81%, rgba(0, 0, 0, 0) 100%) !important;
+}
+/* Footer "Explore" links (Work, About, Résumé): Framer paints them with a fixed
+   #545454 to #373737 gradient, about 2:1 on the always-dark footer. Same look,
+   lighter greys (about 6:1), in both themes. */
+.framer-dn0jtl span.framer-text {
+  background-image: linear-gradient(0deg, #a6a6a6 0%, #8c8c8c 100%) !important;
+}
+/* Phone nav bar: Framer gives it a fixed 80% white frosted fill */
+body[toggle-theme="dark"] nav.framer-GO3Ed {
+  background-color: rgba(29, 29, 29, 0.85) !important;
+}
+/* Primary pill buttons (e.g. "Drag around and explore…" on the home canvas)
+   turn dark grey on hover but kept black text: switch the text to white. */
+.framer-SNWjz.framer-v-jykaqq:hover .framer-1irunw5 {
+  --extracted-r6o4lv: #ffffff !important;
+}
+.framer-SNWjz.framer-v-jykaqq:hover {
+  --43q7um: #ffffff !important;
+}
 
-  /* --- Dark theme: Framer's dark token set only redefines some colour tokens, so
-         parts of the phone layout kept their light-theme colours (white header and
-         hero, dark-grey text on the dark page). Give those tokens dark values here.
-         The always-dark footer and the "Selected work" / "Process" pills are left as is. --- */
-  body[toggle-theme="dark"] {
-    --token-e16847f2-b192-48e1-a890-7bbcce11cc6e: #1d1d1d;  /* header surface */
-    --token-6404906a-a8f6-4a20-b609-163acb7b17d6: #1d1d1d;  /* page surface */
-    --token-266c8d71-9990-411c-9a11-ecf80446ea66: #ececea;  /* headings, menu icon */
-    --token-b1106767-fbaa-4a24-bd97-dfbf18764b12: #b4b4b4;  /* body text */
-    --token-1655f33c-54b8-43d4-8f16-a9e920ed6c1b: #a9aab1;  /* section intro text */
-    --token-28e7f1eb-c89e-4bb0-ab33-0c0caa957f39: #3a3a3a;  /* outline button border */
-  }
-  /* The hero's surface token doubles as the footer's white text colour, so
-     override the hero background itself instead of the token. */
-  body[toggle-theme="dark"] .framer-KlBLr .framer-ufjqu5,
-  body[toggle-theme="dark"] .framer-ewt1ny {
-    background-color: #1d1d1d !important;
-  }
-  /* Text presets with hard-coded dark colours (section headings, project titles, intro copy) */
-  body[toggle-theme="dark"] .framer-styles-preset-4u6n5c,
-  body[toggle-theme="dark"] .framer-styles-preset-13c3248,
-  body[toggle-theme="dark"] .framer-styles-preset-1sksvyh {
-    --framer-text-color: #ececea !important;
-  }
-  body[toggle-theme="dark"] .framer-styles-preset-1y1gyft {
-    --framer-text-color: #b4b4b4 !important;
-  }
-  /* "What I bring" label: match the colour the desktop layout uses in dark */
-  body[toggle-theme="dark"] .framer-styles-preset-10ljhlf {
-    --framer-text-color: #c9c9c9 !important;
-  }
-  /* "Download Resume as PDF" outline button uses a white fill */
-  body[toggle-theme="dark"] .framer-C1xb4.framer-v-u3nqzu {
-    background-color: #262626 !important;
-  }
+@media (max-width: 809.98px) {
 
   /* --- Header (phone): logo left, theme toggle right --- */
   .framer-ANoyk.framer-v-1yd4ihl .framer-1tdmaxe-container {
@@ -296,4 +322,10 @@ body[toggle-theme="dark"] .framer-e6rkk7 [style*="--token-09721aba"] {
 
 body[toggle-theme="dark"] .framer-e6rkk7 [style*="--token-9eeddc74"] {
   background: #f4f4f3 !important;
+}
+
+/* --- Home hero: the template's device-photo ticker ("Scroll to explore" strip)
+       is removed. Hiding its container lets the hero's column close the gap. --- */
+.framer-KlBLr .framer-17zd6od-container {
+  display: none !important;
 }

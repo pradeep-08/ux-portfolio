@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- theme-boot: apply the saved dark theme before the first paint, so moving
+     between pages never flashes a white screen while the page loads. -->
+<script>try{if((localStorage.getItem("pradeep_theme")||localStorage.getItem("currentToggleState"))==="dark"){var d=document.documentElement;d.setAttribute("data-theme","dark")}}catch(e){}</script>
+<style>html[data-theme="dark"],html[data-theme="dark"] body{background-color:#0f0f10;color-scheme:dark}</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kriti Attendance — Case Study | Pradeep UX Portfolio</title>
@@ -8,14 +12,19 @@
   <link rel="icon" href="assets/images/favicon-64.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Figtree:wght@600;700&family=Inter:wght@400;500;600&family=Lora:ital@1&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
   <link rel="stylesheet" href="css/case-study.css" />
   <link rel="stylesheet" href="css/case-study-caseform.css" />
+  <link rel="stylesheet" href="css/case-study-story.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
 </head>
 <!--
   Copy: supplied by Pradeep. Screens: assets/images/case-studies/kriti-attendance/
   (mobile numbers blurred). No outcome metrics are claimed.
+  Two views share this page: the case study (default) and Design decisions, switched by
+  the toggle at the top (js/case-study-story.js). Decision screens are rendered from
+  "Attanance App Redesign.fig"; original-* are earlier Kriti AMS screenshots with
+  employee IDs, mobile numbers and third-party names blurred. Sources: docs/attendance-case-study/.
 -->
 <body class="cs-page cf-page">
 
@@ -24,6 +33,17 @@
   </a>
   <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
 
+  <!-- View toggle: case study (default) / design decisions -->
+  <div class="ds-viewtoggle" role="tablist" aria-label="Choose a view">
+    <button type="button" role="tab" id="view-tab-overview" aria-controls="view-overview" aria-selected="true">Case study</button>
+    <button type="button" role="tab" id="view-tab-decisions" aria-controls="view-decisions" aria-selected="false" tabindex="-1"><span class="ds-viewtoggle__long">Design decisions</span><span class="ds-viewtoggle__short" aria-hidden="true">Decisions</span><span class="ds-viewtoggle__count" aria-hidden="true">4</span></button>
+  </div>
+  <!-- First-visit nudge towards the decisions view; shown by js/case-study-story.js -->
+  <div class="ds-viewhint" hidden>
+    <button type="button" class="ds-viewhint__go"><span class="ds-viewhint__lead">Short on time?&nbsp;</span>See the 4 key design decisions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+    <button type="button" class="ds-viewhint__x" aria-label="Dismiss tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+
   <!-- Contents rail: filled by js/case-study.js from each section's data-toc -->
   <aside class="cs-toc" aria-label="On this page">
     <nav><ol></ol></nav>
@@ -31,6 +51,7 @@
 
   <main class="cs-article cf-article">
     <header class="cf-head">
+      <p class="ds-status"><span aria-hidden="true"></span>Live · in use by Kritilabs employees</p>
       <h1>Kriti Attendance</h1>
       <p class="cf-tagline">Making daily attendance clearer, from registration to check-out.</p>
       <p class="cs-summary">A mobile app redesign focused on helping employees register, understand their attendance status, review location accuracy, and access recent attendance records.</p>
@@ -54,6 +75,8 @@
         </div>
       </dl>
     </header>
+    <!-- ============ VIEW 1: Case study (default) ============ -->
+    <div class="cs-view" id="view-overview" data-view="overview" role="tabpanel" aria-labelledby="view-tab-overview">
 
     <!-- 1. The product -->
     <section class="cs-block cf-section" id="product" data-toc="The product">
@@ -175,7 +198,7 @@
         <figure class="cf-media cf-media--peach" aria-label="Review and verify step">
           <div class="cf-phone">
             <div class="cf-phone__screen">
-              <img src="assets/images/case-studies/kriti-attendance/verify-details.webp" alt="'You're almost there' screen: name, employee ID, department and mobile number to verify, with Register button and 'Not your details? Go back' link" width="720" height="1600" loading="lazy" />
+              <img src="assets/images/case-studies/kriti-attendance/registration-verify-details.webp" alt="'You're almost there' screen: name, employee ID, department and mobile number (blurred) to verify, with Register button and 'Not your details? Go back' link" width="720" height="1600" loading="lazy" />
             </div>
           </div>
         </figure>
@@ -249,6 +272,390 @@
       <blockquote class="cs-quote">"This project reinforced the importance of designing beyond the main action."</blockquote>
       <p class="cf-quote-note">An attendance experience also needs to explain waiting, confirmation, missing information, and failure.</p>
     </section>
+    </div>
+
+    <!-- ============ VIEW 2: Design decisions (Decision Stories framework) ============
+         Shown by the top toggle (js/case-study-story.js). Without JS it follows the case study. -->
+    <div class="cs-view" id="view-decisions" data-view="decisions" role="tabpanel" aria-labelledby="view-tab-decisions">
+
+    <section class="cs-block cf-section" id="dd-intro" data-toc="Key decisions">
+      <h2 class="cf-label">Design decisions</h2>
+      <p class="cf-text">Four decisions shaped the redesign. Each story follows the same structure: the situation before, the alternatives on the table, the reasoning and trade-off, what I designed, and what can honestly be said about the result.</p>
+
+      <ol class="cf-cards ds-index">
+        <li class="cf-card"><a href="#decision-1"><h3><span>1</span>Attendance status over attendance actions</h3><p class="ds-index__take">The screen answers "Have I marked today?" before showing any button.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-2"><h3><span>2</span>Explaining GPS instead of hiding it</h3><p class="ds-index__take">"Accuracy: 100" became "100m · Low", with refresh one tap away.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-3"><h3><span>3</span>Staged employee verification</h3><p class="ds-index__take">Identify, confirm, verify, done, with a way back and an SMS-failure path.</p><p>Tactical · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-4"><h3><span>4</span>One experience for office and remote work</h3><p class="ds-index__take">One screen for every mode; the chosen mode stays visible as a tag.</p><p>Strategic · Read story</p></a></li>
+      </ol>
+
+      <ul class="ds-legend" aria-label="Image labels">
+        <li><span class="cf-tag cf-tag--amber">Original app</span>Earlier Kriti AMS screens</li>
+        <li><span class="cf-tag cf-tag--purple">Exploration</span>Earlier frames from my Figma file</li>
+        <li><span class="cf-tag ds-tag--concept">Conceptual</span>An option described for comparison, not a design I made</li>
+        <li><span class="cf-tag cf-tag--green">Final design</span>The redesigned screens</li>
+      </ul>
+    </section>
+
+    <!-- ---------- Decision 01 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-1" data-toc="01 · Status first">
+      <p class="ds-story__num">Decision 01 · Strategic</p>
+      <h2 class="ds-story__title">Why I prioritised attendance status over attendance actions</h2>
+      <p class="cf-text ds-story__hook">The first question an employee has when opening an attendance app is whether today's attendance is already marked.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The original app was action-first. Enroll and Work From Home were the only interactive elements on the screen, and there was no status line. To know whether they'd already marked attendance, employees had to remember their last interaction with the app.</p>
+      <figure class="cf-media cf-media--mist" aria-label="Original attendance screen">
+        <span class="cf-badge cf-badge--left">Original app</span>
+        <div class="cf-phone"><div class="cf-phone__screen">
+          <img src="assets/images/case-studies/kriti-attendance/original-attendance.webp" alt="Original Kriti AMS attendance screen: employee details as label–value rows, 'Fix Time' and 'Accuracy: 100' in light grey, and equal Enroll and Work From Home buttons. No attendance status is shown." width="720" height="1595" loading="lazy" />
+        </div></div>
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag cf-tag--amber">Option A · Original app</span>
+          <h4>Action-first</h4>
+          <div class="ds-option__media"><img src="assets/images/case-studies/kriti-attendance/detail-original-gps-actions.webp" alt="Original app: Fix Time and Accuracy lines above equal Enroll and Work From Home buttons" width="720" height="300" loading="lazy" /></div>
+          <ul class="ds-pros">
+            <li class="is-pro">A simple, static screen</li>
+            <li class="is-con">Buttons look the same whatever you've already done</li>
+            <li class="is-con">Relies on employees remembering their last action</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Status-first</h4>
+          <div class="ds-option__media"><img src="assets/images/case-studies/kriti-attendance/detail-status-not-marked.webp" alt="Final employee card: Current Status 'Not Marked yet' with a red calendar badge" width="688" height="318" loading="lazy" /></div>
+          <ul class="ds-pros">
+            <li class="is-pro">States today's attendance before any action</li>
+            <li class="is-pro">Actions follow from the state</li>
+            <li class="is-pro">Mirrors the real day: not marked, in, out</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>A task repeated every working day shouldn't depend on employees remembering what they did last. Leading with status replaces recall with recognition.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Three explicit states mean three versions of the screen to design, build and keep in sync with the backend, compared with one static layout.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <p class="cf-text">The status, the badge colour, the primary button and today's summary card all change together, so every part of the screen says the same thing.</p>
+      <figure class="cf-media ds-trio" aria-label="The three attendance states">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/attendance-not-marked.webp" alt="Not Marked: red status and calendar badge, Enroll Now" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/attendance-checked-in.webp" alt="Checked In: green shield, Office tag, Check Out" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/attendance-checked-out.webp" alt="Checked Out: green status and completed day card" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Not Marked</strong>Red status · Enroll Now</li>
+        <li><strong>Checked In</strong>Green shield, Office tag · Check Out</li>
+        <li><strong>Checked Out</strong>Completed day card</li>
+      </ul>
+
+      <p class="cf-text">Drag across the panel to compare the original screen with the redesign.</p>
+      <div class="cf-compare">
+        <figure class="cf-media cf-media--mist cf-compare__layer cf-compare__layer--before" aria-label="Before: original attendance screen">
+          <span class="cf-badge cf-badge--left">Before</span>
+          <div class="cf-phone"><div class="cf-phone__screen">
+            <img src="assets/images/case-studies/kriti-attendance/original-attendance.webp" alt="Before: original Kriti AMS attendance screen" width="720" height="1595" loading="lazy" draggable="false" />
+          </div></div>
+        </figure>
+        <figure class="cf-media cf-compare__layer cf-compare__layer--after" aria-label="After: redesigned attendance screen">
+          <span class="cf-badge cf-badge--right">After</span>
+          <div class="cf-phone"><div class="cf-phone__screen">
+            <img src="assets/images/case-studies/kriti-attendance/attendance-not-marked.webp" alt="After: redesigned Not Marked attendance screen" width="720" height="1600" loading="lazy" draggable="false" />
+          </div></div>
+        </figure>
+        <div class="cf-compare__handle" role="slider" tabindex="0" aria-label="Compare before and after" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% before"></div>
+      </div>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>The redesign makes each attendance state explicit and gives every state one clear next action. Whether this reduces uncertainty would need to be confirmed in testing.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Visibility of system status</li><li>Recognition rather than recall</li><li>Hick's law</li><li>Information hierarchy</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 02 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-2" data-toc="02 · Visible GPS">
+      <p class="ds-story__num">Decision 02 · Strategic</p>
+      <h2 class="ds-story__title">Why I made GPS verification understandable instead of hiding it in the background</h2>
+      <p class="cf-text ds-story__hook">When attendance depends on location, employees need to know whether the app has captured a reliable location.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The original app already showed location data, but only as raw values: "Fix Time" and "Accuracy: 100" in small grey text. When something went wrong, employees couldn't tell whether the problem was their location, the timing or the app.</p>
+      <figure class="cf-media cf-media--mist cf-media--fit cf-media--short" aria-label="Original location fields">
+        <span class="cf-badge cf-badge--left">Original app</span>
+        <img src="assets/images/case-studies/kriti-attendance/detail-original-gps-actions.webp" alt="Original app: 'Fix Time: 27/05/2026 11:47' and 'Accuracy: 100' in light grey text with a refresh button" width="720" height="300" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-options--three ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Hide it</h4>
+          <p>Verify location silently and only show an error when it fails.</p>
+          <ul class="ds-pros"><li class="is-pro">The cleanest screen</li><li class="is-con">Nothing to go on when a check-in fails</li><li class="is-con">Recovery steps aren't obvious</li></ul>
+        </div>
+        <div class="ds-option">
+          <span class="cf-tag cf-tag--amber">Option B · Original app</span>
+          <h4>Show raw values</h4>
+          <p>"Fix Time" and a bare accuracy number, as in the earlier app.</p>
+          <ul class="ds-pros"><li class="is-pro">Information is available</li><li class="is-con">Technical labels need interpreting</li><li class="is-con">No sense of good or bad</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option C · Chosen</span>
+          <h4>Explain it</h4>
+          <p>Plain labels, a quality rating, the update time and refresh, all in one card.</p>
+          <ul class="ds-pros"><li class="is-pro">Readiness is readable at a glance</li><li class="is-pro">Refresh is the obvious next step</li><li class="is-con">Adds a card to a busy screen</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>More information is worth showing when it helps people understand the system and recover from problems. "100m · Low" tells an employee what to do; "Accuracy: 100" doesn't.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Location details make the screen denser. They're grouped in one compact card under the status, so they don't compete with the primary action.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <p class="cf-text">Accuracy is paired with a rating (Low, Good), the timestamp is labelled "Last location update", and the refresh control sits in the same card.</p>
+      <figure class="cf-media cf-media--periwinkle ds-stack" aria-label="Location card in two states">
+        <img src="assets/images/case-studies/kriti-attendance/detail-location-low.webp" alt="Location card: GPS accuracy 100m rated Low" width="688" height="146" loading="lazy" />
+        <img src="assets/images/case-studies/kriti-attendance/detail-location-good.webp" alt="Location card: GPS accuracy 34m rated Good" width="688" height="146" loading="lazy" />
+      </figure>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--lime cf-media--fit" aria-label="Refresh component states">
+          <img src="assets/images/case-studies/kriti-attendance/component-refresh-states.webp" alt="Refresh GPS button component: idle, then three 'Refreshing…' states" width="352" height="462" loading="lazy" />
+        </figure>
+        <figure class="cf-media cf-media--peach" aria-label="Location access disabled">
+          <div class="cf-phone"><div class="cf-phone__screen">
+            <img src="assets/images/case-studies/kriti-attendance/location-not-enabled.webp" alt="Enable location access dialog: 'Turn on location on your phone, then try again', with an Enable button" width="720" height="1600" loading="lazy" />
+          </div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>Refresh</strong>A visible "Refreshing…" state</li>
+        <li><strong>Location off</strong>The dialog names the fix and offers it</li>
+      </ul>
+
+      <figure class="cf-media cf-media--mist cf-media--fit" aria-label="Archived GPS card exploration">
+        <span class="cf-badge cf-badge--left">Exploration</span>
+        <img src="assets/images/case-studies/kriti-attendance/exploration-gps-card.webp" alt="Archived GPS card: accuracy 100m 'Good Accuracy', a map thumbnail with a refresh icon, the fix time and a 'Refresh GPS' link" width="700" height="396" loading="lazy" />
+      </figure>
+      <p class="cf-text">An earlier frame in my file explored a larger GPS card with a map thumbnail. The final design keeps its ideas (a rating, the update time and refresh) in a card about a third of the height, without the map.</p>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>Location readiness, its timestamp and the recovery control are visible next to the attendance action. Better employee confidence is the intended benefit, still to be validated.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Visibility of system status</li><li>User control and freedom</li><li>Progressive disclosure</li><li>Error recovery</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 03 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-3" data-toc="03 · Verification">
+      <p class="ds-story__num">Decision 03 · Tactical</p>
+      <h2 class="ds-story__title">Why I designed staged employee verification instead of a single registration form</h2>
+      <p class="cf-text ds-story__hook">Employees need confidence that their attendance account is connected to the right employee record.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The original app did split registration in two: a form, then a "Validation successful" review. But the review was a block of label–value rows, the wait showed a plain "Loading… Seconds remaining: 17" box, and there was no sign of where you were in the process.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Original verification screen">
+          <span class="cf-badge cf-badge--left">Original app</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/original-verify-details.webp" alt="Original verification: 'Validation successful, verify below details before register', label–value rows, Back and Register buttons" width="720" height="1612" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--mist" aria-label="Original loading state">
+          <span class="cf-badge cf-badge--left">Original app</span>
+          <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/kriti-attendance/original-loading.webp" alt="Original wait state: a white box reading 'Loading… Seconds remaining: 17'" width="720" height="1612" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>One registration form</h4>
+          <ul class="ds-pros"><li class="is-pro">Fewest screens</li><li class="is-pro">Least effort up front</li><li class="is-con">No moment to confirm the matched employee record</li><li class="is-con">Waiting and failure have nowhere to go</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>Staged, visible verification</h4>
+          <ul class="ds-pros"><li class="is-pro">Identify, confirm, verify, done</li><li class="is-pro">A progress indicator and an exit if details are wrong</li><li class="is-pro">Waiting and failure get their own screens</li><li class="is-con">More screens and states to build</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Registration happens once; attendance happens every day on top of it. A few extra seconds confirming identity at setup protects every record that follows.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Every added stage is onboarding friction and implementation work: a processing timer, an SMS code and a delivery-failure path.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--peach ds-trio" aria-label="Registration: identify, confirm, verify">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/registration-form.webp" alt="Welcome to Kritilabs: Full Name, Employee ID and Mobile Number fields with a Validate button" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/registration-verify-details.webp" alt="You're almost there: verify your details card with 'Not your details? Go back'" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/registration-verification-code.webp" alt="Setting up your profile: stopwatch, countdown and verification code field" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>1 · Identify</strong>Name, employee ID, mobile</li>
+        <li><strong>2 · Confirm</strong>Matched record, with a way back</li>
+        <li><strong>3 · Verify</strong>Countdown and SMS code</li>
+      </ul>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--lime" aria-label="Registration complete">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/registration-success.webp" alt="You're all set: green badge, redirecting to the Attendance screen automatically" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--rose" aria-label="Message not delivered">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/kriti-attendance/mobile-not-registered.webp" alt="Message not delivered: enter registered mobile number or contact HR/admin, with a Re-Send button" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>4 · Done</strong>Automatic redirect to attendance</li>
+        <li><strong>If the SMS fails</strong>Re-send, or contact HR/admin</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>Registration now shows progress, lets employees confirm the matched record before committing, explains the wait and covers SMS delivery failure. Completion rates haven't been measured.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Progressive disclosure</li><li>Error prevention</li><li>Visibility of system status</li><li>Identity confirmation</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 04 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-4" data-toc="04 · Work modes">
+      <p class="ds-story__num">Decision 04 · Strategic</p>
+      <h2 class="ds-story__title">Why I designed one attendance experience for office and remote employees</h2>
+      <p class="cf-text ds-story__hook">An employee's working environment may change. Their attendance goal stays the same.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The original app put Enroll and Work From Home side by side as equal buttons, and nothing on the screen showed which mode had been used afterwards.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Separate experiences per mode</h4>
+          <ul class="ds-pros"><li class="is-pro">Each flow can be tailored to its rules</li><li class="is-con">Duplicated screens and patterns</li><li class="is-con">Employees learn two ways to do one job</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Chosen</span>
+          <h4>One screen, explicit mode</h4>
+          <ul class="ds-pros"><li class="is-pro">The same status, location and summary for everyone</li><li class="is-pro">Mode is chosen deliberately, then shown as a tag</li><li class="is-con">Differences in policy must still be communicated</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Keeping one familiar interaction across work modes means nothing to relearn when someone works from home. Making the mode visible afterwards prevents silent mistakes.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>A shared screen can hide real differences. Office and remote attendance may follow different verification rules, which the interface has to communicate rather than assume.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--lavender ds-stack" aria-label="Action area and checked-in status">
+        <img src="assets/images/case-studies/kriti-attendance/detail-actions.webp" alt="Action area: Enroll Now as the primary action; Work From Home and On duty as secondary actions" width="680" height="232" loading="lazy" />
+        <img src="assets/images/case-studies/kriti-attendance/detail-status-checked-in.webp" alt="Checked In status card with an Office tag" width="688" height="318" loading="lazy" />
+      </figure>
+      <p class="cf-text">The everyday action is primary; Work From Home and On duty are deliberate, secondary choices. After check-in, the status carries the work mode as a tag, and the summary cards record each day as Office or WFH.</p>
+      <figure class="cf-media cf-media--lime cf-media--fit cf-media--short" aria-label="Attendance summary cards with work-mode tags">
+        <img src="assets/images/case-studies/kriti-attendance/component-history-cards.webp" alt="Attendance summary cards tagged Office and WFH with hours" width="1180" height="270" loading="lazy" />
+      </figure>
+
+      <figure class="cf-media cf-media--mist" aria-label="Archived v4 exploration with an Enrolled and Mode panel">
+        <span class="cf-badge cf-badge--left">Exploration</span>
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/kriti-attendance/iteration-v4-mode.webp" alt="Archived v4 frame: after enrolling, the primary button becomes a dark 'Enrolled' panel with a 'Mode' row of icons" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <p class="cf-text">A v4 frame explored showing the mode inside an expanded "Enrolled · Mode" panel. The final design moved the mode into a small tag on the status, which keeps the action area the same in every state.</p>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>Office, remote and on-duty attendance share one familiar screen, and the chosen mode stays visible in the status and the records. Fewer wrong-mode entries is the intended benefit, still to be validated.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Consistency and standards</li><li>Error prevention</li><li>Flexibility and efficiency of use</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Iterations ---------- -->
+    <section class="cs-block cf-section" id="iterations" data-toc="Iterations">
+      <h2 class="cf-label">The explorations that shaped the final experience</h2>
+      <p class="cf-text">My Figma file keeps four numbered versions of the attendance screen. Read in order, they show the layout settling from stacked cards into the final status-led structure.</p>
+      <ol class="ds-timeline ds-wide">
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/kriti-attendance/original-attendance.webp" alt="Original Kriti AMS screen" width="720" height="1595" loading="lazy" /></div><span class="cf-tag cf-tag--amber">Original</span><p><strong>Kriti AMS</strong>A form-like layout with no status and raw GPS values.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/kriti-attendance/iteration-v1.webp" alt="Iteration v1: separate Current Status and GPS cards, History button in the header" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">v1</span><p><strong>Status gets its own card</strong>Three stacked cards push the actions down; history sits behind a header button.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/kriti-attendance/iteration-v2.webp" alt="Iteration v2: status merged into the employee card, location strip with Refresh GPS, History section" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">v2</span><p><strong>Merged and condensed</strong>Status joins the employee card and history moves onto the screen.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/kriti-attendance/iteration-v3.webp" alt="Iteration v3: logo in the header, History as day cards" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">v3</span><p><strong>Records become cards</strong>Day cards with times, hours and Office/WFH tags.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/kriti-attendance/iteration-v4.webp" alt="Iteration v4: 'Last location update', round refresh button, 'Attendance Summary'" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">v4</span><p><strong>Plain language</strong>"Last Fix Time" becomes "Last location update"; History becomes "Attendance Summary".</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/kriti-attendance/attendance-not-marked.webp" alt="Final Not Marked screen" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Final</span><p><strong>Status, rated</strong>Status badges, Low/Good ratings, an On duty action and a two-day summary.</p></li>
+      </ol>
+
+      <h3 class="cf-sublabel">App icon explorations</h3>
+      <p class="cf-text">Alongside the screens, I explored icon directions: lettermarks, calendar-and-tick metaphors, a clipboard illustration and layered ID cards using the Kritilabs colours.</p>
+      <ul class="ds-icons ds-wide" aria-label="App icon explorations">
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-k.webp" alt="Lettermark K on a lilac gradient" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-ka.webp" alt="Overlapping KA lettermark" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-calendar-check.webp" alt="Dark calendar with a green tick" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-calendar-team.webp" alt="Calendar with people and a tick on a coral gradient" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-clipboard.webp" alt="Isometric clipboard illustration on navy" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-checklist.webp" alt="Checklist card with a person and clock on navy" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-cards.webp" alt="Layered coloured cards labelled Kriti Attendance" width="320" height="320" loading="lazy" /></li>
+        <li><img src="assets/images/case-studies/kriti-attendance/app-icon-cards-brand.webp" alt="Layered cards with the Kritilabs logo" width="320" height="320" loading="lazy" /></li>
+      </ul>
+    </section>
+
+    <!-- ---------- Design system ---------- -->
+    <section class="cs-block cf-section" id="system" data-toc="Design system">
+      <h2 class="cf-label">Designing consistency across everyday interactions</h2>
+      <p class="cf-text">These values come from the final frames in the Figma file. There's no separate published library; this is the system the screens actually use.</p>
+
+      <div class="ds-sys ds-wide">
+        <div class="cf-card">
+          <h3>Typography</h3>
+          <ul class="ds-type">
+            <li><span style="font:700 26px/34px Figtree,Inter,sans-serif">Setting up your profile…</span><small>Figtree Bold 28/36 · screen titles</small></li>
+            <li><span style="font:600 20px/28px Figtree,Inter,sans-serif">Not Marked yet</span><small>Figtree SemiBold 20/28 · names and key values</small></li>
+            <li><span style="font:600 16px/24px Figtree,Inter,sans-serif">Work From Home</span><small>Figtree Medium–Bold 16 · buttons and labels</small></li>
+            <li><span style="font:600 12px/16px Inter,sans-serif">10:30 PM · 8.25 hrs</span><small>Inter Semi Bold 10–12 · record data</small></li>
+          </ul>
+        </div>
+        <div class="cf-card">
+          <h3>Colour and meaning</h3>
+          <ul class="ds-swatches">
+            <li><i style="background:#3a3a3a"></i><b>#3A3A3A</b><small>Primary action</small></li>
+            <li><i style="background:#004f89"></i><b>#004F89</b><small>Brand blue</small></li>
+            <li><i style="background:#242731"></i><b>#242731</b><small>Primary text</small></li>
+            <li><i style="background:#717782"></i><b>#717782</b><small>Secondary text</small></li>
+            <li><i style="background:#ba1a1a"></i><b>#BA1A1A</b><small>Not marked</small></li>
+            <li><i style="background:#34c77b"></i><b>#34C77B</b><small>Checked in · good</small></li>
+            <li><i style="background:#ea7c37"></i><b>#EA7C37</b><small>Low accuracy</small></li>
+            <li><i style="background:linear-gradient(180deg,#fff,#e6ebf9)"></i><b>#FFF → #E6EBF9</b><small>Screen background</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cf-results ds-reuse">
+        <div><strong>3</strong><span>Attendance states built from one status card, swapping the badge, colour and label</span></div>
+        <div><strong>5</strong><span>Day record card variants: today, completed, WFH, not marked, incomplete</span></div>
+        <div><strong>12 · 14 · 15</strong><span>Corner radii for cards, inputs and buttons, plus pill tags</span></div>
+        <div><strong>1</strong><span>Primary button style (#3A3A3A) shared by registration, attendance and error dialogs</span></div>
+      </div>
+
+      <h3 class="cf-sublabel">Contrast check</h3>
+      <p class="cf-text">I checked the status colours against WCAG 2.2 text contrast. Three pairs fall short and are on the refinement list.</p>
+      <div class="ds-table ds-wide">
+        <table>
+          <thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">AA text</th></tr></thead>
+          <tbody>
+            <tr><td>Primary text #242731 on white</td><td>14.9:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>White on primary action #3A3A3A</td><td>11.4:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Not marked #BA1A1A on white</td><td>6.5:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Secondary text #717782 on white</td><td>4.5:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Low accuracy #EA7C37 on white</td><td>2.8:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Field labels #A8A8A8 on white</td><td>2.4:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Checked in #34C77B on white</td><td>2.2:1</td><td class="is-fail">Fail</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    </div>
 
     <footer class="cs-end cf-foot">
       <p>Pradeep © 2026</p>
@@ -259,6 +666,7 @@
   <script src="js/main.js" defer></script>
   <script src="js/case-study.js" defer></script>
   <script src="js/compare-slider.js" defer></script>
+  <script src="js/case-study-story.js" defer></script>
   <script src="js/bot-nav.js" defer></script>
 </body>
 </html>

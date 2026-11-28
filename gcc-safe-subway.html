@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- theme-boot: apply the saved dark theme before the first paint, so moving
+     between pages never flashes a white screen while the page loads. -->
+<script>try{if((localStorage.getItem("pradeep_theme")||localStorage.getItem("currentToggleState"))==="dark"){var d=document.documentElement;d.setAttribute("data-theme","dark")}}catch(e){}</script>
+<style>html[data-theme="dark"],html[data-theme="dark"] body{background-color:#0f0f10;color-scheme:dark}</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GCC Safe Subway — Case Study | Pradeep UX Portfolio</title>
@@ -10,117 +14,485 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
   <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/case-study-caseform.css" />
+  <link rel="stylesheet" href="css/case-study-story.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
 </head>
-<body class="cs-page">
+<!--
+  GCC Safe Subway case study. Two views share this page: the case study (default, the earlier
+  copy unchanged) and Design decisions, switched by the toggle at the top
+  (js/case-study-story.js). Screens are rendered from "GCC Boom Barrier Design.fig": the
+  "Approved" section is shown as final; the "Draft" and "wireframe" pages as explorations.
+  Operator names in draft history rows are blurred. No outcome metrics are claimed.
+  Sources and open questions: docs/gcc-safe-subway-case-study/.
+-->
+<body class="cs-page cf-page">
 
-  <div class="cs-topbar">
-    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
-      <span class="cs-avatar"><img src="assets/images/avatar-132.webp" alt="" width="44" height="44" decoding="async" /><i aria-hidden="true"></i></span>
-      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
-    </a>
-    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  <a href="projects.html" class="cf-back" aria-label="Back to all projects">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+  <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+
+  <!-- View toggle: case study (default) / design decisions -->
+  <div class="ds-viewtoggle" role="tablist" aria-label="Choose a view">
+    <button type="button" role="tab" id="view-tab-overview" aria-controls="view-overview" aria-selected="true">Case study</button>
+    <button type="button" role="tab" id="view-tab-decisions" aria-controls="view-decisions" aria-selected="false" tabindex="-1"><span class="ds-viewtoggle__long">Design decisions</span><span class="ds-viewtoggle__short" aria-hidden="true">Decisions</span><span class="ds-viewtoggle__count" aria-hidden="true">4</span></button>
+  </div>
+  <!-- First-visit nudge towards the decisions view; shown by js/case-study-story.js -->
+  <div class="ds-viewhint" hidden>
+    <button type="button" class="ds-viewhint__go"><span class="ds-viewhint__lead">Short on time?&nbsp;</span>See the 4 key design decisions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+    <button type="button" class="ds-viewhint__x" aria-label="Dismiss tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
 
-  <div class="cs-layout">
-    <aside class="cs-toc" aria-label="On this page">
-      <nav><ol></ol></nav>
-    </aside>
+  <!-- Contents rail: filled by js/case-study.js from each section's data-toc -->
+  <aside class="cs-toc" aria-label="On this page">
+    <nav><ol></ol></nav>
+  </aside>
 
-    <main class="cs-article">
-      <header>
-        <a href="projects.html" class="cs-back">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-          back
-        </a>
-        <p class="cs-eyebrow">GCC Safe Subway · case study · <span data-read-time>4 min read</span></p>
-        <h1 class="cs-title">Making subway barrier operations clear and deliberate</h1>
-        <p class="cs-summary">A mobile interface for reviewing subway locations, checking barrier status and submitting a manual operation request.</p>
+  <main class="cs-article cf-article">
+    <header class="cf-head">
+      <p class="ds-status"><span aria-hidden="true"></span>Live · Government deployment</p>
+      <h1>GCC Safe Subway</h1>
+      <p class="cf-tagline">Making subway barrier operations clear and deliberate</p>
+      <p class="cs-summary">A mobile interface for reviewing subway locations, checking barrier status and submitting a manual operation request.</p>
 
-        <dl class="cs-meta">
-          <div><dt>Sector</dt><dd>Public-sector operations</dd></div>
-          <div><dt>Domain</dt><dd>Civic infrastructure</dd></div>
-          <div><dt>Platform</dt><dd>Mobile</dd></div>
-          <div><dt>Project</dt><dd>Office project</dd></div>
-        </dl>
-      </header>
-
-      <section class="cs-block" id="product" data-toc="The product">
-        <p class="cs-eyebrow">The product</p>
-        <h2>What GCC Safe Subway brings together</h2>
-        <p>Safe Subway is an operational interface for subway barrier management. Its designs include a location list, barrier-status information, selected-location controls, password recovery and a confirmation prompt. Some variants also expose water-level information. The case study centers on the sequence from identifying a location to deliberately requesting a change.</p>
-      </section>
-
-      <section class="cs-block" id="problem" data-toc="Problem framing">
-        <p class="cs-eyebrow">Problem framing</p>
-        <h2>The challenge</h2>
-        <p>An operational control must make both its target and its current state clear. With multiple subway locations in the same application, a user needs to know which location they are viewing before requesting an action. The design challenge is to keep location identity, barrier status and operation controls connected throughout the interaction.</p>
-      </section>
-
-      <section class="cs-block" id="users" data-toc="Users &amp; scope">
-        <p class="cs-eyebrow">Users and scope</p>
-        <h2>Who it serves</h2>
-        <p>The screens are intended for authorized operational staff rather than members of the public. The visible scope covers monitoring and initiating requests. A design screen does not establish the physical barrier’s response, interlocks or the system’s operational safety performance.</p>
-      </section>
-
-      <section class="cs-block" id="flow" data-toc="Task flow">
-        <p class="cs-eyebrow">Task flow</p>
-        <h2>How the work moves</h2>
-        <div class="cs-flowgroup">
-          <p class="cs-flowgroup-label">Operator</p>
-          <ol class="cs-steps">
-            <li>Sign in</li>
-            <li>Find a subway location</li>
-            <li>Inspect current status</li>
-            <li>Open the location control screen</li>
-            <li>Choose an operation</li>
-            <li>Review confirmation</li>
-            <li>Send the request</li>
-          </ol>
+      <dl class="cf-meta">
+        <div><dt>Sector</dt><dd><strong>B2G</strong><span>Government · public-sector operations</span></dd></div>
+        <div><dt>Domain</dt><dd><strong>Civic</strong><span>Civic infrastructure</span></dd></div>
+        <div>
+          <dt>Platform</dt>
+          <dd>
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></strong>
+            <span>Mobile</span>
+          </dd>
         </div>
-        <p style="margin-top: 20px;">A complete implementation should then show a pending state and a device-confirmed result or failure. That final acknowledgement sequence is a recommendation for completion of the experience.</p>
-      </section>
+        <div><dt>Project</dt><dd><strong>Office</strong><span>Office project</span></dd></div>
+      </dl>
+    </header>
 
-      <section class="cs-block" id="decisions" data-toc="Design decisions">
-        <p class="cs-eyebrow">Design decisions</p>
-        <h2>Key decisions</h2>
-        <h3>1. The location list supports recognition before action.</h3>
-        <p>Location names and status information allow operators to select the relevant subway before entering its controls. Search provides a direct route when the operator already knows the target location.</p>
-        <h3>2. The control screen keeps the selected location visible.</h3>
-        <p>This creates continuity between the list selection and the action. A confirmation prompt adds a deliberate checkpoint before a manual operation request is submitted.</p>
-        <h3>3. Screens and task flow are designed together.</h3>
-        <p>The file includes both UI screens and a task-flow diagram. Together they show how authentication, location selection and operation relate. Draft variants explore additional overview counts and operation history.</p>
-      </section>
+    <!-- ============ VIEW 1: Case study (default) ============ -->
+    <div class="cs-view" id="view-overview" data-view="overview" role="tabpanel" aria-labelledby="view-tab-overview">
 
-      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
-        <p class="cs-eyebrow">Design outcome and next validation</p>
-        <h2>What the design achieves, and how to test it</h2>
-        <p>The design establishes a clear location-to-operation sequence. The next evaluation should check whether operators can identify the intended subway, distinguish current status from an action, cancel an unintended request and recognize a failed or delayed response.</p>
-      </section>
+    <section class="cs-block cf-section" id="product" data-toc="The product">
+      <h2 class="cf-label">What GCC Safe Subway brings together</h2>
+      <p class="cf-text">Safe Subway is an operational interface for subway barrier management. Its designs include a location list, barrier-status information, selected-location controls, password recovery and a confirmation prompt. Some variants also expose water-level information. The case study centers on the sequence from identifying a location to deliberately requesting a change.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--periwinkle" aria-label="Location list">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/dashboard.webp" alt="Location list: search above subway cards, each showing barrier status and the last update time" width="720" height="1600" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--periwinkle" aria-label="Location control">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/control.webp" alt="Location control: Rangarajapuram with current status Open, and Open and Closed request buttons" width="720" height="1600" /></div></div>
+        </figure>
+      </div>
+    </section>
 
-      <section class="cs-block" id="reflection" data-toc="Reflection">
-        <p class="cs-eyebrow">Pausing to reflect</p>
-        <h2>Reflection</h2>
-        <blockquote class="cs-quote">For physical controls, clarity depends on more than a prominent button. The user must understand the target, the requested action and whether the device actually completed it.</blockquote>
-      </section>
+    <section class="cs-block cf-section" id="problem" data-toc="Problem framing">
+      <h2 class="cf-label">The challenge</h2>
+      <p class="cf-text">An operational control must make both its target and its current state clear. With multiple subway locations in the same application, a user needs to know which location they are viewing before requesting an action. The design challenge is to keep location identity, barrier status and operation controls connected throughout the interaction.</p>
+    </section>
 
-      <footer class="cs-end">
-        <p class="cs-thanks">Thanks for reading</p>
-        <ul class="cs-links">
-          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
-          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
-          <li><a href="projects.html"><span>all projects</span></a></li>
-        </ul>
-        <a href="e-seal.html" class="cs-next">
-          <div><small>next project</small><strong>E-Seal</strong></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-        </a>
-      </footer>
-    </main>
-  </div>
+    <section class="cs-block cf-section" id="users" data-toc="Users &amp; scope">
+      <h2 class="cf-label">Who it serves</h2>
+      <p class="cf-text">The screens are intended for authorized operational staff rather than members of the public. The visible scope covers monitoring and initiating requests. A design screen does not establish the physical barrier’s response, interlocks or the system’s operational safety performance.</p>
+    </section>
+
+    <section class="cs-block cf-section" id="flow" data-toc="Task flow">
+      <h2 class="cf-label">How the work moves</h2>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Operator</p>
+        <ol class="cs-steps">
+          <li>Sign in</li>
+          <li>Find a subway location</li>
+          <li>Inspect current status</li>
+          <li>Open the location control screen</li>
+          <li>Choose an operation</li>
+          <li>Review confirmation</li>
+          <li>Send the request</li>
+        </ol>
+      </div>
+      <p class="cf-text">A complete implementation should then show a pending state and a device-confirmed result or failure. That final acknowledgement sequence is a recommendation for completion of the experience.</p>
+      <figure class="cf-media cf-media--mist cf-media--fit ds-media--tall" aria-label="User flow diagram">
+        <img src="assets/images/case-studies/gcc-safe-subway/user-flow.webp" alt="Safe Subway user flow: app launch, login, a credentials check that loops back with an error message when invalid, then the location control screen showing current status with Open and Closed, then end" width="1100" height="1382" loading="lazy" />
+      </figure>
+    </section>
+
+    <section class="cs-block cf-section" id="decisions" data-toc="Design decisions">
+      <h2 class="cf-label">Key decisions</h2>
+
+      <h3 class="cf-decision">1. The location list supports recognition before action.</h3>
+      <p class="cf-text">Location names and status information allow operators to select the relevant subway before entering its controls. Search provides a direct route when the operator already knows the target location.</p>
+      <figure class="cf-media cf-media--lime" aria-label="Location list">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/dashboard.webp" alt="Location list with search and barrier status per subway" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-decision">2. The control screen keeps the selected location visible.</h3>
+      <p class="cf-text">This creates continuity between the list selection and the action. A confirmation prompt adds a deliberate checkpoint before a manual operation request is submitted.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--peach" aria-label="Control screen">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/control.webp" alt="Control screen with the selected location and current status above the request buttons" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--peach" aria-label="Confirmation prompt">
+          <div class="cf-phone"><div class="cf-phone__screen ds-screen--mid"><img src="assets/images/case-studies/gcc-safe-subway/control-confirm.webp" alt="Warning dialog: 'Do want to manually operate Rangarajapuram subway?' with No and Yes" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-decision">3. Screens and task flow are designed together.</h3>
+      <p class="cf-text">The file includes both UI screens and a task-flow diagram. Together they show how authentication, location selection and operation relate. Draft variants explore additional overview counts and operation history.</p>
+      <figure class="cf-media cf-media--mist cf-media--fit ds-media--tall" aria-label="UI screens flow">
+        <img src="assets/images/case-studies/gcc-safe-subway/ui-flow.webp" alt="Safe Subway UI screens board: Login, Subway List and Operation shown side by side in phone frames" width="1100" height="1382" loading="lazy" />
+      </figure>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-section" id="outcome" data-toc="Outcome &amp; validation">
+      <h2 class="cf-label">What the design achieves, and how to test it</h2>
+      <p class="cf-text">The design establishes a clear location-to-operation sequence. The next evaluation should check whether operators can identify the intended subway, distinguish current status from an action, cancel an unintended request and recognize a failed or delayed response.</p>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-quote" id="reflection" data-toc="Reflection">
+      <span class="cf-badge">Reflection</span>
+      <blockquote class="cs-quote">For physical controls, clarity depends on more than a prominent button.</blockquote>
+      <p class="cf-quote-note">The user must understand the target, the requested action and whether the device actually completed it.</p>
+    </section>
+
+    </div>
+
+    <!-- ============ VIEW 2: Design decisions (Decision Stories framework) ============ -->
+    <div class="cs-view" id="view-decisions" data-view="decisions" role="tabpanel" aria-labelledby="view-tab-decisions">
+
+    <section class="cs-block cf-section" id="dd-intro" data-toc="Key decisions">
+      <h2 class="cf-label">Design decisions</h2>
+      <p class="cf-text">Four decisions took Safe Subway from its draft to the approved design. Each story follows the same structure: the situation before, the alternatives, the reasoning and trade-off, what I designed, and what can honestly be said about the result.</p>
+
+      <ol class="cf-cards ds-index">
+        <li class="cf-card"><a href="#decision-1"><h3><span>1</span>From an analytics dashboard to a focused subway list</h3><p class="ds-index__take">Totals and water levels gave way to search and one status per subway.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-2"><h3><span>2</span>A checkpoint that names the subway</h3><p class="ds-index__take">"Do want to manually operate Rangarajapuram subway?" before anything moves.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-3"><h3><span>3</span>One request per location, not per barrier</h3><p class="ds-index__take">Per-barrier lists and history became one Open/Close request.</p><p>Tactical · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-4"><h3><span>4</span>Password recovery inside the app</h3><p class="ds-index__take">Generate a code, verify it and set a new password on one screen.</p><p>Tactical · Read story</p></a></li>
+      </ol>
+
+      <ul class="ds-legend" aria-label="Image labels">
+        <li><span class="cf-tag cf-tag--purple">Draft</span>Earlier frames from the Draft and wireframe pages of my Figma file</li>
+        <li><span class="cf-tag ds-tag--concept">Conceptual</span>An option described for comparison, not a design I made</li>
+        <li><span class="cf-tag cf-tag--green">Approved</span>Frames in the file's "Approved ✅" section</li>
+      </ul>
+    </section>
+
+    <!-- ---------- Decision 01 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-1" data-toc="01 · Focused list">
+      <p class="ds-story__num">Decision 01 · Strategic</p>
+      <h2 class="ds-story__title">Why I replaced the analytics dashboard with a focused subway list</h2>
+      <p class="cf-text ds-story__hook">An operator opening the app during heavy rain needs one subway, fast, not a summary of all of them.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The draft home screen opened with page analytics: total subways (17), total barriers (44), open (37) and closed (3). The subway list sat below, with each row showing water level and barrier status.</p>
+      <figure class="cf-media cf-media--mist" aria-label="Draft analytics dashboard">
+        <span class="cf-badge cf-badge--left">Draft</span>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/draft-dashboard.webp" alt="Draft home: Page analytics with Total Subway 17, Total barrier 44, Open 37 and Close 3, above a subway list with water level and barrier status" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag cf-tag--purple">Option A · Draft</span>
+          <h4>Analytics first</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Network-wide totals at a glance</li>
+            <li class="is-con">The list starts below the fold</li>
+            <li class="is-con">Two statuses per row to read</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Approved</span>
+          <h4>Search and list first</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Search sits at the top</li>
+            <li class="is-pro">One barrier status and an update time per row</li>
+            <li class="is-con">Totals and water level are no longer on screen</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>The core task is acting on one location. Putting search and the list first shortens the path to that task; totals are useful context but don't help pick a subway.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Operators lose the network overview and the water level that might explain why a barrier is closed. Both would need a home elsewhere.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Lo-fi dashboard">
+          <span class="cf-badge cf-badge--left">Lo-fi</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/lofi-dashboard.webp" alt="Lo-fi dashboard wireframe: page analytics blocks above a subway list" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--lime" aria-label="Approved subway list">
+          <span class="cf-badge cf-badge--left">Approved</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/dashboard.webp" alt="Approved home: search above subway cards with barrier status and last update time" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>Lo-fi</strong>Analytics blocks, then the list</li>
+        <li><strong>Approved</strong>Search, then status and time per subway</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Live · impact not yet measured</span>
+        <p>The home screen is a direct route to a subway. Whether operators find the intended location faster, and miss the totals, is still to be tested.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Information hierarchy</li><li>Recognition rather than recall</li><li>Aesthetic and minimalist design</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 02 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-2" data-toc="02 · Checkpoint">
+      <p class="ds-story__num">Decision 02 · Strategic</p>
+      <h2 class="ds-story__title">Why the confirmation names the subway before a barrier moves</h2>
+      <p class="cf-text ds-story__hook">Opening the wrong barrier isn't a typo you can undo. It changes traffic in a real subway.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">In the draft detail screen, each barrier had its own Open or Closed button next to its status, with the location name at the top of the card.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>One-tap toggle</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Fastest in an emergency</li>
+            <li class="is-con">A mis-tap moves a physical barrier</li>
+            <li class="is-con">Nothing restates the target</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Approved</span>
+          <h4>Request, then a named confirmation</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Location and current status above the buttons</li>
+            <li class="is-pro">The warning repeats the subway's name</li>
+            <li class="is-con">One extra tap every time</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>A confirmation only prevents errors if it says what will happen. Naming the subway in the question turns "Are you sure?" into a check of the target.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>An extra step when speed matters, and a pattern people can learn to tap through. The design still needs a pending and a device-confirmed state after "Yes".</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--peach ds-trio" aria-label="Draft detail, approved control and confirmation">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/draft-detail-b.webp" alt="Draft: per-barrier controls with a warning dialog over the history list" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/control.webp" alt="Approved control screen: location, current status, Open and Closed request buttons" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/control-confirm.webp" alt="Approved warning naming Rangarajapuram subway, with No and Yes" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Draft</strong>Warning over per-barrier controls</li>
+        <li><strong>Approved</strong>Target and status above the request</li>
+        <li><strong>Confirmation</strong>Names the subway, No or Yes</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>Every manual operation passes through a checkpoint that restates the target. The acknowledgement step (pending, done, failed) is designed as a recommendation, not yet as screens.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Error prevention</li><li>Visibility of system status</li><li>User control and freedom</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 03 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-3" data-toc="03 · Per location">
+      <p class="ds-story__num">Decision 03 · Tactical</p>
+      <h2 class="ds-story__title">Why control moved from individual barriers to the location</h2>
+      <p class="cf-text ds-story__hook">Operators think in subways ("Rangarajapuram"), not in "Barrier 2, double lane".</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The draft explored barrier lists (all, open, closed) with lane type, and a detail screen showing each barrier's status with an operation history: who opened it, manually or automatically, and when.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Draft barrier list">
+          <span class="cf-badge cf-badge--left">Draft</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/draft-barriers.webp" alt="Draft barrier list: Barrier 1 and Barrier 2 per location with single or double lane type" width="720" height="1596" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--mist" aria-label="Draft barrier detail with history">
+          <span class="cf-badge cf-badge--left">Draft</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/draft-detail.webp" alt="Draft detail: water level, two barriers with status and buttons, and a history list of openings and closings" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag cf-tag--purple">Option A · Draft</span>
+          <h4>Manage each barrier</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Fine control and a full history</li>
+            <li class="is-con">More screens between list and action</li>
+            <li class="is-con">Easy to act on the wrong barrier</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Approved</span>
+          <h4>One request per location</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">List → location → request</li>
+            <li class="is-pro">Matches how operators name places</li>
+            <li class="is-con">No per-barrier control or history</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Fewer, clearer targets reduce the chance of operating the wrong thing. The location is the unit operators recognise and talk about.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>A double-lane subway with one barrier open and one closed can't be expressed, and the audit trail of who operated what is gone from the app.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>The approved flow has three steps from list to request. Per-barrier states and operation history are open questions for a later version.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Match between system and real world</li><li>Error prevention</li><li>Hick's law</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 04 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-4" data-toc="04 · Recovery">
+      <p class="ds-story__num">Decision 04 · Tactical</p>
+      <h2 class="ds-story__title">Why password recovery happens inside the app</h2>
+      <p class="cf-text ds-story__hook">An operator locked out during a flood alert can't wait to find a reset link in their inbox.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The draft "Forgot password" screen asked for an email and had a single Send button, implying a reset sent elsewhere.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag cf-tag--purple">Option A · Draft</span>
+          <h4>Send a reset by email</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">One field, one button</li>
+            <li class="is-con">The user leaves the app</li>
+            <li class="is-con">Depends on email access on the phone</li>
+          </ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Approved</span>
+          <h4>Code and reset in the app</h4>
+          <ul class="ds-pros">
+            <li class="is-pro">Email or SAP code, Generate, Verify</li>
+            <li class="is-pro">New password set on the next screen</li>
+            <li class="is-con">Two screens and a code to handle</li>
+          </ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Keeping recovery in the app keeps the operator in one place. Accepting a SAP code as well as email fits staff who sign in with their employee code.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>More steps than a link, and the code delivery channel still has to be reliable.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--periwinkle ds-trio" aria-label="Draft and approved password recovery">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/draft-forgot.webp" alt="Draft forgot password: email field and Send" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/forgot.webp" alt="Approved: email or SAP code with Generate, then a code field with Verify" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/gcc-safe-subway/forgot-reset.webp" alt="Approved: new password and confirm new password with Submit" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Draft</strong>Email and Send</li>
+        <li><strong>Approved · 1</strong>Generate a code, then verify</li>
+        <li><strong>Approved · 2</strong>Set a new password</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>Recovery happens without leaving the app and accepts the identifier staff already use. Success rates haven't been measured.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Flexibility and efficiency of use</li><li>Help users recover from errors</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Iterations ---------- -->
+    <section class="cs-block cf-section" id="iterations" data-toc="Iterations">
+      <h2 class="cf-label">From wireframe to approved design</h2>
+      <p class="cf-text">The same screens at three points in my Figma file: the wireframe or lo-fi page, the draft and the approved section.</p>
+      <ol class="ds-timeline ds-wide">
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/wf-onboarding.webp" alt="Wireframe onboarding screen with image and text placeholders" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Wireframe</span><p><strong>Sign in</strong>Placeholder blocks and one action.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/draft-login.webp" alt="Draft login with emblem header and plain fields" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Draft</span><p><strong>Sign in</strong>Emblem header, plain fields.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/login.webp" alt="Approved login with icon labels and a pill Login button" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Approved</span><p><strong>Sign in</strong>Labelled fields, one clear button.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/lofi-dashboard.webp" alt="Lo-fi dashboard" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Lo-fi</span><p><strong>Home</strong>Analytics, then the subway list.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/draft-dashboard.webp" alt="Draft dashboard with analytics" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Draft</span><p><strong>Home</strong>Totals, water level and status.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/dashboard.webp" alt="Approved subway list" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Approved</span><p><strong>Home</strong>Search and status per subway.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/wf-forgot.webp" alt="Wireframe forgot password" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Wireframe</span><p><strong>Recovery</strong>One field, one button.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/draft-forgot.webp" alt="Draft forgot password" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Draft</span><p><strong>Recovery</strong>Email and Send.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/gcc-safe-subway/forgot.webp" alt="Approved forgot password" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Approved</span><p><strong>Recovery</strong>Generate, verify, reset.</p></li>
+      </ol>
+    </section>
+
+    <!-- ---------- Design system ---------- -->
+    <section class="cs-block cf-section" id="system" data-toc="Design system">
+      <h2 class="cf-label">Designing consistency for an operations tool</h2>
+      <p class="cf-text">These values come from the six approved frames in the Figma file.</p>
+
+      <div class="ds-sys ds-wide">
+        <div class="cf-card">
+          <h3>Typography</h3>
+          <ul class="ds-type">
+            <li><span style="font:700 24px/30px Inter,sans-serif">Forgot password</span><small>Inter Bold 24–26 · screen titles</small></li>
+            <li><span style="font:500 18px/24px Inter,sans-serif">Rangarajapuram</span><small>Inter Medium 15–18 · location names</small></li>
+            <li><span style="font:500 14px/20px Inter,sans-serif">Open/Close Request (Boom Barrier)</span><small>Inter Medium 14 · labels and buttons</small></li>
+            <li><span style="font:500 12px/16px Inter,sans-serif">Barrier Status : Open · 20-06-2025 13:25:19</span><small>Inter Medium 10–12 · status and time</small></li>
+          </ul>
+        </div>
+        <div class="cf-card">
+          <h3>Colour and meaning</h3>
+          <ul class="ds-swatches">
+            <li><i style="background:#1874a2"></i><b>#1874A2</b><small>Brand blue · header, buttons</small></li>
+            <li><i style="background:#11448c"></i><b>#11448C</b><small>App title</small></li>
+            <li><i style="background:#bdf6cd"></i><b>#BDF6CD</b><small>Open request</small></li>
+            <li><i style="background:#ffdfdf"></i><b>#FFDFDF</b><small>Close request</small></li>
+            <li><i style="background:#076a23"></i><b>#076A23</b><small>Open status</small></li>
+            <li><i style="background:#ef3f3f"></i><b>#EF3F3F</b><small>Closed status</small></li>
+            <li><i style="background:#de782a"></i><b>#DE782A</b><small>Warning icon</small></li>
+            <li><i style="background:#ebf1fa"></i><b>#EBF1FA</b><small>Screen background</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cf-results ds-reuse">
+        <div><strong>6</strong><span>Typefaces across six approved screens (Inter, Montserrat, Poppins, Figtree, Karla, K2D); consolidating to Inter is a refinement</span></div>
+        <div><strong>2</strong><span>Status colours paired with words (Open, Closed), so status never relies on colour alone</span></div>
+      </div>
+
+      <h3 class="cf-sublabel">Contrast check</h3>
+      <p class="cf-text">I checked the main pairs against WCAG 2.2 text contrast.</p>
+      <div class="ds-table ds-wide">
+        <table>
+          <thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">AA text</th></tr></thead>
+          <tbody>
+            <tr><td>Open text #076A23 on #BDF6CD</td><td>5.6:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>White on brand blue #1874A2</td><td>5.2:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Closed status #EF3F3F on white</td><td>3.9:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Closed text #FF1010 on #FFDFDF</td><td>3.2:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Placeholder text #979797 on white</td><td>2.9:1</td><td class="is-fail">Fail</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    </div>
+
+    <footer class="cs-end">
+      <p class="cs-thanks">Thanks for reading</p>
+      <ul class="cs-links">
+        <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+        <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+        <li><a href="projects.html"><span>all projects</span></a></li>
+      </ul>
+      <a href="e-seal.html" class="cs-next">
+        <div><small>next project</small><strong>E-Seal</strong></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+    </footer>
+  </main>
 
   <script src="js/main.js" defer></script>
   <script src="js/case-study.js" defer></script>
+  <script src="js/case-study-story.js" defer></script>
   <script src="js/bot-nav.js" defer></script>
 </body>
 </html>

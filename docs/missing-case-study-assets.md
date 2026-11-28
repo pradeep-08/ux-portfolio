@@ -32,6 +32,9 @@ copies may get different IDs.
 
 ## lomo-track
 
+**Done.** Rendered from `assets/images/fig/Lomo Track Mobile App Design.fig` with vehicle numbers
+replaced by demo values. See `docs/lomo-track-case-study/README.md` for the final file names.
+
 | File | Figma frame (node) | Section |
 | --- | --- | --- |
 | hero-list.png | Landing_page (2306:3437) | Hero: three-phone composition with trip list, trip info and route exceptions |
@@ -67,6 +70,9 @@ screens) and the STM32 / SMT 32 spelling.
 
 ## facility-management
 
+**Done.** Rendered from `assets/images/fig/Facility management App design.fig`. See
+`docs/facility-management-case-study/README.md` for the final file names.
+
 | File | Figma frame (node) | Section |
 | --- | --- | --- |
 | admin-dashboard.png | Home page (141:384) | Hero, administrator overview |
@@ -86,6 +92,9 @@ Before exporting, fix the sample AM/PM times and the labels "In_active",
 
 ## gcc-safe-subway
 
+**Done.** Rendered from `assets/images/fig/GCC Boom Barrier Design.fig`. See
+`docs/gcc-safe-subway-case-study/README.md` for the final file names.
+
 | File | Figma frame (node) | Section |
 | --- | --- | --- |
 | location-list.png | High-Fidelity ( Dashboard) (300:130) | Hero and location selection |
@@ -94,6 +103,9 @@ Before exporting, fix the sample AM/PM times and the labels "In_active",
 | ui-flow.png | Ui flow (481:558) | Supporting UI sequence |
 
 ## e-seal
+
+**Done.** Rendered from the E-Seal Web and Mobile Figma files. See
+`docs/e-seal-case-study/README.md` for the final file names.
 
 | File | Figma frame (node) | Section |
 | --- | --- | --- |

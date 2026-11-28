@@ -7,6 +7,10 @@
 <html lang="en">
 
 <head>
+<!-- theme-boot: apply the saved dark theme before the first paint, so moving
+     between pages never flashes a white screen while the page loads. -->
+<script>try{if(localStorage.getItem("pradeep_theme")==="dark"){var d=document.documentElement;d.setAttribute("toggle-theme","dark")}}catch(e){}</script>
+<style>html[toggle-theme="dark"],html[toggle-theme="dark"] body{background-color:#1a1a1a;color-scheme:dark}</style>
 <!-- Perf: open connections to the CDNs early. Framer renders the whole page in JS,
      so its modules and fonts are on the critical path. -->
 <link rel="preconnect" href="https://framerusercontent.com" crossorigin>
@@ -203,6 +207,8 @@ document.addEventListener("click", function(e) {
 	<script src="js/theme-toggle.js" defer></script>
 	<link rel="stylesheet" href="css/projects-grid.css">
 	<script src="js/projects-grid.js" defer></script>
+	<link rel="stylesheet" href="css/home-canvas.css">
+	<script src="js/home-canvas.js" defer></script>
 	<link rel="stylesheet" href="css/experience.css">
 	<script src="js/experience.js" defer></script>
 
@@ -1509,6 +1515,7 @@ document.addEventListener("click", function(e) {
 </head>
 
 <body>
+<script>try{if(localStorage.getItem("pradeep_theme")==="dark"){document.documentElement.setAttribute("toggle-theme","dark");document.body.setAttribute("toggle-theme","dark")}}catch(e){}</script>
 
 	<!-- Start of bodyStart -->
 

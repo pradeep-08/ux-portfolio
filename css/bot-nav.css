@@ -59,14 +59,16 @@
   max-width: calc(100vw - 16px);
 }
 
+/* Dark theme: a dark bar one step lighter than the page (#0f0f10–#1e1e1e), so it
+   still reads as a surface without flipping to a bright pill */
 .botnav[data-bn-theme="dark"],
 .botseat[data-bn-theme="dark"] {
-  --bn-bar: #f2f2f0;
-  --bn-text: #111111;
-  --bn-muted: #6b6b6b;
-  --bn-divider: rgba(0, 0, 0, 0.15);
-  --bn-face: #111111;
-  --bn-eye: #f2f2f0;
+  --bn-bar: #2a2a2d;
+  --bn-text: #f4f4f3;
+  --bn-muted: #a1a1a6;
+  --bn-divider: rgba(255, 255, 255, 0.14);
+  --bn-face: #f4f4f3;
+  --bn-eye: #2a2a2d;
   --bn-bubble-bg: #262628;
   --bn-bubble-text: #ececea;
   --bn-bubble-border: #3a3a3d;
@@ -865,4 +867,71 @@
 
 @media print {
   .edge-blur { display: none; }
+}
+
+/* --- Mute: small close button on the bubble's corner --- */
+.botnav__bubble-close {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--bn-bubble-border);
+  background: var(--bn-bubble-bg);
+  color: var(--bn-muted);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  pointer-events: none;
+  transition: color 0.15s ease, transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Bigger invisible hit area than the 20px circle */
+.botnav__bubble-close::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+}
+
+.botnav__bubble.is-visible .botnav__bubble-close {
+  pointer-events: auto;
+}
+
+.botnav__bubble-close svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+@media (hover: hover) {
+  .botnav__bubble-close:hover { color: var(--bn-bubble-text); }
+}
+
+.botnav__bubble-close:active { transform: scale(0.9); }
+
+.botnav__bubble-close:focus-visible {
+  outline: 2px solid var(--bn-accent);
+  outline-offset: 2px;
+}
+
+/* On the accent "Email copied" bubble the button follows the accent colours */
+.botnav__bubble.is-success .botnav__bubble-close {
+  color: var(--bn-accent-ink);
+  border-color: var(--bn-accent-ink);
+}
+
+/* Muted: eyes closed, as if napping. Clicking (or tapping) the bot wakes it. */
+.botnav__bot.is-muted:not(.is-happy) .botnav__eye {
+  height: 3px;
+}
+
+.botnav__bot.is-muted .botnav__head {
+  pointer-events: auto;
+  cursor: pointer;
 }

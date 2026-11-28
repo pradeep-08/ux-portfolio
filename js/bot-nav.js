@@ -103,7 +103,13 @@
     let pendingStory = null;
     let free = false; // true while the bot is off the bar (dragging or seated)
     let asking = false; // the "shall I take a seat?" question is on screen
+    let askedAtY = 0;   // scroll position when the question appeared
     let seated = false;
+    // Muted with the bubble's close button: the bot stays quiet (on every page,
+    // until the visitor clicks the bot again).
+    const MUTE_KEY = 'pradeep_bot_muted';
+    let muted = false;
+    try { muted = localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { /* storage blocked */ }
 
     syncTheme(nav);
     watchTheme(nav);
@@ -148,7 +154,10 @@
     }
 
     /* --- Speech bubble --- */
-    function say(text, duration, success, label) {
+    // `force` lets a reply to the visitor's own action through while muted
+    // (e.g. "Email copied!"), so a click still gets its confirmation.
+    function say(text, duration, success, label, force) {
+      if (muted && !force) return;
       endAsk();
       clearTimeout(bubbleTimer);
       clearInterval(typeTimer);
@@ -197,8 +206,10 @@
     // A question with buttons in the bubble. The bot is aria-hidden as decoration,
     // so it's exposed to assistive tech while the question is up.
     function ask(text, actions) {
+      if (muted) return;
       say(text, 0);
       asking = true;
+      askedAtY = window.scrollY;
       bubbleActions.innerHTML = '';
       actions.forEach(({ label, primary, run }) => {
         const b = document.createElement('button');
@@ -254,8 +265,13 @@
         return;
       }
       if (asking) {
-        if (scrollProgress() < 0.25) return;
-        hideBubble(); // reader has moved on without answering
+        // Reader started scrolling instead of answering: take that as a "no",
+        // wish them well, then carry on as normal
+        if (Math.abs(window.scrollY - askedAtY) < 120) return;
+        say('No worries, enjoy reading! 📖 I’ll be right here.', 2400);
+        smile(900);
+        lastSaidAt += 1400; // let this line finish before the scroll story resumes
+        return;
       }
       if (!story.length || hoverItem) return;
       const progress = scrollProgress();
@@ -370,7 +386,7 @@
       const btn = e.currentTarget;
       copyText(EMAIL).then(ok => {
         moveTo(centerOf(btn));
-        say(ok ? 'Email copied! ✓' : EMAIL, 2200, ok);
+        say(ok ? 'Email copied! ✓' : EMAIL, 2200, ok, '', true);
         if (!hoverItem) setTimeout(moveWithScroll, 2200);
         live.textContent = ok ? 'Email address copied' : EMAIL;
         if (ok) smile(1400);
@@ -378,6 +394,47 @@
     });
 
     nav.querySelector('.botnav__resume').addEventListener('click', () => smile(900));
+
+    /* --- Mute: the bubble's close button quiets the bot; clicking the bot wakes it --- */
+    const head_ = bot.querySelector('.botnav__head');
+    function setMuted(on) {
+      muted = on;
+      try {
+        if (on) localStorage.setItem(MUTE_KEY, '1');
+        else localStorage.removeItem(MUTE_KEY);
+      } catch (e) { /* storage blocked: mute lasts for this page only */ }
+      bot.classList.toggle('is-muted', on);
+      head_.title = on ? 'Click me to chat again' : '';
+    }
+
+    function mute() {
+      clearTimeout(pendingStory);
+      clearTimeout(finishTimer);
+      clearInterval(typeTimer);
+      bubbleText.style.minHeight = '';
+      bot.classList.remove('is-talking');
+      hideBubble();
+      setMuted(true);
+      live.textContent = 'Bot muted. Click the bot to hear from it again.';
+      if (seated) jumpHome(); // a silent storyteller on the stool makes no sense
+    }
+
+    function unmute() {
+      setMuted(false);
+      smile(900);
+      say('I’m back! 👋 Tap ✕ whenever you want me quiet.', 3000);
+    }
+
+    nav.querySelector('.botnav__bubble-close').addEventListener('click', e => {
+      e.stopPropagation();
+      mute();
+    });
+
+    head_.addEventListener('click', () => {
+      if (muted && !flying) unmute();
+    });
+
+    if (muted) setMuted(true);
 
     /* --- Seated narration ---
        Case studies: one line per section, taken from the page's own text, spoken
@@ -388,9 +445,12 @@
     function narrate() {
       if (narration.length) {
         const line = window.innerHeight * 0.35;
-        let index = 0;
-        narration.forEach((n, i) => { if (n.el.getBoundingClientRect().top <= line) index = i; });
-        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) index = narration.length - 1;
+        // Sections in a hidden view (case study / design decisions toggle) are skipped
+        const shown = narration.map((n, i) => (n.el.closest('[hidden]') ? -1 : i)).filter(i => i > -1);
+        if (!shown.length) return;
+        let index = shown[0];
+        shown.forEach(i => { if (narration[i].el.getBoundingClientRect().top <= line) index = i; });
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) index = shown[shown.length - 1];
         if (index === lastNarrated) return;
         lastNarrated = index;
         clearTimeout(pendingStory);
@@ -554,6 +614,7 @@
         if (Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) < 5) return;
         // Start dragging: lift the bot out into the stool layer so it can move freely
         drag.moved = true;
+        if (muted) setMuted(false); // pulling the bot out to the stool means "talk to me"
         clearTimeout(finishTimer);
         free = true;
         seated = false;
@@ -656,8 +717,13 @@
       const decisions = block.querySelectorAll('h3');
       const quote = block.querySelector('.cs-quote');
       const para = block.querySelector('p:not(.cs-eyebrow):not(.cs-flowgroup-label)');
+      const storyTitle = block.querySelector('.ds-story__title');
+      const storyHook = block.querySelector('.ds-story__hook');
       let text = '';
-      if (steps.length) {
+      if (storyTitle) {
+        // Decision story: its title and hook, not the step headings
+        text = storyTitle.textContent.trim() + '. ' + (storyHook ? storyHook.textContent.trim() : '');
+      } else if (steps.length) {
         const roles = [...steps].map(g => {
           const name = g.querySelector('.cs-flowgroup-label').textContent.trim();
           return name + ' (' + g.querySelectorAll('li').length + ' steps)';
@@ -686,7 +752,7 @@
     nav.innerHTML = `
       <div class="botnav__bar">
         <div class="botnav__bot" aria-hidden="true">
-          <div class="botnav__bubble"><span class="botnav__bubble-label" hidden></span><span class="botnav__bubble-text"></span><span class="botnav__bubble-actions" hidden></span></div>
+          <div class="botnav__bubble"><span class="botnav__bubble-label" hidden></span><span class="botnav__bubble-text"></span><span class="botnav__bubble-actions" hidden></span><button class="botnav__bubble-close" type="button" aria-label="Mute the bot" title="Mute the bot"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg></button></div>
           <div class="botnav__head">
             <div class="botnav__face"><span class="botnav__eye"></span><span class="botnav__eye"></span></div>
           </div>

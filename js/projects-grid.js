@@ -8,22 +8,48 @@
  */
 
 (function () {
-  // Single source for project cards. `img` stays null until a verified Figma export
-  // exists (see docs/missing-case-study-assets.md); cards then show a text cover.
+  // Single source for project cards. Cards show real screens from each case study:
+  // `shots` = up to three phone screens (centre one first), `web` = a web screenshot
+  // shown as a window with the first phone laid over it. Without either, the card
+  // falls back to a text cover. `tint` picks the panel colour (see projects-grid.css),
+  // `live` adds a Live chip (confirmed live products only).
   // `featured` projects also appear under "Selected work" on the phone home page.
+  const CS = 'assets/images/case-studies/';
   const PROJECTS = [
-    { href: 'lomo-track.html', kicker: 'B2B · Logistics and IoT', name: 'LOMO Track', platform: 'Mobile · Office project', pitch: 'Making tanker trips easier to understand on the move', img: null, wide: true, featured: true },
-    { href: 'curio-snap.html', kicker: 'EdTech · Robotics and AI', name: 'Curio Snap', platform: 'Web · Freelance', pitch: 'Helping learners connect visual code with real-world robotics', img: null, featured: true },
-    { href: 'facility-management.html', kicker: 'B2B · Facility operations', name: 'Facility Management', platform: 'Mobile · Office project', pitch: 'Connecting facility tasks from assignment to completion', img: null, featured: true },
-    { href: 'gcc-safe-subway.html', kicker: 'Public-sector operations', name: 'GCC Safe Subway', platform: 'Mobile · Office project', pitch: 'Making subway barrier operations clear and deliberate', img: null },
-    { href: 'e-seal.html', kicker: 'B2B · Asset and seal operations', name: 'E-Seal', platform: 'Web · Office project', pitch: 'Bringing seal activity into one operational view', img: null },
-    { href: 'kriti-attendance.html', kicker: 'Enterprise · B2E', name: 'Kriti Attendance', platform: 'Mobile · Office project', pitch: 'Making daily attendance clearer, from registration to check-out', img: null },
+    { href: 'lomo-track.html', kicker: 'B2B · Logistics and IoT', name: 'LOMO Track', platform: 'Mobile · Office project', pitch: 'Making tanker trips easier to understand on the move', wide: true, featured: true, live: true, tint: 'teal',
+      shots: [CS + 'lomo-track/trip-info.webp', CS + 'lomo-track/trip-list.webp', CS + 'lomo-track/route-events.webp'] },
+    { href: 'curio-snap.html', kicker: 'EdTech · Robotics and AI', name: 'Curio Snap', platform: 'Web · Freelance', pitch: 'Helping learners connect visual code with real-world robotics', featured: true },
+    { href: 'facility-management.html', kicker: 'B2B · Facility operations', name: 'Facility Management', platform: 'Mobile · Office project', pitch: 'Connecting facility tasks from assignment to completion', featured: true, tint: 'peach',
+      shots: [CS + 'facility-management/task-checklist.webp', CS + 'facility-management/user-dashboard.webp', CS + 'facility-management/task-completed.webp'] },
+    { href: 'gcc-safe-subway.html', kicker: 'B2G · Public-sector operations', name: 'GCC Safe Subway', platform: 'Mobile · Government', pitch: 'Making subway barrier operations clear and deliberate', live: true, tint: 'blue',
+      shots: [CS + 'gcc-safe-subway/control.webp', CS + 'gcc-safe-subway/dashboard.webp', CS + 'gcc-safe-subway/control-confirm.webp'] },
+    { href: 'e-seal.html', kicker: 'B2B · Asset and seal operations', name: 'E-Seal', platform: 'Web + mobile · Office project', pitch: 'Bringing seal activity into one operational view', tint: 'sage',
+      web: CS + 'e-seal/web-dashboard.webp', shots: [CS + 'e-seal/app-scanned-rfid.webp'] },
+    { href: 'kriti-attendance.html', kicker: 'Enterprise · B2E', name: 'Kriti Attendance', platform: 'Mobile · Office project', pitch: 'Making daily attendance clearer, from registration to check-out', live: true, tint: 'lilac',
+      shots: [CS + 'kriti-attendance/attendance-checked-in.webp', CS + 'kriti-attendance/attendance-not-marked.webp', CS + 'kriti-attendance/attendance-checked-out.webp'] },
   ];
+  // Shared with js/home-canvas.js (the draggable project canvas on the home page)
+  window.PORTFOLIO_PROJECTS = PROJECTS;
 
   const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>';
 
+  const LIVE = '<span class="pcard__chip pcard__chip--live"><i aria-hidden="true"></i>Live</span>';
+
+  // Screens are decorative here (the card's link text names the project), so alt="".
+  // Order on screen: side, centre, side; the centre phone is listed first in `shots`.
   function media(p) {
-    if (p.img) return `<div class="pcard__media"><img src="${p.img}" alt="" loading="lazy" /></div>`;
+    if (p.shots || p.web) {
+      const chips = `<span class="pcard__chips"><span class="pcard__chip">${p.platform}</span>${p.live ? LIVE : ''}</span>`;
+      const img = (src, cls) => `<span class="pshot ${cls}"><img src="${src}" alt="" loading="lazy" decoding="async" draggable="false" /></span>`;
+      let shots = '';
+      if (p.web) {
+        shots = img(p.web, 'pshot--web') + (p.shots ? img(p.shots[0], 'pshot--over') : '');
+      } else {
+        const [centre, left, right] = p.shots;
+        shots = (left ? img(left, 'pshot--left') : '') + img(centre, 'pshot--centre') + (right ? img(right, 'pshot--right') : '');
+      }
+      return `<div class="pcard__media pcard__media--shots" data-tint="${p.tint || 'neutral'}">${chips}<span class="pshots">${shots}</span></div>`;
+    }
     return `<div class="pcard__media pcard__media--text"><span class="pcard__platform">${p.platform}</span><span class="pcard__pitch">${p.pitch}</span></div>`;
   }
 
@@ -51,7 +77,7 @@
         <a class="pcard" href="${p.href}">
           ${media(p)}
           <div class="pcard__foot">
-            <h3 class="pcard__title"><span>${p.kicker}</span><strong>${p.name}</strong></h3>
+            <h3 class="pcard__title"><span>${p.kicker}</span><strong>${p.name}</strong>${p.shots || p.web ? `<em>${p.pitch}</em>` : ''}</h3>
             <span class="pcard__btn" aria-hidden="true">${ARROW}<span class="pcard__label">View case</span></span>
           </div>
         </a>
@@ -61,7 +87,7 @@
   // Shelf cover: the solution line sits under the card, so the text cover shows
   // the project name instead of repeating it.
   function shelfMedia(p) {
-    if (p.img) return media(p);
+    if (p.shots || p.web) return media(p);
     return `<div class="pcard__media pcard__media--text"><span class="pcard__platform">${p.platform}</span><span class="pcard__pitch">${p.name}</span></div>`;
   }
 

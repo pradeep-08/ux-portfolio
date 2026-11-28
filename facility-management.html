@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- theme-boot: apply the saved dark theme before the first paint, so moving
+     between pages never flashes a white screen while the page loads. -->
+<script>try{if((localStorage.getItem("pradeep_theme")||localStorage.getItem("currentToggleState"))==="dark"){var d=document.documentElement;d.setAttribute("data-theme","dark")}}catch(e){}</script>
+<style>html[data-theme="dark"],html[data-theme="dark"] body{background-color:#0f0f10;color-scheme:dark}</style>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Facility Management — Case Study | Pradeep UX Portfolio</title>
@@ -10,129 +14,512 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Lora:ital@1&family=Source+Serif+4:opsz,wght@8..60,400&display=swap" />
   <link rel="stylesheet" href="css/case-study.css" />
+  <link rel="stylesheet" href="css/case-study-caseform.css" />
+  <link rel="stylesheet" href="css/case-study-story.css" />
   <link rel="stylesheet" href="css/bot-nav.css" />
 </head>
-<body class="cs-page">
+<!--
+  Facility Management case study. Two views share this page: the case study (default, the
+  earlier copy unchanged) and Design decisions, switched by the toggle at the top
+  (js/case-study-story.js). Screens are rendered from "Facility management App design.fig".
+  "Maintanence" and "In_active" are corrected on screen; phone numbers are blurred.
+  No outcome metrics are claimed. Sources and open questions: docs/facility-management-case-study/.
+-->
+<body class="cs-page cf-page">
 
-  <div class="cs-topbar">
-    <a href="index.html" class="cs-brand" aria-label="Pradeep, UX Designer - home">
-      <span class="cs-avatar"><img src="assets/images/avatar-132.webp" alt="" width="44" height="44" decoding="async" /><i aria-hidden="true"></i></span>
-      <span class="cs-brand-text"><span>Pradeep</span><span>UX Designer</span></span>
-    </a>
-    <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+  <a href="projects.html" class="cf-back" aria-label="Back to all projects">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+  </a>
+  <button id="themeToggleBtn" class="cs-theme" type="button" aria-label="Toggle dark/light mode"><span id="themeIcon"></span></button>
+
+  <!-- View toggle: case study (default) / design decisions -->
+  <div class="ds-viewtoggle" role="tablist" aria-label="Choose a view">
+    <button type="button" role="tab" id="view-tab-overview" aria-controls="view-overview" aria-selected="true">Case study</button>
+    <button type="button" role="tab" id="view-tab-decisions" aria-controls="view-decisions" aria-selected="false" tabindex="-1"><span class="ds-viewtoggle__long">Design decisions</span><span class="ds-viewtoggle__short" aria-hidden="true">Decisions</span><span class="ds-viewtoggle__count" aria-hidden="true">4</span></button>
+  </div>
+  <!-- First-visit nudge towards the decisions view; shown by js/case-study-story.js -->
+  <div class="ds-viewhint" hidden>
+    <button type="button" class="ds-viewhint__go"><span class="ds-viewhint__lead">Short on time?&nbsp;</span>See the 4 key design decisions <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></button>
+    <button type="button" class="ds-viewhint__x" aria-label="Dismiss tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
 
-  <div class="cs-layout">
-    <aside class="cs-toc" aria-label="On this page">
-      <nav><ol></ol></nav>
-    </aside>
+  <!-- Contents rail: filled by js/case-study.js from each section's data-toc -->
+  <aside class="cs-toc" aria-label="On this page">
+    <nav><ol></ol></nav>
+  </aside>
 
-    <main class="cs-article">
-      <header>
-        <a href="projects.html" class="cs-back">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-          back
-        </a>
-        <p class="cs-eyebrow">Facility Management · case study · <span data-read-time>4 min read</span></p>
-        <h1 class="cs-title">Connecting facility tasks from assignment to completion</h1>
-        <p class="cs-summary">A mobile workflow for organizing facilities, assigning work and recording activity through connected devices and guided checklists.</p>
+  <main class="cs-article cf-article">
+    <header class="cf-head">
+      <h1>Facility Management</h1>
+      <p class="cf-tagline">Connecting facility tasks from assignment to completion</p>
+      <p class="cs-summary">A mobile workflow for organizing facilities, assigning work and recording activity through connected devices and guided checklists.</p>
 
-        <dl class="cs-meta">
-          <div><dt>Sector</dt><dd>B2B</dd></div>
-          <div><dt>Domain</dt><dd>Facility operations</dd></div>
-          <div><dt>Platform</dt><dd>Mobile</dd></div>
-          <div><dt>Project</dt><dd>Office project</dd></div>
-        </dl>
-      </header>
-
-      <section class="cs-block" id="product" data-toc="The product">
-        <p class="cs-eyebrow">The product</p>
-        <h2>What Facility Management brings together</h2>
-        <p>The Facility Management designs connect administrative setup with day-to-day field work. Administrators organize locations, buildings, floors and facilities, create schedules and map users to work. Field users review assigned tasks, connect an eBaton, record activity and complete checklists. The interface also includes maintenance history, complaints and reassignment workflows.</p>
-      </section>
-
-      <section class="cs-block" id="problem" data-toc="Problem framing">
-        <p class="cs-eyebrow">Problem framing</p>
-        <h2>The challenge</h2>
-        <p>Completing a task involves more than marking it done. A worker must identify the correct facility, understand the required work and record the result. Supervisors need to see who is responsible and which work remains outstanding. Device connection adds another dependency. The design challenge is to make those dependencies understandable without turning routine maintenance into a complicated form-filling exercise.</p>
-      </section>
-
-      <section class="cs-block" id="users" data-toc="Users &amp; scope">
-        <p class="cs-eyebrow">Users and scope</p>
-        <h2>Who it serves</h2>
-        <p>The administrator experience focuses on configuration, assignment and oversight. The field-user experience focuses on today’s tasks and activity recording. This separation allows the same system to support setup and execution without giving both roles the same starting screen.</p>
-      </section>
-
-      <section class="cs-block" id="flow" data-toc="Task flow">
-        <p class="cs-eyebrow">Task flow</p>
-        <h2>How the work moves</h2>
-        <div class="cs-flowgroup">
-          <p class="cs-flowgroup-label">Administrator</p>
-          <ol class="cs-steps">
-            <li>Create company hierarchy</li>
-            <li>Add facility</li>
-            <li>Map its identifier</li>
-            <li>Assign users and schedule</li>
-            <li>Monitor work</li>
-            <li>Reassign selected tasks when necessary</li>
-          </ol>
+      <dl class="cf-meta">
+        <div><dt>Sector</dt><dd><strong>B2B</strong><span>Business to business</span></dd></div>
+        <div><dt>Domain</dt><dd><strong>FM</strong><span>Facility operations</span></dd></div>
+        <div>
+          <dt>Platform</dt>
+          <dd>
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></strong>
+            <span>Mobile</span>
+          </dd>
         </div>
-        <div class="cs-flowgroup">
-          <p class="cs-flowgroup-label">Field user</p>
-          <ol class="cs-steps">
-            <li>Review assigned task</li>
-            <li>Connect device or choose the available manual path</li>
-            <li>Identify facility</li>
-            <li>Check in</li>
-            <li>Complete checklist and reasons</li>
-            <li>Check out</li>
-            <li>Review recorded activity</li>
-          </ol>
+        <div><dt>Project</dt><dd><strong>Office</strong><span>Office project</span></dd></div>
+      </dl>
+    </header>
+
+    <!-- ============ VIEW 1: Case study (default) ============ -->
+    <div class="cs-view" id="view-overview" data-view="overview" role="tabpanel" aria-labelledby="view-tab-overview">
+
+    <section class="cs-block cf-section" id="product" data-toc="The product">
+      <h2 class="cf-label">What Facility Management brings together</h2>
+      <p class="cf-text">The Facility Management designs connect administrative setup with day-to-day field work. Administrators organize locations, buildings, floors and facilities, create schedules and map users to work. Field users review assigned tasks, connect an eBaton, record activity and complete checklists. The interface also includes maintenance history, complaints and reassignment workflows.</p>
+      <div class="cf-pair">
+        <figure class="cf-media ds-media--teal" aria-label="Administrator overview">
+          <span class="cf-badge cf-badge--left">Administrator</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/admin-dashboard.webp" alt="Administrator dashboard: 69% of today's maintenance completed, completed and to-do counts, 224 facilities and 42 active users" width="720" height="1600" /></div></div>
+        </figure>
+        <figure class="cf-media ds-media--teal" aria-label="Field-user overview">
+          <span class="cf-badge cf-badge--left">Field user</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/user-dashboard.webp" alt="Field-user dashboard: a Not Connected device banner, assigned and completed task counts, and today's tasks with scheduled times" width="720" height="1600" /></div></div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="cs-block cf-section" id="problem" data-toc="Problem framing">
+      <h2 class="cf-label">The challenge</h2>
+      <p class="cf-text">Completing a task involves more than marking it done. A worker must identify the correct facility, understand the required work and record the result. Supervisors need to see who is responsible and which work remains outstanding. Device connection adds another dependency. The design challenge is to make those dependencies understandable without turning routine maintenance into a complicated form-filling exercise.</p>
+    </section>
+
+    <section class="cs-block cf-section" id="users" data-toc="Users &amp; scope">
+      <h2 class="cf-label">Who it serves</h2>
+      <p class="cf-text">The administrator experience focuses on configuration, assignment and oversight. The field-user experience focuses on today’s tasks and activity recording. This separation allows the same system to support setup and execution without giving both roles the same starting screen.</p>
+    </section>
+
+    <section class="cs-block cf-section" id="flow" data-toc="Task flow">
+      <h2 class="cf-label">How the work moves</h2>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Administrator</p>
+        <ol class="cs-steps">
+          <li>Create company hierarchy</li>
+          <li>Add facility</li>
+          <li>Map its identifier</li>
+          <li>Assign users and schedule</li>
+          <li>Monitor work</li>
+          <li>Reassign selected tasks when necessary</li>
+        </ol>
+      </div>
+      <div class="cs-flowgroup">
+        <p class="cs-flowgroup-label">Field user</p>
+        <ol class="cs-steps">
+          <li>Review assigned task</li>
+          <li>Connect device or choose the available manual path</li>
+          <li>Identify facility</li>
+          <li>Check in</li>
+          <li>Complete checklist and reasons</li>
+          <li>Check out</li>
+          <li>Review recorded activity</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="cs-block cf-section" id="decisions" data-toc="Design decisions">
+      <h2 class="cf-label">Key decisions</h2>
+
+      <h3 class="cf-decision">1. The location hierarchy gives tasks a physical context.</h3>
+      <p class="cf-text">Location, building and floor labels help distinguish facilities that may otherwise have similar names. Facility detail screens bring together mapping, users, schedules and maintenance information so the relationships can be reviewed in one place.</p>
+      <figure class="cf-media cf-media--periwinkle" aria-label="Facility view">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/facility-view.webp" alt="Facility view for Hall_005: floor, location, building, scheduler and last maintenance, with schedule mapping and user mapping sections" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-decision">2. Connection state is part of the workflow.</h3>
+      <p class="cf-text">The file includes device discovery, connected, disconnected, reconnecting and low-battery screens. It also shows a choice between connecting an eBaton and recording manually when no device is connected. This makes the dependency visible rather than leaving users to guess why an action is unavailable.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--lime" aria-label="Device connected">
+          <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/device-connected.webp" alt="eBaton connected sheet with the device and its battery level" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--rose" aria-label="Device disconnected">
+          <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/device-disconnected.webp" alt="eBaton disconnected sheet with Re-connect and Done" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <figure class="cf-media cf-media--peach" aria-label="Manual fallback">
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/manual-fallback.webp" alt="Prompt: 'Do you want to Record Activity manually?' eBaton not connected, with Connect eBaton and Record Manually buttons" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-decision">3. Checklists turn completion into a more specific record.</h3>
+      <p class="cf-text">Task screens associate the facility, user, time and device with checklist answers and reasons. The check-in and check-out sequence provides a clear distinction between beginning work and recording its completion.</p>
+      <figure class="cf-media cf-media--lime ds-trio" aria-label="Task started, checklist and completed">
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/task-started.webp" alt="Task Started confirmation for Floor Cleaning W002 at 11.23 am" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/task-checklist.webp" alt="In-progress task with a yes/no checklist and a reason field" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/task-done.webp" alt="Task Completed confirmation with the end time" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-decision">4. Assignment can change without losing the task context.</h3>
+      <p class="cf-text">The user-swapping flow selects a current assignee, a backup assignee and the relevant tasks. Complaint screens extend the activity record with a category, facility or asset, message and up to two photographs.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--periwinkle" aria-label="Reassign user">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/swap-assign.webp" alt="User swapping: current assignee, backup assignee and a task list with checkboxes and Select All" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--periwinkle" aria-label="Complaint">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/complaint.webp" alt="Complaint screen: category, asset, a confirmed repair request and a photo field" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-section" id="outcome" data-toc="Outcome &amp; validation">
+      <h2 class="cf-label">What the design achieves, and how to test it</h2>
+      <p class="cf-text">The design connects configuration, task execution and supervisory review in a coherent operational model. Validation should cover a complete maintenance task, a disconnected device, an unknown facility identifier and a reassignment. Measure completion errors, recovery success and whether supervisors can correctly identify outstanding work.</p>
+      <hr class="cf-rule" />
+    </section>
+
+    <section class="cs-block cf-quote" id="reflection" data-toc="Reflection">
+      <span class="cf-badge">Reflection</span>
+      <blockquote class="cs-quote">The strongest part of this project is the connection between digital records and physical work.</blockquote>
+      <p class="cf-quote-note">Clear facility identity, visible device state and explicit completion steps all contribute to a record that another person can understand later.</p>
+    </section>
+
+    </div>
+
+    <!-- ============ VIEW 2: Design decisions (Decision Stories framework) ============ -->
+    <div class="cs-view" id="view-decisions" data-view="decisions" role="tabpanel" aria-labelledby="view-tab-decisions">
+
+    <section class="cs-block cf-section" id="dd-intro" data-toc="Key decisions">
+      <h2 class="cf-label">Design decisions</h2>
+      <p class="cf-text">Four decisions shaped how facility work is set up, carried out and handed over. Each story follows the same structure: the situation before, the alternatives, the reasoning and trade-off, what I designed, and what can honestly be said about the result.</p>
+
+      <ol class="cf-cards ds-index">
+        <li class="cf-card"><a href="#decision-1"><h3><span>1</span>Device state you can see, with a manual way out</h3><p class="ds-index__take">A banner shows the eBaton state; if it's not connected, staff can still record manually.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-2"><h3><span>2</span>Check-in, checklist, check-out</h3><p class="ds-index__take">Completion is a record of what was done, not a single "done" tap.</p><p>Tactical · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-3"><h3><span>3</span>Facilities placed in a location hierarchy</h3><p class="ds-index__take">Location, building and floor tell "Hall_005" apart from every other hall.</p><p>Strategic · Read story</p></a></li>
+        <li class="cf-card"><a href="#decision-4"><h3><span>4</span>Reassigning work in one step</h3><p class="ds-index__take">Pick the current and backup person, then the tasks to move.</p><p>Tactical · Read story</p></a></li>
+      </ol>
+
+      <ul class="ds-legend" aria-label="Image labels">
+        <li><span class="cf-tag cf-tag--purple">Exploration</span>Wireframes and earlier frames from my Figma file</li>
+        <li><span class="cf-tag ds-tag--concept">Conceptual</span>An option described for comparison, not a design I made</li>
+        <li><span class="cf-tag cf-tag--green">Final design</span>The hi-fi screens</li>
+      </ul>
+    </section>
+
+    <!-- ---------- Decision 01 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-1" data-toc="01 · Device state">
+      <p class="ds-story__num">Decision 01 · Strategic</p>
+      <h2 class="ds-story__title">Why device state is always visible, with a manual way out</h2>
+      <p class="cf-text ds-story__hook">A Bluetooth device that silently drops is the fastest way to lose a day's maintenance records.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">Earlier record screens in my file were built around the eBaton: "Record data" showed the connected device, then asked the user to scan the facility RFID. Recording depended on the device being there.</p>
+      <figure class="cf-media cf-media--mist" aria-label="Earlier record screen">
+        <span class="cf-badge cf-badge--left">Exploration</span>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/ebaton-record.webp" alt="Earlier Record data screen: an eBaton device row, then 'Please scan the facility RFID' and a Scan button" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-options--three ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Block until connected</h4>
+          <ul class="ds-pros"><li class="is-pro">Every record is device-verified</li><li class="is-con">No device, no work recorded</li><li class="is-con">Staff blame the app, not the device</li></ul>
         </div>
-      </section>
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option B · Conceptual</span>
+          <h4>Hide the device</h4>
+          <ul class="ds-pros"><li class="is-pro">A simpler screen</li><li class="is-con">Failures surface only at the end</li><li class="is-con">No idea why an action is unavailable</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option C · Final</span>
+          <h4>Visible state and a manual path</h4>
+          <ul class="ds-pros"><li class="is-pro">A banner under the header: Connected or Not Connected</li><li class="is-pro">Connect eBaton or Record Manually</li><li class="is-con">Manual records are less verified</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Physical devices fail in the field. Showing the state up front explains what's possible, and a manual path keeps the work moving instead of losing the record.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Manual entries carry less proof than an eBaton scan, so supervisors need to tell the two apart in the activity record.</p></div>
+      </div>
 
-      <section class="cs-block" id="decisions" data-toc="Design decisions">
-        <p class="cs-eyebrow">Design decisions</p>
-        <h2>Key decisions</h2>
-        <h3>1. The location hierarchy gives tasks a physical context.</h3>
-        <p>Location, building and floor labels help distinguish facilities that may otherwise have similar names. Facility detail screens bring together mapping, users, schedules and maintenance information so the relationships can be reviewed in one place.</p>
-        <h3>2. Connection state is part of the workflow.</h3>
-        <p>The file includes device discovery, connected, disconnected, reconnecting and low-battery screens. It also shows a choice between connecting an eBaton and recording manually when no device is connected. This makes the dependency visible rather than leaving users to guess why an action is unavailable.</p>
-        <h3>3. Checklists turn completion into a more specific record.</h3>
-        <p>Task screens associate the facility, user, time and device with checklist answers and reasons. The check-in and check-out sequence provides a clear distinction between beginning work and recording its completion.</p>
-        <h3>4. Assignment can change without losing the task context.</h3>
-        <p>The user-swapping flow selects a current assignee, a backup assignee and the relevant tasks. Complaint screens extend the activity record with a category, facility or asset, message and up to two photographs.</p>
-      </section>
+      <h3 class="cf-sublabel">What I designed</h3>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--peach" aria-label="Not connected dashboard">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/user-dashboard.webp" alt="Dashboard with a red Not Connected banner under the header" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--peach" aria-label="Manual fallback">
+          <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/manual-fallback.webp" alt="Prompt offering Connect eBaton or Record Manually" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>Always visible</strong>Device state under the header</li>
+        <li><strong>A way out</strong>Connect, or record manually</li>
+      </ul>
+      <figure class="cf-media cf-media--lime ds-trio" aria-label="Device states">
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/device-connected.webp" alt="eBaton connected, with battery level" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/device-disconnected.webp" alt="eBaton disconnected, with Re-connect" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen cf-phone__screen--end"><img src="assets/images/case-studies/facility-management/low-battery.webp" alt="Low battery warning: device is running out of battery" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Connected</strong>Device and battery level</li>
+        <li><strong>Disconnected</strong>Re-connect or carry on</li>
+        <li><strong>Low battery</strong>A warning before it dies</li>
+      </ul>
 
-      <section class="cs-block" id="outcome" data-toc="Outcome &amp; validation">
-        <p class="cs-eyebrow">Design outcome and next validation</p>
-        <h2>What the design achieves, and how to test it</h2>
-        <p>The design connects configuration, task execution and supervisory review in a coherent operational model. Validation should cover a complete maintenance task, a disconnected device, an unknown facility identifier and a reassignment. Measure completion errors, recovery success and whether supervisors can correctly identify outstanding work.</p>
-      </section>
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Intended outcome · not measured</span>
+        <p>Device problems are explained where they happen and never block a record. Recovery success after a disconnect is the measure to test.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Visibility of system status</li><li>User control and freedom</li><li>Error recovery</li></ul>
+      </div>
+    </section>
 
-      <section class="cs-block" id="reflection" data-toc="Reflection">
-        <p class="cs-eyebrow">Pausing to reflect</p>
-        <h2>Reflection</h2>
-        <blockquote class="cs-quote">The strongest part of this project is the connection between digital records and physical work. Clear facility identity, visible device state and explicit completion steps all contribute to a record that another person can understand later.</blockquote>
-      </section>
+    <!-- ---------- Decision 02 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-2" data-toc="02 · Check-in flow">
+      <p class="ds-story__num">Decision 02 · Tactical</p>
+      <h2 class="ds-story__title">Why a task is checked in, checked off and checked out</h2>
+      <p class="cf-text ds-story__hook">"Done" doesn't tell a supervisor whether the bins were emptied or only the floor was mopped.</p>
 
-      <footer class="cs-end">
-        <p class="cs-thanks">Thanks for reading</p>
-        <ul class="cs-links">
-          <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
-          <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
-          <li><a href="projects.html"><span>all projects</span></a></li>
-        </ul>
-        <a href="gcc-safe-subway.html" class="cs-next">
-          <div><small>next project</small><strong>GCC Safe Subway</strong></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-        </a>
-      </footer>
-    </main>
-  </div>
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The earlier manual record screen collected location, floor, facility and a free-text comment, then a single Done button.</p>
+      <figure class="cf-media cf-media--mist" aria-label="Earlier manual record">
+        <span class="cf-badge cf-badge--left">Exploration</span>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/manual-record.webp" alt="Earlier Record data form: location, floor and facility selectors, a comment box and Done" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>One "Mark done" tap</h4>
+          <ul class="ds-pros"><li class="is-pro">The fastest possible</li><li class="is-con">No start time, no detail</li><li class="is-con">Nothing to check later</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Final</span>
+          <h4>Check in, checklist, check out</h4>
+          <ul class="ds-pros"><li class="is-pro">Start and end times recorded</li><li class="is-pro">Yes/No per item, a reason when "No"</li><li class="is-con">More taps per task</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>A record is only useful if someone else can read it later. Splitting start, checklist and finish captures what happened, when, and why anything was skipped.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Routine tasks take longer to record, so the checklist has to stay short and the confirmations quick.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--lime ds-trio" aria-label="Check-in, checklist and completed">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/check-in.webp" alt="Floor Cleaning W002 with a Check-in button, start time and facility details" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/task-checklist.webp" alt="In-progress task: yes/no checklist and a reason field" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/task-completed.webp" alt="Completed task: start and end times, completed in 53 minutes, checklist details and the reason for a skipped item" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>Check in</strong>Facility details and start time</li>
+        <li><strong>Checklist</strong>Yes/No and a reason</li>
+        <li><strong>Completed</strong>Duration and the full record</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--green">Design outcome</span>
+        <p>Each completed task records its start, end, duration, checklist answers and reasons. Completion errors are the measure to test.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Visibility of system status</li><li>Error prevention</li><li>Recognition rather than recall</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 03 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-3" data-toc="03 · Hierarchy">
+      <p class="ds-story__num">Decision 03 · Strategic</p>
+      <h2 class="ds-story__title">Why every facility sits in a location hierarchy</h2>
+      <p class="cf-text ds-story__hook">A site can have a dozen washrooms. "Washroom" alone doesn't tell a cleaner which one.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The earliest wireframes in my file, the "before" frames, set out company creation by levels and a location form of region, building and floor.</p>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--mist" aria-label="Wireframe: company levels">
+          <span class="cf-badge cf-badge--left">Wireframe</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/wf-company.webp" alt="Wireframe: company creation with a name, a level and a tree of levels" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--mist" aria-label="Wireframe: location level">
+          <span class="cf-badge cf-badge--left">Wireframe</span>
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/wf-location.webp" alt="Wireframe: location level with region, building and floor fields" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>A flat list of facility names</h4>
+          <ul class="ds-pros"><li class="is-pro">Quick to set up</li><li class="is-con">Similar names are easy to confuse</li><li class="is-con">No way to filter by place</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Final</span>
+          <h4>Location → building → floor → facility</h4>
+          <ul class="ds-pros"><li class="is-pro">Every facility shows where it is</li><li class="is-pro">Filters by location, building, floor and type</li><li class="is-con">More setup for administrators</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Field staff find things by place. Carrying location, building and floor on every facility removes guesswork from the task itself.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Administrators have to build the hierarchy before anyone can work, and changes to a site ripple through it.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <figure class="cf-media cf-media--periwinkle ds-trio" aria-label="Facility list, view and filters">
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/facility-list.webp" alt="Facility list: each facility with its floor, mapped status and last maintenance" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/facility-view.webp" alt="Facility view: floor, location, building, scheduler, schedule mapping and user mapping" width="720" height="1600" loading="lazy" /></div></div>
+        <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/advance-filter.webp" alt="Advance filter: location, building, floor and type, with search and chips" width="720" height="1600" loading="lazy" /></div></div>
+      </figure>
+      <ul class="ds-captions ds-captions--three ds-wide">
+        <li><strong>List</strong>Floor and maintenance status per facility</li>
+        <li><strong>View</strong>Place, schedule and people together</li>
+        <li><strong>Filter</strong>By location, building, floor, type</li>
+      </ul>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Intended outcome · not measured</span>
+        <p>Facilities are identified by place everywhere they appear. Wrong-facility check-ins would show whether this works.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Match between system and real world</li><li>Recognition rather than recall</li><li>Information hierarchy</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Decision 04 ---------- -->
+    <section class="cs-block cf-section ds-story" id="decision-4" data-toc="04 · Reassignment">
+      <p class="ds-story__num">Decision 04 · Tactical</p>
+      <h2 class="ds-story__title">Why reassigning work happens in one step</h2>
+      <p class="cf-text ds-story__hook">When someone calls in sick, their tasks shouldn't have to be moved one by one.</p>
+
+      <h3 class="cf-sublabel">Before the decision</h3>
+      <p class="cf-text">The scheduler lists tasks with their assignee and time. Without a swap flow, covering for an absent worker would mean editing each scheduled task.</p>
+
+      <h3 class="cf-sublabel">The turning point</h3>
+      <div class="ds-options ds-wide">
+        <div class="ds-option">
+          <span class="cf-tag ds-tag--concept">Option A · Conceptual</span>
+          <h4>Edit each task</h4>
+          <ul class="ds-pros"><li class="is-pro">No new screens</li><li class="is-con">Slow and easy to miss a task</li><li class="is-con">No record that a swap happened</li></ul>
+        </div>
+        <div class="ds-option ds-option--chosen">
+          <span class="cf-tag cf-tag--green">Option B · Final</span>
+          <h4>Swap current → backup, pick tasks</h4>
+          <ul class="ds-pros"><li class="is-pro">Two people, then a task checklist</li><li class="is-pro">Select All, plus a confirmation</li><li class="is-con">A bulk mistake moves many tasks</li></ul>
+        </div>
+      </div>
+      <div class="ds-reason ds-wide">
+        <div><p class="ds-reason__label">Reasoning</p><p>Supervisors think "Jenny covers for Cameron today", not "edit task 14". One flow that mirrors that sentence is faster and harder to get half-done.</p></div>
+        <div class="ds-reason--trade"><p class="ds-reason__label">Trade-off</p><p>Bulk actions magnify mistakes, so the swap asks for confirmation and names both people before it runs.</p></div>
+      </div>
+
+      <h3 class="cf-sublabel">What I designed</h3>
+      <div class="cf-pair">
+        <figure class="cf-media cf-media--periwinkle" aria-label="Select user">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/swap-select.webp" alt="Select User sheet with a search field and a list of people to add" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+        <figure class="cf-media cf-media--periwinkle" aria-label="Choose tasks">
+          <div class="cf-phone"><div class="cf-phone__screen"><img src="assets/images/case-studies/facility-management/swap-assign.webp" alt="Current and backup assignee set, task list with checkboxes and Select All" width="720" height="1600" loading="lazy" /></div></div>
+        </figure>
+      </div>
+      <ul class="ds-captions ds-wide">
+        <li><strong>Who</strong>Pick the current and backup person</li>
+        <li><strong>What</strong>Choose the tasks to move</li>
+      </ul>
+      <figure class="cf-media cf-media--mist cf-media--fit" aria-label="Swap confirmation">
+        <img src="assets/images/case-studies/facility-management/swap-confirm.webp" alt="Two confirmation popups: 'Do you want Swap task to User?' naming both people with Cancel and Yes, then Success" width="1744" height="1742" loading="lazy" />
+      </figure>
+
+      <h3 class="cf-sublabel">Result</h3>
+      <div class="ds-result ds-wide">
+        <span class="cf-tag cf-tag--blue">Intended outcome · not measured</span>
+        <p>A whole day's tasks can move to a backup person in one confirmed step. Correct reassignment on the first try is the measure to test.</p>
+        <ul class="ds-principles" aria-label="UX principles"><li>Flexibility and efficiency of use</li><li>Error prevention</li><li>Match between system and real world</li></ul>
+      </div>
+    </section>
+
+    <!-- ---------- Iterations ---------- -->
+    <section class="cs-block cf-section" id="iterations" data-toc="Iterations">
+      <h2 class="cf-label">The explorations that shaped the final experience</h2>
+      <p class="cf-text">Frames from my Figma file: the "before" wireframes, dashboard variants and the move from a record form to a check-in flow.</p>
+      <ol class="ds-timeline ds-wide">
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/wf-company.webp" alt="Wireframe: company levels" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Wireframe</span><p><strong>Setup</strong>Company levels as a tree.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/wf-location.webp" alt="Wireframe: location level" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Wireframe</span><p><strong>Setup</strong>Region, building, floor.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/facility-overview.webp" alt="Facility management overview: 224 total facilities with Add and Map actions" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Hi-fi</span><p><strong>Setup</strong>Facilities, then add or map.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/admin-dashboard.webp" alt="Admin dashboard variant" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Variant</span><p><strong>Dashboard</strong>Completion gauge and counts.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/admin-dashboard-v2.webp" alt="Admin dashboard, frame labelled draft v2" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Draft v2</span><p><strong>Dashboard</strong>Refined spacing and labels.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/admin-dashboard-filter.webp" alt="Admin dashboard with location, facility type and advance filter chips" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Hi-fi</span><p><strong>Dashboard</strong>Filters by place and type.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/ebaton-record.webp" alt="Earlier eBaton record screen" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Earlier</span><p><strong>Recording</strong>Device, then scan RFID.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/manual-record.webp" alt="Earlier manual record form" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--purple">Earlier</span><p><strong>Recording</strong>A form and a comment.</p></li>
+        <li><div class="ds-timeline__shot"><img src="assets/images/case-studies/facility-management/check-in.webp" alt="Check-in task screen" width="720" height="1600" loading="lazy" /></div><span class="cf-tag cf-tag--green">Hi-fi</span><p><strong>Recording</strong>Check in, checklist, check out.</p></li>
+      </ol>
+    </section>
+
+    <!-- ---------- Design system ---------- -->
+    <section class="cs-block cf-section" id="system" data-toc="Design system">
+      <h2 class="cf-label">Designing consistency across setup and field work</h2>
+      <p class="cf-text">These values come from the hi-fi frames in the Figma file.</p>
+
+      <div class="ds-sys ds-wide">
+        <div class="cf-card">
+          <h3>Typography · Inter</h3>
+          <ul class="ds-type">
+            <li><span style="font:700 18px/24px Inter,sans-serif">Floor Cleaning – W002</span><small>Inter Bold 16–18 · task and screen titles</small></li>
+            <li><span style="font:500 22px/28px Inter,sans-serif">11.23 am</span><small>Inter Medium 22 · times</small></li>
+            <li><span style="font:600 12px/16px Inter,sans-serif">Washroom Cleaning · First Floor</span><small>Inter Medium / Semi Bold 12 · list items</small></li>
+            <li><span style="font:600 8px/12px Inter,sans-serif">LAST MAINTENANCE 20 AUG 2024</span><small>Inter Semi Bold 7–8 · tags and metadata</small></li>
+          </ul>
+        </div>
+        <div class="cf-card">
+          <h3>Colour and meaning</h3>
+          <ul class="ds-swatches">
+            <li><i style="background:#00adb5"></i><b>#00ADB5</b><small>Brand teal · header, nav</small></li>
+            <li><i style="background:#222831"></i><b>#222831</b><small>Primary buttons</small></li>
+            <li><i style="background:#e8f9ed"></i><b>#E8F9ED</b><small>Completed / connected tint</small></li>
+            <li><i style="background:#3e7823"></i><b>#3E7823</b><small>Completed text</small></li>
+            <li><i style="background:#ff1010"></i><b>#FF1010</b><small>Not connected, to do</small></li>
+            <li><i style="background:#ee755f"></i><b>#EE755F</b><small>Scheduled time</small></li>
+            <li><i style="background:#0074b5"></i><b>#0074B5</b><small>Links, Add</small></li>
+            <li><i style="background:#f0f0f3"></i><b>#F0F0F3</b><small>Surfaces</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cf-results ds-reuse">
+        <div><strong>5</strong><span>eBaton states designed: searching, connected, disconnected, reconnecting, low battery</span></div>
+        <div><strong>3</strong><span>Task states with their own components: start task, in progress and completed</span></div>
+      </div>
+
+      <h3 class="cf-sublabel">Contrast check</h3>
+      <p class="cf-text">I checked the main pairs against WCAG 2.2 text contrast. Several fall short and are on the refinement list.</p>
+      <div class="ds-table ds-wide">
+        <table>
+          <thead><tr><th scope="col">Pair</th><th scope="col">Ratio</th><th scope="col">AA text</th></tr></thead>
+          <tbody>
+            <tr><td>White on primary #222222</td><td>15.9:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Completed #3E7823 on #E8F9ED</td><td>4.9:1</td><td class="is-pass">Pass</td></tr>
+            <tr><td>Secondary text #7E7B7B on white</td><td>4.2:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Not connected #FF1010 on white</td><td>3.9:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Scheduled time #EE755F on white</td><td>2.9:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>White on brand teal #00ADB5</td><td>2.7:1</td><td class="is-fail">Fail</td></tr>
+            <tr><td>Placeholder #AAAAAA on white</td><td>2.3:1</td><td class="is-fail">Fail</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <hr class="cf-rule" />
+    </section>
+
+    </div>
+
+    <footer class="cs-end">
+      <p class="cs-thanks">Thanks for reading</p>
+      <ul class="cs-links">
+        <li><a href="mailto:pradeep.tasp.0802@gmail.com">say hi → <span>pradeep.tasp.0802@gmail.com</span></a></li>
+        <li><a href="https://framerusercontent.com/assets/leYzq3yJ71NjjhqCAEeSTh7vr0.pdf" target="_blank" rel="noopener noreferrer"><span>resume</span> ↓</a></li>
+        <li><a href="projects.html"><span>all projects</span></a></li>
+      </ul>
+      <a href="gcc-safe-subway.html" class="cs-next">
+        <div><small>next project</small><strong>GCC Safe Subway</strong></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+      </a>
+    </footer>
+  </main>
 
   <script src="js/main.js" defer></script>
   <script src="js/case-study.js" defer></script>
+  <script src="js/case-study-story.js" defer></script>
   <script src="js/bot-nav.js" defer></script>
 </body>
 </html>
